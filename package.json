@@ -1,0 +1,51 @@
+{
+  "name": "react_typescript_webpack",
+  "version": "1.0.0",
+  "description": "Build UI that scales",
+  "scripts": {
+    "start": "webpack --config webpack.config.js && webpack-dev-server --open",
+    "build": "webpack --config webpack.config.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "webpack"
+  ],
+  "author": "bonta.jacopo@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/plugin-syntax-jsx": "^7.12.1",
+    "@types/node": "^14.11.2",
+    "@types/react-router-dom": "^5.1.5",
+    "axios": "^0.20.0",
+    "formik": "^2.1.5",
+    "moment": "^2.29.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.2.0",
+    "react-slick": "^0.27.11",
+    "react-tooltip": "^4.2.10",
+    "semantic-ui-calendar-react": "^0.15.3",
+    "semantic-ui-react": "^1.2.1",
+    "yup": "^0.29.3"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.12.5",
+    "@testing-library/jest-dom": "^5.7.0",
+    "@testing-library/react": "^10.0.4",
+    "@types/jest": "^25.2.1",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.0.5",
+    "@types/webpack": "4.1.4",
+    "html-webpack-plugin": "^4.5.0",
+    "jest": "^25.5.4",
+    "ts-jest": "^25.5.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.4.3",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
