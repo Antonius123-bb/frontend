@@ -1,3 +1,6 @@
+//service api url
+export const API_URL = 'http://localhost:8081';
+
 //name for user localstorage object
 export const USER_COOKIE_NAME = 'username';
 
