@@ -38,7 +38,7 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
         if(this.mounted) {
             this.setState({isLoading: true})
             var presentations = await presentationsService.getPresentations();
-            var movies = await movieService.getMovies();
+            var movies = await movieService.getAllMovies();
         }
 
         //proceed the resolved data to generate a usabled strucutre

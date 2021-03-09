@@ -29,11 +29,12 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
         window.scrollTo(0, 0);
 
         if(this.mounted) {
-            var movies = await movieServices.getMovies();
+            var movies = await movieServices.getAllMovies();
+            
 
             if(this.mounted && movies) {
                 this.setState({
-                    movies: movies.data.filme
+                    movies: movies.data.data
                 })
             }
         }
@@ -44,13 +45,13 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
     }
 
     handleCartCountOnLandingpage() {
-        this.setState({refreshCart: this.state.refreshCart + 1})
+//        this.setState({refreshCart: this.state.refreshCart + 1})
     }
  
     pushToMovieDetailPage = (movie) => {
         this.props.history.push({
             pathname: '/movie',
-            search: '?name='+(movie['name'].replace(/ /g, '-')).toLowerCase(),
+            search: '?name='+(movie['originalTitle'].replace(/ /g, '-')).toLowerCase(),
             state: { movie: movie }
         })
     }
@@ -80,16 +81,16 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
                                     return (
                                         <div key={index}>
                                             <h2 style={{'textAlign': 'center', 'fontSize': '32px'}}>
-                                                {movie['name'] &&
+                                                {movie['originalTitle'] &&
                                                     <a onClick={() => this.pushToMovieDetailPage(movie)} style={{'cursor': 'pointer'}}>
-                                                        {movie['name']} ({movie['filmstart'] && new Date(movie['filmstart']).getFullYear()})
+                                                        {movie['originalTitle']} ({movie['releaseDate'] && new Date(movie['releaseDate']).getFullYear()})
                                                     </a>
                                                 }
                                             </h2>
                                             
                                             <Image
                                                 fluid
-                                                src={movie['hintergrund_bild_link']}
+                                                src={movie['posterurl']}
                                                 as='a'
                                                 style={{'height': '520px', 'width': '1920px', 'cursor': 'pointer'}}
                                                 onClick={() => this.pushToMovieDetailPage(movie)}
@@ -105,7 +106,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
 
                     <Grid.Row>
                         <Grid.Column>
-                            <h2 style={{'textAlign': 'center', 'fontSize': '36px'}}>Unserer Filme</h2>
+                            <h2 style={{'textAlign': 'center', 'fontSize': '36px'}}>Unsere Filme</h2>
                             <MovieOverview history={this.props.history} handleCartCountOnLandingpage={this.handleCartCountOnLandingpage} withoutTopBar={true}/>
                         </Grid.Column>
                     </Grid.Row>

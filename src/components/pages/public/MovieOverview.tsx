@@ -26,13 +26,13 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
 
         if(this.mounted) {
             this.setState({loadMovies: true})
-            var movies = await movieService.getMovies();
+            var movies = await movieService.getAllMovies();
         }
 
         if(this.mounted && movies) {
             this.setState({
-                movies: movies.data.filme,
-                initialMovies: movies.data.filme,
+                movies: movies.data,
+                initialMovies: movies.data,
                 loadMovies: false
             })
         }
@@ -78,7 +78,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         }
 
         this.state.initialMovies.map(movie => {
-            const name = movie['name'].toLowerCase();
+            const name = movie['originalTitle'].toLowerCase();
 
             if(name.indexOf(value.toLowerCase()) > -1) {
                 newMovies.push(movie);
@@ -96,7 +96,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
     pushToMovieDetailPage = (movie) => {
         this.props.history.push({
             pathname: '/movie',
-            search: '?name='+(movie['name'].replace(/ /g, '-')).toLowerCase(),
+            search: '?name='+(movie['originalTitle'].replace(/ /g, '-')).toLowerCase(),
             state: { movie: movie }
         })
     }
@@ -133,17 +133,17 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                             return (
                                 <Grid.Column key={index}>
                                     <Card style={{'minHeight': '750px', 'marginBottom': '30px'}}>
-                                        <Image src={movie['bild_link']} wrapped ui={false} />
+                                        <Image src={movie['posterurl']} wrapped ui={false} />
                                         <Card.Content>
-                                        <Card.Header>{movie['name']}</Card.Header>
+                                        <Card.Header>{movie['originalTitle']}</Card.Header>
                                         <Card.Meta>
-                                            {movie['filmstart'] && new Date(movie['filmstart']).getFullYear()}
+                                            {movie['releaseDate'] && new Date(movie['releaseDate']).getFullYear()}
                                         </Card.Meta>
                                         <Card.Meta>
                                             FSK: {movie['fsk']}
                                         </Card.Meta>
                                         <Card.Description>
-                                            {movie['beschreibung'] && movie['beschreibung'].substring(0,250)}... <a onClick={() => this.pushToMovieDetailPage(movie)}>mehr lesen</a>
+                                            {movie['storyline'] && movie['storyline'].substring(0,250)}... <a onClick={() => this.pushToMovieDetailPage(movie)}>mehr lesen</a>
                                         </Card.Description>
                                         </Card.Content>
                                         <Card.Content extra>

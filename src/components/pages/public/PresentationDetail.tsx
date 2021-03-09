@@ -34,7 +34,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, {lo
 
         const getPresentationById = await presentationsService.getPresentationById(id);
 
-        let movies = await movieService.getMovies();
+        let movies = await movieService.getAllMovies();
 
         const movie = movies.data.filme.find(x => x.filmid === getPresentationById.data.filmid);
 

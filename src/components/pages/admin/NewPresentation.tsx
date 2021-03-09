@@ -61,7 +61,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
         //get movieData und roomData from backend
         let movieArr = [];
 
-        const movies = await movieService.getMovies();
+        const movies = await movieService.getAllMovies();
         const rooms = await adminService.getRooms();
 
         const roomArr = rooms.data.map(room => ({
