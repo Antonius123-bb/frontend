@@ -29,10 +29,12 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
             var movies = await movieService.getAllMovies();
         }
 
+        movies = this.selectMoviesWithValidUrl(movies);
+
         if(this.mounted && movies) {
             this.setState({
-                movies: movies.data,
-                initialMovies: movies.data,
+                movies: movies.data.data,
+                initialMovies: movies.data.data,
                 loadMovies: false
             })
         }
@@ -41,6 +43,12 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
     componentWillUnmount() {
         this.mounted = false;
     }
+
+    selectMoviesWithValidUrl = (movies) => {
+
+        console.log("test ", movies)
+        return movies;
+    };
 
     saveToCart(id: any) {
         var cart = {};
@@ -135,12 +143,12 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                                     <Card style={{'minHeight': '750px', 'marginBottom': '30px'}}>
                                         <Image src={movie['posterurl']} wrapped ui={false} />
                                         <Card.Content>
-                                        <Card.Header>{movie['originalTitle']}</Card.Header>
+                                        <Card.Header>{movie['originalTitle'] != '' ? movie['originalTitle'] : movie['title']}</Card.Header>
                                         <Card.Meta>
                                             {movie['releaseDate'] && new Date(movie['releaseDate']).getFullYear()}
                                         </Card.Meta>
                                         <Card.Meta>
-                                            FSK: {movie['fsk']}
+                                          Rating: {movie['imdbRating']}
                                         </Card.Meta>
                                         <Card.Description>
                                             {movie['storyline'] && movie['storyline'].substring(0,250)}... <a onClick={() => this.pushToMovieDetailPage(movie)}>mehr lesen</a>

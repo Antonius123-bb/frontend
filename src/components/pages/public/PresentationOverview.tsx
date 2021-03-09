@@ -37,7 +37,7 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
         //get all movies and presentations
         if(this.mounted) {
             this.setState({isLoading: true})
-            var presentations = await presentationsService.getPresentations();
+            var presentations = await presentationsService.getAllPresentations();
             var movies = await movieService.getAllMovies();
         }
 

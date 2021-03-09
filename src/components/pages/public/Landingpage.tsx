@@ -7,7 +7,8 @@ import movieServices from '../../../services/movieService';
 
 interface ladingpageState {
     refreshCart: number,
-    movies: [{}]
+    movies: [{}],
+    isLoading: boolean
 }
 
 class Landingpage extends React.Component<{history: any}, ladingpageState> {
@@ -19,7 +20,8 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
 
         this.state = {
             refreshCart: 0,
-            movies: [{}]
+            movies: [{}],
+            isLoading: false
         };
     }
 
@@ -29,6 +31,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
         window.scrollTo(0, 0);
 
         if(this.mounted) {
+            this.setState({isLoading: true});
             var movies = await movieServices.getAllMovies();
             
 
@@ -37,6 +40,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
                     movies: movies.data.data
                 })
             }
+            this.setState({isLoading: false});
         }
     }
 
@@ -65,7 +69,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
             infinite: true,
             autoplay: true,
             autoplayspreed: 1500,
-            slidesToShow: 1,
+            slidesToShow: 5,
             slidesToScroll: 1
           };
 
@@ -76,23 +80,14 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
                 <Grid>
                     <Grid.Row>
                         <Grid.Column>
-                            <Slider {...settings}>
+                            <Slider {...settings} style={{'textAlign': 'center'}}>
                                 {this.state.movies.map((movie, index) => {
                                     return (
-                                        <div key={index}>
-                                            <h2 style={{'textAlign': 'center', 'fontSize': '32px'}}>
-                                                {movie['originalTitle'] &&
-                                                    <a onClick={() => this.pushToMovieDetailPage(movie)} style={{'cursor': 'pointer'}}>
-                                                        {movie['originalTitle']} ({movie['releaseDate'] && new Date(movie['releaseDate']).getFullYear()})
-                                                    </a>
-                                                }
-                                            </h2>
-                                            
+                                        <div key={index}>                                            
                                             <Image
-                                                fluid
                                                 src={movie['posterurl']}
                                                 as='a'
-                                                style={{'height': '520px', 'width': '1920px', 'cursor': 'pointer'}}
+                                                style={{'height': '437px', 'width': '362px', 'cursor': 'pointer'}}
                                                 onClick={() => this.pushToMovieDetailPage(movie)}
                                             />
                                     </div> 
