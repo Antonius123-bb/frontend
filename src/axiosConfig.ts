@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { USER_COOKIE_NAME } from "./constants";
+import { USER_COOKIE_INFO } from "./constants";
 
 axios.interceptors.request.use(function (config) {
     
     //send the authtoken if available to show that a user is registered
-    const userdata = JSON.parse(localStorage.getItem(USER_COOKIE_NAME));
-    if(userdata && userdata.authToken) {
-        config.headers.Auth = userdata.authToken
+    const userdata = JSON.parse(localStorage.getItem(USER_COOKIE_INFO));
+    if(userdata && userdata.authcode) {
+        config.headers.authcode = userdata.authcode
     }
 
     return config;

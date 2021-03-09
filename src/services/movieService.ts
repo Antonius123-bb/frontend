@@ -10,6 +10,6 @@ export default {
 
     //get movie information by ID
     getMovieById: (id) : Promise<any> => {
-        return axios.get(API_URL + '/getMovieById' + id);
+        return axios.get(API_URL + '/getMovieById/' + id);
     }
 }

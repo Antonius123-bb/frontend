@@ -1,7 +1,7 @@
 import * as React from "react";
 import TopMenu from "../../menus/public/TopMenu";
 import { Grid, Button, Modal, Accordion, Icon, Form, Dimmer, Loader, Header, Divider, Message } from "semantic-ui-react";
-import { USER_COOKIE_NAME, CART_COOKIE } from "../../../constants";
+import { USER_COOKIE_INFO, CART_COOKIE } from "../../../constants";
 import userService from "../../../services/userService";
 import Login from "./Login";
 import Signup from "./Signup";
@@ -54,16 +54,15 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
             })
         }
 
-        const user = localStorage.getItem(USER_COOKIE_NAME);
-        console.log("TEST ", USER_COOKIE_NAME)
+        const user = localStorage.getItem(USER_COOKIE_INFO);
 
         if(user != null) {
-            const userData = await userService.getUserById(2);
+            const userData = await userService.getUserById(JSON.parse(user).id);
 
             if(this.mounted) {
                 this.setState({
-                    user: userData.data,
-                    adressen: userData.data.adressen
+                    user: userData.data.name + " " + userData.data.lastName,
+                    adressen: userData.data.adresses
                 })
             }
         }
@@ -132,9 +131,9 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
 
         if(!this.state.updated) {
             //update user after forceUpdate() after login
-            const user = localStorage.getItem(USER_COOKIE_NAME);
+            const user = localStorage.getItem(USER_COOKIE_INFO);
             if(user != null) {
-                const userDetails = await userService.getUserinfos();
+                const userDetails = await userService.getUserById(JSON.parse(user).id);
 
                 if(this.mounted) {
                     this.setState({
@@ -164,10 +163,10 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
     };
 
     handleOpenModalState = async (boolean) => {
-        const user = localStorage.getItem(USER_COOKIE_NAME);
+        const user = localStorage.getItem(USER_COOKIE_INFO);
 
         if(user != null) {
-            const userData = await userService.getUserinfos();
+            const userData = await userService.getUserById(JSON.parse(user).id);
 
             if(this.mounted) {
                 this.setState({
@@ -193,24 +192,24 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                 stadt: this.state.user.adressen[this.state.selectedAdress].stadt
             };
     
-            const response = await presentationsService.placeOrder(parseInt(this.props.location.state.presentationId), this.state.user.email, this.state.selectedSeats, 0, rechnung);
+            // const response = await presentationsService.placeOrder(parseInt(this.props.location.state.presentationId), this.state.user.email, this.state.selectedSeats, 0, rechnung);
         
-            if(response.status === 200) {
-                this.props.history.push("/thankyou");
-                localStorage.removeItem(CART_COOKIE);
+            // if(response.status === 200) {
+            //     this.props.history.push("/thankyou");
+            //     localStorage.removeItem(CART_COOKIE);
 
-                if(this.state.error != "" && this.mounted) {
-                    this.setState({
-                        error: ""
-                    })
-                }
-            } else {
-                if(this.mounted) {
-                    this.setState({
-                        error: response.data
-                    })
-                }
-            }
+            //     if(this.state.error != "" && this.mounted) {
+            //         this.setState({
+            //             error: ""
+            //         })
+            //     }
+            // } else {
+            //     if(this.mounted) {
+            //         this.setState({
+            //             error: response.data
+            //         })
+            //     }
+            // }
         } else {
             const rechnung = {
                 titel: values.anrede,
@@ -221,18 +220,18 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                 telefon: values.präfix + values.telefonnummer
             };
     
-            const response = await presentationsService.placeOrder(parseInt(this.props.location.state.presentationId), values.email, this.state.selectedSeats, 0, rechnung);
+            // const response = await presentationsService.placeOrder(parseInt(this.props.location.state.presentationId), values.email, this.state.selectedSeats, 0, rechnung);
 
-            if(response.status === 200) {
-                this.props.history.push("/thankyou");
-                localStorage.removeItem(CART_COOKIE);
-            } else {
-                if(this.state.error != "" && this.mounted) {
-                    this.setState({
-                        error: ""
-                    })
-                }
-            }
+            // if(response.status === 200) {
+            //     this.props.history.push("/thankyou");
+            //     localStorage.removeItem(CART_COOKIE);
+            // } else {
+            //     if(this.state.error != "" && this.mounted) {
+            //         this.setState({
+            //             error: ""
+            //         })
+            //     }
+            // }
         };
     }
 

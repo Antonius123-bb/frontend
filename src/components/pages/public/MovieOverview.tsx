@@ -95,10 +95,14 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
     }
 
     pushToMovieDetailPage = (movie) => {
+        let movieTitle = movie['originalTitle'];
+        if (movie['originalTitle'] === ''){
+            movieTitle = movie['title']
+        }
         this.props.history.push({
             pathname: '/movie',
-            search: '?name='+(movie['originalTitle'].replace(/ /g, '-')).toLowerCase(),
-            state: { movie: movie }
+            search: '?name='+(movieTitle.replace(/ /g, '-')).toLowerCase(),
+            state: { movieId: movie['_id'] }
         })
     }
 

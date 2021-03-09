@@ -30,13 +30,7 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
 
             if(response) {
                 //set user name in cookie
-                const userdata = {
-                    firstName: response.data.data.name,
-                    lastName: response.data.data.lastName,
-                    id: response.data.data.id,
-                    email: response.data.data.email
-                }
-                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(userdata));
+                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(response.data.data));
 
                 // const adresses = (await userService.getUserById(response.data.id)).addresses;
                 // if (adresses.data.adresses && adresses.data.adresses != null){

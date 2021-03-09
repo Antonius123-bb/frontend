@@ -87,15 +87,12 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
                 this.handleUserRights();
 
                 //update cookie
-                const user = {
-                    name: response.data.name,
-                    authToken: response.data.authToken
-                }
-                localStorage.setItem(USER_COOKIE_NAME, JSON.stringify(user));
-                const adresses = await userService.getUserinfos();
-                if (adresses.data.adresses && adresses.data.adresses != null){
-                    localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
-                }
+                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(response.data.data));
+
+                // const userinfo = await userService.getUserById(JSON.parse(USER_COOKIE_INFO).id);
+                // if (adresses.data.adresses && adresses.data.adresses != null){
+                //     localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
+                // }
 
             }
 

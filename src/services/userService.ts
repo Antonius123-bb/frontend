@@ -10,7 +10,7 @@ export default {
     },
 
     getUserById: (id) : Promise<any> => {
-        return axios.get(API_URL + '/getUserById' + id);
+        return axios.get(API_URL + '/getUserById/' + id);
     },
 
     updateUserById : (data, id) : Promise<any> => {

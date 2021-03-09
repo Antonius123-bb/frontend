@@ -3,6 +3,7 @@ import {Image, Button, Grid, List, Divider, Message, Popup} from "semantic-ui-re
 import TopMenu from "../../menus/public/TopMenu";
 import presentationsService from "../../../services/presentationService";
 import { DateInput } from "semantic-ui-calendar-react";
+import movieService from "../../../services/movieService";
 
 const m = require('moment');
 
@@ -14,7 +15,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         super(props);
 
         this.state = {
-            movie: this.props.location.state.movie,
+            movie: {},
             presentations: [{}],
             initialPresentations: [{}],
             date : ""
@@ -26,12 +27,14 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
 
         window.scrollTo(0, 0);
 
-        const getPresentationById = await presentationsService.getPresentationByMovieId(this.state.movie.filmid);
+        //const getPresentationById = await presentationsService.getPresentationByMovieId(this.state.movieId);
+        const getMovie = await movieService.getMovieById(this.props.location.state.movieId);
 
         if(this.mounted) {
             this.setState({
-                presentations: getPresentationById.data,
-                initialPresentations: getPresentationById.data,
+                //presentations: getPresentationById.data,
+                //initialPresentations: getPresentationById.data,
+                movie: getMovie.data
             })
         }
     }

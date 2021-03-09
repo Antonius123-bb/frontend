@@ -1,8 +1,9 @@
 import * as React from "react";
 import {Icon, Button, Grid, Dimmer, Loader, Form, Message} from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
-import adminService from "../../../services/orderService";
+import orderService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
+import presentationService from "../../../services/presentationService";
 var m = require('moment');
 
 interface newPresentationState {
@@ -62,31 +63,31 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
         let movieArr = [];
 
         const movies = await movieService.getAllMovies();
-        const rooms = await adminService.getRooms();
+        // const rooms = await orderService.getRooms();
 
-        const roomArr = rooms.data.map(room => ({
-            key: room.saalid,
-            text: room.name,
-            value: room.saalid
-        }))
+        // const roomArr = rooms.data.map(room => ({
+        //     key: room.saalid,
+        //     text: room.name,
+        //     value: room.saalid
+        // }))
 
-        movies['data']['filme'].forEach(mov => {
-            const obj = {
-                key: mov.filmid.toString(),
-                text: mov.name,
-                value: mov.filmid.toString()
-            };
+        // movies['data']['filme'].forEach(mov => {
+        //     const obj = {
+        //         key: mov.filmid.toString(),
+        //         text: mov.name,
+        //         value: mov.filmid.toString()
+        //     };
 
-            movieArr.push(obj);
-        })
+        //     movieArr.push(obj);
+        // })
 
-        //set the states with mapped/modified data from backend
-        if(this.mounted) {
-            this.setState({
-                movies: movieArr,
-                rooms: roomArr
-            })
-        }
+        // //set the states with mapped/modified data from backend
+        // if(this.mounted) {
+        //     this.setState({
+        //         movies: movieArr,
+        //         rooms: roomArr
+        //     })
+        // }
     }
 
     componentWillUnmount() {
@@ -97,7 +98,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
     createPresentation = async () => {
         if (this.mounted) { this.setState({successModal: false}) }
         try {
-            await adminService.createPresentation(
+            await presentationService.createPresentation(
                 this.state.movieId,
                 this.state.saalId,
                 this.state.basicPrice,

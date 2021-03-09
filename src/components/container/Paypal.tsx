@@ -7,18 +7,18 @@ const Paypal = (props) => {
     const paypal = useRef()
 
     const buy = async (paypalTransactionId) => {
-        const rechnung = {
-            titel: props.user.adressen[props.selectedAdress].anrede,
-            name: props.user.name,
-            strasse: props.user.adressen[props.selectedAdress].strasse,
-            plz: props.user.adressen[props.selectedAdress].plz,
-            stadt: props.user.adressen[props.selectedAdress].stadt
-        };
+        // const rechnung = {
+        //     titel: props.user.adressen[props.selectedAdress].anrede,
+        //     name: props.user.name,
+        //     strasse: props.user.adressen[props.selectedAdress].strasse,
+        //     plz: props.user.adressen[props.selectedAdress].plz,
+        //     stadt: props.user.adressen[props.selectedAdress].stadt
+        // };
 
-        const response = presentationsService.placeOrderWithPaypal(parseInt(props.presId), props.user.email, props.selectedSeats, 1, rechnung, paypalTransactionId);
+        // const response = presentationsService.placeOrderWithPaypal(parseInt(props.presId), props.user.email, props.selectedSeats, 1, rechnung, paypalTransactionId);
 
-        props.history.push('/thankyou');
-        localStorage.removeItem(CART_COOKIE);
+        // props.history.push('/thankyou');
+        // localStorage.removeItem(CART_COOKIE);
     }
 
     useEffect(() => {

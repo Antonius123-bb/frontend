@@ -3,7 +3,7 @@ import {Icon, Grid, Menu, Segment, Modal, Header} from "semantic-ui-react";
 import Settings from "./Settings";
 import Orders from "./Orders";
 import userService from '../../../../services/userService';
-import { USER_COOKIE_NAME } from "../../../../constants";
+import { USER_COOKIE_INFO } from "../../../../constants";
 import ContactData from "./ContactData";
 
 //Profile Root
@@ -32,10 +32,11 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
         this.mounted = true;
         
         //get user name from cookie and set state
-        const user = localStorage.getItem(USER_COOKIE_NAME);
+        const user = localStorage.getItem(USER_COOKIE_INFO);
 
         if(user) {
-            const response = await userService.getUserinfos();
+            const response = await userService.getUserById(JSON.parse(user).id);
+
 
             if(this.mounted) {
                 this.setState({
@@ -54,10 +55,10 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
         
         //handle open profile modal state
         if(prevProps.openProfileModal != this.props.openProfileModal) {
-            const user = localStorage.getItem(USER_COOKIE_NAME);
+            const user = localStorage.getItem(USER_COOKIE_INFO);
 
             if(user) {
-                const response = await userService.getUserinfos();
+                const response = await userService.getUserById(JSON.parse(user).id);
 
                 if(this.mounted) {
                     this.setState({

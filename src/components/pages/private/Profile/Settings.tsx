@@ -3,7 +3,7 @@ import {Card, Button, Grid, Dimmer, Loader, Form, Modal, Message} from "semantic
 import { Formik } from "formik";
 import * as Yup from 'yup';
 import userService from "../../../../services/userService";
-import { USER_COOKIE_NAME } from "../../../../constants";
+import { USER_COOKIE_INFO } from "../../../../constants";
 import { DisableValuesPropTypes } from "semantic-ui-calendar-react/dist/types/inputs/BaseInput";
 
 //Settings of a user to change email, password, name
@@ -56,35 +56,37 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
 
     //function to set a new email in databasa
     updateEmail = async (values, formikBag) => {
-        try {           
-            const response = await userService.changeEmailRequest(values.currentPassword, values.email);
-            if (this.mounted){ this.setState({openConfirmEmailModal: true}) }
-        } catch (error){
-            if (error.response.status === 401){
-                formikBag.setErrors({
-                    currentPassword: "Das eingegebene Passwort ist falsch."
-                })
-            };
-        }
+        // try {           
+        //     const response = await userService.changeEmailRequest(values.currentPassword, values.email);
+        //     if (this.mounted){ this.setState({openConfirmEmailModal: true}) }
+        // } catch (error){
+        //     if (error.response.status === 401){
+        //         formikBag.setErrors({
+        //             currentPassword: "Das eingegebene Passwort ist falsch."
+        //         })
+        //     };
+        // }
     }
 
     //function to change the name in database
     updateName = async (values, formikBag) => {
-        if (this.mounted){ this.setState({openSuccessModal: ''}) }
-        try {
-            await userService.changeName(values.name);
+        // if (this.mounted){ this.setState({openSuccessModal: ''}) }
+        // try {
+        //     let firstAndLastName = values.name.split(" ");
 
-            const userInfo = await userService.getUserinfos();
+        //     await userService.updateUserById({name: firstAndLastName[0], lastName: firstAndLastName[1]}, JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
 
-            if(this.mounted) {
-                this.setState({
-                    userdata: userInfo.data,
-                    currentPassword: '', 
-                    openSuccessModal: 'Name'
-                })
-            }
-        } catch (e){
-        }
+        //     const userInfo = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
+
+        //     if(this.mounted) {
+        //         this.setState({
+        //             userdata: userInfo.data,
+        //             currentPassword: '', 
+        //             openSuccessModal: 'Name'
+        //         })
+        //     }
+        // } catch (e){
+        // }
 
     }
 
@@ -132,68 +134,68 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
     }
 
     changePasswordForm = async (values, formikBag) => {
-        if (this.mounted){ this.setState({isLoadingPassword: true, openSuccessModal: ''}) }
-        try {
-            const response = await userService.changePassword(values.currentPassword, values.newPassword);
+        // if (this.mounted){ this.setState({isLoadingPassword: true, openSuccessModal: ''}) }
+        // try {
+        //     const response = await userService.changePassword(values.currentPassword, values.newPassword);
 
-            if (this.mounted){ this.setState({isLoadingPassword: false, openSuccessModal: 'Passwort'}) }
-            formikBag.resetForm();
-        }
-        catch (error){
-            if(error.response.status === 401){
-                formikBag.setErrors({
-                    currentPassword: "Das angegebene Passwort ist falsch."
-                })
-            }
-            if (this.mounted){ this.setState({isLoadingPassword: false}) }
-        }
+        //     if (this.mounted){ this.setState({isLoadingPassword: false, openSuccessModal: 'Passwort'}) }
+        //     formikBag.resetForm();
+        // }
+        // catch (error){
+        //     if(error.response.status === 401){
+        //         formikBag.setErrors({
+        //             currentPassword: "Das angegebene Passwort ist falsch."
+        //         })
+        //     }
+        //     if (this.mounted){ this.setState({isLoadingPassword: false}) }
+        // }
     }
 
     deleteAccountPermanently = async (values, formikBag) => {
-        if (this.mounted){
-            try {                
-                await userService.deactivateAccount(values.password);
-                this.setState({openDeleteAccountModal: false});
-                this.props.closeModal();
-                localStorage.removeItem(USER_COOKIE_NAME);
-                this.props.history.push('/');                
-            } catch (error){
-                if (error.response.status === 404){
-                    if (this.mounted){
-                        formikBag.setErrors({
-                            password: "Das eingegebene Passwort ist falsch."
-                        })
-                    }
-                }
-            }
-        }
+        // if (this.mounted){
+        //     try {                
+        //         await userService.deactivateAccount(values.password);
+        //         this.setState({openDeleteAccountModal: false});
+        //         this.props.closeModal();
+        //         localStorage.removeItem(USER_COOKIE_NAME);
+        //         this.props.history.push('/');                
+        //     } catch (error){
+        //         if (error.response.status === 404){
+        //             if (this.mounted){
+        //                 formikBag.setErrors({
+        //                     password: "Das eingegebene Passwort ist falsch."
+        //                 })
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     verifyEmailChange = async (values, formikBag) => {
-        try {
-            await userService.changeEmailConfirm(values.oldEmailCode, values.newEmailCode);
+        // try {
+        //     await userService.changeEmailConfirm(values.oldEmailCode, values.newEmailCode);
 
-            const userInfo = await userService.getUserinfos();
+        //     const userInfo = await userService.getUserinfos();
 
-            if(this.mounted) {
-                this.setState({
-                    userdata: userInfo.data
-                })
-            }
-            if (this.mounted) { this.setState({openConfirmEmailModal: false, currentPassword: '', openSuccessModal: 'Email'}) };
-        } catch (error){
-            if (error.response.status === 409){
-                if(error.response.data.includes("neu")){
-                    formikBag.setErrors({
-                        newEmailCode: "Der Code für die neue Email ist falsch."
-                    })
-                } else if(error.response.data.includes("alt")){
-                    formikBag.setErrors({
-                        oldEmailCode: "Der Code für die alte Email ist falsch."
-                    })
-                }
-            }
-        }
+        //     if(this.mounted) {
+        //         this.setState({
+        //             userdata: userInfo.data
+        //         })
+        //     }
+        //     if (this.mounted) { this.setState({openConfirmEmailModal: false, currentPassword: '', openSuccessModal: 'Email'}) };
+        // } catch (error){
+        //     if (error.response.status === 409){
+        //         if(error.response.data.includes("neu")){
+        //             formikBag.setErrors({
+        //                 newEmailCode: "Der Code für die neue Email ist falsch."
+        //             })
+        //         } else if(error.response.data.includes("alt")){
+        //             formikBag.setErrors({
+        //                 oldEmailCode: "Der Code für die alte Email ist falsch."
+        //             })
+        //         }
+        //     }
+        // }
     }
     
     render() {

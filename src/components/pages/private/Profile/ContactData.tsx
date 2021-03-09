@@ -2,7 +2,7 @@ import * as React from "react";
 import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Table} from "semantic-ui-react";
 import { Formik } from "formik";
 import * as Yup from 'yup';
-import { ALL_ADDRESSES, USER_COOKIE_NAME } from "../../../../constants";
+import { ALL_ADDRESSES, USER_COOKIE_INFO } from "../../../../constants";
 import userService from "../../../../services/userService";
 
 //The Contact Data Container to add adresses
@@ -44,12 +44,11 @@ class ContactData extends React.Component<{closeContactDataModal: any}, contactD
         if (this.mounted) { this.setState({currentlyLoading: true})}
 
         //check cookie and set state
-        const userDetails = await userService.getUserinfos();
-        const userLocalObj = JSON.parse(localStorage.getItem(USER_COOKIE_NAME));
+        const userDetails = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
         if (this.mounted){
             this.setState({
-                userDetails: userDetails.data.adressen,
-                name: userLocalObj.name
+                userDetails: userDetails.adresses,
+                name: userDetails.name + " " + userDetails.lastName
             })
         }
         if (this.mounted) { this.setState({currentlyLoading: false})}
@@ -62,87 +61,87 @@ class ContactData extends React.Component<{closeContactDataModal: any}, contactD
     //called after submitting form -> save data in backend
     saveContactData = async (values, formikBag) => {
 
-        //check if user filled in a phone number, if not: send data without 
-        if (values.telefonnummer && values.telefonnummer !== ''){
+        // //check if user filled in a phone number, if not: send data without 
+        // if (values.telefonnummer && values.telefonnummer !== ''){
 
-            //modify attributes before sending to backend
-            const straße = values.straße + " " + values.hausnummer;
-            const telefonnummer = values.präfix + values.telefonnummer;
-            try {
-                 await userService.addAdress(
-                    values.anrede,
-                    values.name,
-                    straße,
-                    values.postleitzahl.toString(),
-                    values.stadt,
-                    telefonnummer
-                ) 
-                this.getUserDetails();
+        //     //modify attributes before sending to backend
+        //     const straße = values.straße + " " + values.hausnummer;
+        //     const telefonnummer = values.präfix + values.telefonnummer;
+        //     try {
+        //          await userService.addAdress(
+        //             values.anrede,
+        //             values.name,
+        //             straße,
+        //             values.postleitzahl.toString(),
+        //             values.stadt,
+        //             telefonnummer
+        //         ) 
+        //         this.getUserDetails();
                 
-                //modify cookie
-                const adresses = await userService.getUserinfos();
-                localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
+        //         //modify cookie
+        //         const adresses = await userService.getUserinfos();
+        //         localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
                 
-                if (this.mounted){
-                    this.setState({addMode: false})
-                }
-                if(this.state.error != "") {
-                    if(this.mounted) {
-                        this.setState({
-                            error: ""
-                        })
-                    }
-                }
-                formikBag.resetForm();
+        //         if (this.mounted){
+        //             this.setState({addMode: false})
+        //         }
+        //         if(this.state.error != "") {
+        //             if(this.mounted) {
+        //                 this.setState({
+        //                     error: ""
+        //                 })
+        //             }
+        //         }
+        //         formikBag.resetForm();
 
-                if(this.props.closeContactDataModal != null) {
-                    this.props.closeContactDataModal();
-                }
+        //         if(this.props.closeContactDataModal != null) {
+        //             this.props.closeContactDataModal();
+        //         }
                 
-            } catch (e) {
-                if(this.mounted) {
-                    this.setState({
-                        error: e.response.data
-                    })
-                }
-            }
-        } else {
-            //user filled in a phone number, send data with phone number
-            const straße = values.straße + values.hausnummer;
-            try {
-                await userService.addAdress(
-                    values.anrede,
-                    values.name,
-                    straße,
-                    values.postleitzahl.toString(),
-                    values.stadt,
-                    ''
-                )
-                this.getUserDetails();
-                if (this.mounted){
-                    this.setState({addMode: false})
-                }
-                if(this.state.error != "") {
-                    if(this.mounted) {
-                        this.setState({
-                            error: ""
-                        })
-                    }
-                }
-                formikBag.resetForm();
+        //     } catch (e) {
+        //         if(this.mounted) {
+        //             this.setState({
+        //                 error: e.response.data
+        //             })
+        //         }
+        //     }
+        // } else {
+        //     //user filled in a phone number, send data with phone number
+        //     const straße = values.straße + values.hausnummer;
+        //     try {
+        //         await userService.addAdress(
+        //             values.anrede,
+        //             values.name,
+        //             straße,
+        //             values.postleitzahl.toString(),
+        //             values.stadt,
+        //             ''
+        //         )
+        //         this.getUserDetails();
+        //         if (this.mounted){
+        //             this.setState({addMode: false})
+        //         }
+        //         if(this.state.error != "") {
+        //             if(this.mounted) {
+        //                 this.setState({
+        //                     error: ""
+        //                 })
+        //             }
+        //         }
+        //         formikBag.resetForm();
 
-                if(this.props.closeContactDataModal != null) {
-                    this.props.closeContactDataModal();
-                }
+        //         if(this.props.closeContactDataModal != null) {
+        //             this.props.closeContactDataModal();
+        //         }
 
-            } catch (e) {
-                if(this.mounted) {
-                    this.setState({
-                        error: e.response.data
-                    })
-                }
-            }
-        }
+        //     } catch (e) {
+        //         if(this.mounted) {
+        //             this.setState({
+        //                 error: e.response.data
+        //             })
+        //         }
+        //     }
+        // }
 
     }
 
@@ -322,12 +321,12 @@ class ContactData extends React.Component<{closeContactDataModal: any}, contactD
 
     //function to delete the adress that is connected with the ID parameter
     deleteAdress = async (adressId) => {
-        await userService.deleteAddress(adressId);
-        this.getUserDetails();
+        // await userService.deleteAddress(adressId);
+        // this.getUserDetails();
         
-        //modify cookie
-        const adresses = await userService.getUserinfos();
-        localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
+        // //modify cookie
+        // const adresses = await userService.getUserinfos();
+        // localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
     } 
 
     //called from every single table row

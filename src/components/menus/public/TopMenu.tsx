@@ -203,7 +203,7 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                     {/* in case: user logged in */}
                     {localStorage.getItem(USER_COOKIE_INFO) &&
                         <React.Fragment>
-                            <Dropdown text={JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).firstName + " " + JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).lastName} style={{"marginTop": "13px", "color": "white", "marginLeft": "50px"}}>
+                            <Dropdown text={JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).name + " " + JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).lastName} style={{"marginTop": "13px", "color": "white", "marginLeft": "50px"}}>
                                 <Dropdown.Menu>
                                     <Dropdown.Item icon='user circle' text='Mein Profil' onClick={() => this.setState({openProfileModal: true})} />
                                     <Dropdown.Divider />

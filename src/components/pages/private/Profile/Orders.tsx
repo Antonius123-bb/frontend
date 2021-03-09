@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button, Message, Table } from "semantic-ui-react";
+import { USER_COOKIE_INFO } from "../../../../constants";
 import presentationsService from "../../../../services/presentationService";
 import userService from "../../../../services/userService";
 
@@ -37,7 +38,7 @@ class Orders extends React.Component<{}, ordersState> {
     }
 
     getUserInfos = async () => {
-        return await userService.getUserinfos();
+        return await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
     }
 
     getRecentOrders = () => {

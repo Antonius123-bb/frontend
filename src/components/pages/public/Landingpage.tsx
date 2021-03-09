@@ -4,6 +4,8 @@ import TopMenu from "../../menus/public/TopMenu";
 import Slider from "react-slick";
 import MovieOverview from './MovieOverview';
 import movieServices from '../../../services/movieService';
+import userService from "../../../services/userService";
+import { USER_COOKIE_INFO } from "../../../constants";
 
 interface ladingpageState {
     refreshCart: number,
@@ -53,17 +55,16 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
     }
  
     pushToMovieDetailPage = (movie) => {
-        let movieName = movie['originalTitle'];
+        let movieTitle = movie['originalTitle'];
         if (movie['originalTitle'] === ''){
-            movieName = movie['title']
+            movieTitle = movie['title']
         }
         this.props.history.push({
             pathname: '/movie',
-            search: '?name='+(movieName.replace(/ /g, '-')).toLowerCase(),
-            state: { movie: movie }
+            search: '?name='+(movieTitle.replace(/ /g, '-')).toLowerCase(),
+            state: { movieId: movie['_id'] }
         })
     }
-
 
     render() {
 
@@ -72,8 +73,8 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
             arrows: false,
             infinite: true,
             autoplay: true,
-            autoplayspreed: 1500,
-            slidesToShow: 5,
+            autoplayspreed: 500,
+            slidesToShow: 7,
             slidesToScroll: 1
           };
 
@@ -94,7 +95,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
                                                 style={{'height': '437px', 'width': '362px', 'cursor': 'pointer'}}
                                                 onClick={() => this.pushToMovieDetailPage(movie)}
                                             />
-                                    </div> 
+                                        </div> 
                                     )
                                 })}
                                 
