@@ -10,7 +10,7 @@ import { Formik } from "formik";
 import * as Yup from 'yup';
 import Paypal from "../../container/Paypal";
 import ContactData from "../private/Profile/ContactData";
-import presentationsService from "../../../services/presentationsService";
+import presentationsService from "../../../services/presentationService";
 
 //Todo show result thank you page, etc
 
@@ -55,9 +55,10 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
         }
 
         const user = localStorage.getItem(USER_COOKIE_NAME);
+        console.log("TEST ", USER_COOKIE_NAME)
 
         if(user != null) {
-            const userData = await userService.getUserinfos();
+            const userData = await userService.getUserById(2);
 
             if(this.mounted) {
                 this.setState({

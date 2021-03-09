@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import presentationsService from '../../services/presentationsService';
+import presentationsService from '../../services/presentationService';
 import { CART_COOKIE } from '../../constants';
 
 const Paypal = (props) => {

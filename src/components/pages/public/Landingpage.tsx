@@ -53,9 +53,13 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
     }
  
     pushToMovieDetailPage = (movie) => {
+        let movieName = movie['originalTitle'];
+        if (movie['originalTitle'] === ''){
+            movieName = movie['title']
+        }
         this.props.history.push({
             pathname: '/movie',
-            search: '?name='+(movie['originalTitle'].replace(/ /g, '-')).toLowerCase(),
+            search: '?name='+(movieName.replace(/ /g, '-')).toLowerCase(),
             state: { movie: movie }
         })
     }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Icon, Image, Button, Grid, Divider, Header} from "semantic-ui-react";
-import presentationsService from '../../../services/presentationsService';
+import presentationsService from '../../../services/presentationService';
 import movieService from '../../../services/movieService';
 import TopMenu from "../../menus/public/TopMenu";
 import { CART_COOKIE } from '../../../constants';

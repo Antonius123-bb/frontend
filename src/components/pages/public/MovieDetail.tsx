@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Image, Button, Grid, List, Divider, Message, Popup} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
-import presentationsService from "../../../services/presentationsService";
+import presentationsService from "../../../services/presentationService";
 import { DateInput } from "semantic-ui-calendar-react";
 
 const m = require('moment');
@@ -105,10 +105,10 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                             <p>FSK: {this.state.movie['fsk']} Filmstart: {m(this.state.movie['filmstart']).format("DD.MM.YYYY")} Laufzeit: {this.state.movie['dauer']} Min.</p>
                             <p style={{'lineHeight': '1.9'}}>{this.state.movie['beschreibung']}</p>
                             <List>
-                                <List.Item>Filstart: {m(this.state.movie['filmstart']).format("DD.MM.YYYY")}</List.Item>
-                                <List.Item>FSK: {this.state.movie['fsk']}</List.Item>
-                                <List.Item>Länge: {this.state.movie['dauer']}</List.Item>
-                                <List.Item>Land: {this.state.movie['land']}</List.Item>
+                                <List.Item key='0'>Filstart: {m(this.state.movie['filmstart']).format("DD.MM.YYYY")}</List.Item>
+                                <List.Item key='1'>FSK: {this.state.movie['fsk']}</List.Item>
+                                <List.Item key='2'>Länge: {this.state.movie['dauer']}</List.Item>
+                                <List.Item key='3'>Land: {this.state.movie['land']}</List.Item>
                             </List>
                         </Grid.Column>
                         <Grid.Column width="6">

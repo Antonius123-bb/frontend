@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Button, Grid, Message, Popup} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
-import presentationsService from '../../../services/presentationsService';
+import presentationsService from '../../../services/presentationService';
 import movieService from '../../../services/movieService';
 import {DateInput} from 'semantic-ui-calendar-react';
 const m = require('moment');

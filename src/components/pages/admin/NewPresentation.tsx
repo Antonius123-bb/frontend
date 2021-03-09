@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Icon, Button, Grid, Dimmer, Loader, Form, Message} from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
-import adminService from "../../../services/adminService";
+import adminService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
 var m = require('moment');
 

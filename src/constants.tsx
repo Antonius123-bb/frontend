@@ -2,7 +2,7 @@
 export const API_URL = 'http://localhost:8081';
 
 //name for user localstorage object
-export const USER_COOKIE_NAME = 'username';
+export const USER_COOKIE_INFO = 'userinfo';
 
 //name for cart localstorage object
 export const CART_COOKIE = 'cart';

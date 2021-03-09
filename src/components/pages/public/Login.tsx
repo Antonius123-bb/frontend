@@ -2,7 +2,7 @@ import * as React from "react";
 import {Button, Form, Grid, Header, Image, Message, Segment, Modal} from "semantic-ui-react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ALL_ADDRESSES, USER_COOKIE_NAME } from '../../../constants';
+import { ALL_ADDRESSES, USER_COOKIE_INFO } from '../../../constants';
 import userService from '../../../services/userService';
 
 interface loginState {
@@ -26,18 +26,22 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
     submitLogin = async (values, formikBag) => {
         if (this.mounted){ formikBag.setSubmitting(true) }        
         try {
-            const response = await userService.login(values.email, values.password);            
+            const response = await userService.validateUser(values.password, values.email);            
 
             if(response) {
-                const user = {
-                    name: response.data.name,
-                    authToken: response.data.authToken
+                //set user name in cookie
+                const userdata = {
+                    firstName: response.data.data.name,
+                    lastName: response.data.data.lastName,
+                    id: response.data.data.id,
+                    email: response.data.data.email
                 }
-                localStorage.setItem(USER_COOKIE_NAME, JSON.stringify(user));
-                const adresses = await userService.getUserinfos();
-                if (adresses.data.adresses && adresses.data.adresses != null){
-                    localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
-                }
+                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(userdata));
+
+                // const adresses = (await userService.getUserById(response.data.id)).addresses;
+                // if (adresses.data.adresses && adresses.data.adresses != null){
+                //     localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
+                // }
 
             }
 

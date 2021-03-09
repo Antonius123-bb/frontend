@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Message, Table } from "semantic-ui-react";
-import presentationsService from "../../../../services/presentationsService";
+import presentationsService from "../../../../services/presentationService";
 import userService from "../../../../services/userService";
 
 //The Orders Container to watch the latest orders

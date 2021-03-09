@@ -6,7 +6,7 @@ import Cart from "../../container/Cart";
 import Login from "../../pages/public/Login";
 import Signup from "../../pages/public/Signup";
 import DefaultModal from "../../pages/public/DefaultModal";
-import { ALL_ADDRESSES, USER_COOKIE_NAME, CART_COOKIE } from "../../../constants";
+import { ALL_ADDRESSES, USER_COOKIE_INFO, CART_COOKIE } from "../../../constants";
 import ProfileRoot from "../../pages/private/Profile/ProfileRoot";
 
 /*
@@ -142,7 +142,7 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
     //handle logout and delete localstorage object
     handleLogout() {
         try {
-            localStorage.removeItem(USER_COOKIE_NAME);
+            localStorage.removeItem(USER_COOKIE_INFO);
             localStorage.removeItem(ALL_ADDRESSES);
             localStorage.removeItem(CART_COOKIE);
             this.props.history.push('/')
@@ -201,9 +201,9 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
                     {/*user icon*/}
                     {/* in case: user logged in */}
-                    {localStorage.getItem(USER_COOKIE_NAME) &&
+                    {localStorage.getItem(USER_COOKIE_INFO) &&
                         <React.Fragment>
-                            <Dropdown text={JSON.parse(localStorage.getItem(USER_COOKIE_NAME)).name} style={{"marginTop": "13px", "color": "white", "marginLeft": "50px"}}>
+                            <Dropdown text={JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).firstName + " " + JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).lastName} style={{"marginTop": "13px", "color": "white", "marginLeft": "50px"}}>
                                 <Dropdown.Menu>
                                     <Dropdown.Item icon='user circle' text='Mein Profil' onClick={() => this.setState({openProfileModal: true})} />
                                     <Dropdown.Divider />
@@ -214,7 +214,7 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                     }
                     
                     {/* in case: user not logged in */}
-                    {!localStorage.getItem(USER_COOKIE_NAME) &&
+                    {!localStorage.getItem(USER_COOKIE_INFO) &&
                         <Icon style={{"marginTop": "10px", "marginLeft": "50px", "color": "#F8EEE7", "cursor": "pointer"}} name='user' size="large" onClick={() => this.setState({openModal: true})}/>
                     }                   
 
@@ -239,8 +239,8 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                     {activePage === 'signup' && !activated &&  
                         <Signup handleUserManagement={this.handleUserManagement}/>
                     }
-                    {activePage === 'checkEmail' && !activated &&  
-                        <DefaultModal handleUserManagement={this.handleUserManagement} success={false} info={true} iconName='mail' description='Bitte durchsuchen Sie Ihr Email Postfach, um Ihren Account zu verifizieren.'/>
+                    {activePage === 'registerSuccess' && !activated &&  
+                        <DefaultModal handleUserManagement={this.handleUserManagement} success={true} info={true} iconName='check' description='Der Account wurde erfolgreich erstellt, sie können sich jetzt einloggen.'/>
                     }
                     {activated &&
                         <DefaultModal handleUserManagement={this.handleUserManagement} success={true} info={false} iconName='check' description='Ihr Account wurde erfolgreich verifiziert. Sie können sich jetzt einloggen.'/>

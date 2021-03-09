@@ -34,11 +34,11 @@ class Signup extends React.Component<{ handleUserManagement: any }, signupState>
         formikBag.setSubmitting(true);
         try {
             //send the request
-            const response = await userService.createAccount(values.email, values.name, values.password);
+            const response = await userService.registerUser(values.firstName, values.lastName, values.password, values.email);
 
             if (response){
                 //send checkEmail to parent component -> opens another modal
-                this.props.handleUserManagement('checkEmail')
+                this.props.handleUserManagement('registerSuccess')
             }
 
             formikBag.setSubmitting(false);
@@ -73,10 +73,14 @@ class Signup extends React.Component<{ handleUserManagement: any }, signupState>
                     email: Yup.string().email()
                         .required('Email ist erforderlich.')
                         .max(254, 'Email darf maximal 254 Zeichen beinhalten.'),
-                    name: Yup.string()
-                        .required('Name ist erforderlich.')
-                        .max(60, 'Name darf maximal 60 Zeichen beinhalten.')
-                        .min(6, 'Name muss aus mindestens 6 Zeichen bestehen.'),
+                    firstName: Yup.string()
+                        .required('Vorname ist erforderlich.')
+                        .max(60, 'Vorname darf maximal 60 Zeichen beinhalten.')
+                        .min(2, 'Vorname muss aus mindestens 2 Zeichen bestehen.'),
+                    lastName: Yup.string()
+                        .required('Nachname ist erforderlich.')
+                        .max(60, 'Nachname darf maximal 60 Zeichen beinhalten.')
+                        .min(2, 'Nachname muss aus mindestens 2 Zeichen bestehen.'),
                     password: Yup.string()
                         .required('Passwort ist erforderlich')
                         .max(50, 'Passwort darf maximal 50 Zeichen beinhalten.')
@@ -120,12 +124,21 @@ class Signup extends React.Component<{ handleUserManagement: any }, signupState>
                                     <Form.Input
                                         fluid icon="pencil alternate"
                                         iconPosition="left"
-                                        placeholder='Name'
-                                        name="name"
+                                        placeholder='Vorname'
+                                        name="firstName"
                                         type="text"
                                         onChange={handleChange}
                                         onBlur={handleBlur}
-                                        error={(errors.name && touched.name) ? { content: errors.name, pointing: 'above' } : false} />
+                                        error={(errors.firstName && touched.firstName) ? { content: errors.firstName, pointing: 'above' } : false} />
+                                    <Form.Input
+                                        fluid icon="pencil alternate"
+                                        iconPosition="left"
+                                        placeholder='Nachname'
+                                        name="lastName"
+                                        type="text"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={(errors.lastName && touched.lastName) ? { content: errors.lastName, pointing: 'above' } : false} />  
                                     <Form.Input
                                         fluid icon="lock"
                                         iconPosition="left"

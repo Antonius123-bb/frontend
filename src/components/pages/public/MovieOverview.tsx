@@ -29,7 +29,6 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
             var movies = await movieService.getAllMovies();
         }
 
-        movies = this.selectMoviesWithValidUrl(movies);
 
         if(this.mounted && movies) {
             this.setState({
@@ -43,12 +42,6 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
     componentWillUnmount() {
         this.mounted = false;
     }
-
-    selectMoviesWithValidUrl = (movies) => {
-
-        console.log("test ", movies)
-        return movies;
-    };
 
     saveToCart(id: any) {
         var cart = {};

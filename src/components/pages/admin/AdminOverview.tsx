@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import * as Yup from 'yup';
 import userService from "../../../services/userService";
 import AdminDetails from "./AdminDetails";
-import { ALL_ADDRESSES, USER_COOKIE_NAME } from "../../../constants";
+import { ALL_ADDRESSES, USER_COOKIE_INFO } from "../../../constants";
 
 //The Admin overview to handle login of a admin and to send unauthorized users away
 
@@ -44,7 +44,8 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
             this.setState({isLoading: true})
         }
         try {
-            const userDetails = await userService.getUserinfos();
+            const userDetails = await userService.getUserById(JSON.parse(USER_COOKIE_INFO).id);
+            console.log("USER ",userDetails)
 
             // User logged in
             if (this.mounted){
@@ -79,7 +80,7 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
         if (this.mounted){ formikBag.setSubmitting(true) }        
         try {
             //login with data that user filled in
-            const response = await userService.login(values.email, values.password);
+            const response = await userService.validateUser(values.password, values.email);
             
             if(response) {
                 //login was successfull, so handle user rights again
