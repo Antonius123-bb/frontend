@@ -36,12 +36,12 @@ interface updatePresentationState {
 
 const roomData = [
     {
-        'roomId': '0',
-        "name": "Saal Nummer 1"
+        'roomId': '6043c266646e955a2881300e',
+        "name": "Saal 1"
     },
     {
-        'roomId': '1',
-        "name": "Saal Nummer 2"
+        'roomId': '6043c5aed6915558208e0f36',
+        "name": "Saal 2"
     }
 ];
 

@@ -1,2 +1,3 @@
 
 -> Daytimeinput nur start, kein end mehr. Duration für den Film und Estimated ende angeben
+-> updatepresentation: keine ids abfragen, sondern zuerst movie und dann jeweilige vorstellung abfragen (uhrezit und datum in dropdown)
