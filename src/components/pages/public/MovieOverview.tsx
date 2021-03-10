@@ -127,7 +127,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                 <Grid style={{'marginLeft':'10px', 'marginRight':'10px', 'minHeight': '800px'}}>
 
                     <Input
-                        style={{'marginTop': '15px', 'maxHeight': '40px'}}
+                        style={{'marginTop': '15px', 'maxHeight': '40px', 'width': '40%'}}
                         loading={this.state.loading} 
                         placeholder='Suche...'
                         onChange={(event, {value}) => this.handleSearch(value)} />
@@ -148,7 +148,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                         {this.state.movies.length > 0 && this.state.movies.map((movie, index) => {
                             return (
                                 <Grid.Column key={index}>
-                                    <Card style={{'minHeight': '750px', 'marginBottom': '30px'}}>
+                                    <Card style={{'minHeight': '800px', 'marginBottom': '30px'}}>
                                         <Image src={movie['posterurl']} wrapped ui={false} />
                                         <Card.Content>
                                         <Card.Header>{movie['originalTitle'] != '' ? movie['originalTitle'] : movie['title']}</Card.Header>

@@ -1,2 +1,2 @@
-- Sterne bei imdb rating in eine Zeile packen (styling probleme)
--> Evtl rating von semativ, dafür nur 5 sterne und dann aufrunden (performance..)
+
+-> Daytimeinput nur start, kein end mehr. Duration für den Film und Estimated ende angeben
