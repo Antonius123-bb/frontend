@@ -65,6 +65,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
             state: { movieId: movie['_id'] }
         })
     }
+    
 
     render() {
 
