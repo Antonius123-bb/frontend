@@ -1,6 +1,6 @@
 # DHBW-Kino
 
-DHBW-Kino is a frontend used to order some movie tickets in SAUE Sem 3.
+DHBW-Kino is a frontend used to order some movie tickets.
 
 ## Installation
 
