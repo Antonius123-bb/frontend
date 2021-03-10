@@ -1,5 +1,9 @@
-- Addresse bei validateUser zurückgeben
+
 - Statuscode überarbeiten
 - Link YT
 - Bilder fixen
+
+
+DONE:
 - bei createPresentation auch basicPrice annehmen
+- Addresse bei validateUser zurückgeben -> tue ich schon!
