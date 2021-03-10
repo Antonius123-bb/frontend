@@ -4,10 +4,13 @@ import TopMenu from "../../menus/public/TopMenu";
 import presentationsService from "../../../services/presentationService";
 import { DateInput } from "semantic-ui-calendar-react";
 import movieService from "../../../services/movieService";
+import moment from "moment";
+import Rating from "@material-ui/lab/Rating";
+
 
 const m = require('moment');
 
-class MovieDetail extends React.Component<{location: any, history: any}, {movie: any, presentations: any, initialPresentations: any, date: string}> {
+class MovieDetail extends React.Component<{location: any, history: any}, {movie: any, presentations: any, initialPresentations: any, date: string, isLoading: boolean}> {
     
     private mounted: boolean = false;
 
@@ -18,24 +21,34 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
             movie: {},
             presentations: [{}],
             initialPresentations: [{}],
-            date : ""
+            date : "",
+            isLoading: false
         };
     }
 
     async componentDidMount() {
-        this.mounted = true;
+        try {
+            this.mounted = true;
+            if (this.mounted){ this.setState({isLoading: true}) };
+    
+            window.scrollTo(0, 0);
+    
+            const getMovie = await movieService.getMovieById(this.props.location.state.movieId);
+    
+            if(this.mounted) {
+                this.setState({
+                    //presentations: getPresentationById.data,
+                    //initialPresentations: getPresentationById.data,
+                    movie: getMovie.data.data,
+                    isLoading: false
+                })
+            }
+            console.log("TEST ", this.state.movie)
+            
 
-        window.scrollTo(0, 0);
+        }
+        catch {
 
-        //const getPresentationById = await presentationsService.getPresentationByMovieId(this.state.movieId);
-        const getMovie = await movieService.getMovieById(this.props.location.state.movieId);
-
-        if(this.mounted) {
-            this.setState({
-                //presentations: getPresentationById.data,
-                //initialPresentations: getPresentationById.data,
-                movie: getMovie.data
-            })
         }
     }
 
@@ -44,53 +57,96 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
     }
 
     async componentDidUpdate(prevProps) {
-        if(prevProps != this.props) {
-            this.setState({
-                movie: this.props.location.state.movie
-            })
-
-            const getPresentationById = await presentationsService.getPresentationByMovieId(this.props.location.state.movie.filmid);
-
-            if(this.mounted) {
+        try {
+            if(prevProps != this.props) {
                 this.setState({
-                    presentations: getPresentationById.data,
-                    initialPresentations: getPresentationById.data,
+                    movie: this.props.location.state.movie,
+                    isLoading: true
                 })
+    
+                const getPresentationById = await presentationsService.getPresentationByMovieId(this.props.location.state.movie.filmid);
+    
+                if(this.mounted) {
+                    this.setState({
+                        presentations: getPresentationById.data,
+                        initialPresentations: getPresentationById.data,
+                        isLoading: false
+                    })
+                }
             }
+
+        }
+        catch {
+
         }
     }
 
     pushToPresentationDetailPage = (presentation) => {
-        this.props.history.push({
-            pathname: '/presentation/'+presentation['vorstellungsid']
-        })
+        try {
+            this.props.history.push({
+                pathname: '/presentation/'+presentation['vorstellungsid']
+            })
+
+        }
+        catch {
+
+        }
     }
 
     
     search = async (date) => {
+        try {
 
-        if(date.length === 0) {
-
-            if(this.mounted) {
-                this.setState({
-                    presentations: this.state.initialPresentations
-                })
-            }
-        } else {
-            let presentations = [];
+            if(date.length === 0) {
     
-            this.state.initialPresentations.map((pres) => {
-                if(m(pres['vorstellungsbeginn']).format("DD-MM-YYYY") === date) {
-                    presentations.push(pres);
+                if(this.mounted) {
+                    this.setState({
+                        presentations: this.state.initialPresentations
+                    })
                 }
-            })
-    
-            if(this.mounted) {
-                this.setState({
-                    presentations: presentations
+            } else {
+                let presentations = [];
+        
+                this.state.initialPresentations.map((pres) => {
+                    if(m(pres['vorstellungsbeginn']).format("DD-MM-YYYY") === date) {
+                        presentations.push(pres);
+                    }
                 })
+        
+                if(this.mounted) {
+                    this.setState({
+                        presentations: presentations
+                    })
+                }
             }
+
         }
+        catch {
+
+        }
+    }
+
+    arrayToString = (inputArray) => {
+        try {
+            if (this.mounted && inputArray){
+            
+                let string = " ";
+                inputArray.map((item, index) => {
+                    if(index === 0){
+                        string = inputArray[index]
+                    } else {
+                        string = string + ", " + inputArray[index]
+                    }
+                })            
+                return string;
+            } else {
+                return "No data"
+            }
+
+        } catch (e) {
+            console.log("ERROR ", e)
+        }
+
     }
 
     render() {
@@ -100,22 +156,29 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         return (
             <React.Fragment>
                 <TopMenu refreshCart={0} history={this.props.history}/>
-
-                <Grid centered style={{'marginLeft':'150px', 'marginRight':'150px'}}>
+                {!this.state.isLoading &&
+                    <Grid centered style={{'marginLeft':'150px', 'marginRight':'150px'}}>
                     <Grid.Row columns="2">
                         <Grid.Column width="10" floated="right">
-                            <h2>{this.state.movie['name']}</h2>
-                            <p>FSK: {this.state.movie['fsk']} Filmstart: {m(this.state.movie['filmstart']).format("DD.MM.YYYY")} Laufzeit: {this.state.movie['dauer']} Min.</p>
-                            <p style={{'lineHeight': '1.9'}}>{this.state.movie['beschreibung']}</p>
+
+                            <h2 style={{'marginBottom': '5%'}}>{this.state.movie['orginalTitle'] != "" ? this.state.movie['title'] : this.state.movie['originalTitle']}</h2>
                             <List>
-                                <List.Item key='0'>Filstart: {m(this.state.movie['filmstart']).format("DD.MM.YYYY")}</List.Item>
-                                <List.Item key='1'>FSK: {this.state.movie['fsk']}</List.Item>
-                                <List.Item key='2'>Länge: {this.state.movie['dauer']}</List.Item>
-                                <List.Item key='3'>Land: {this.state.movie['land']}</List.Item>
+                                <List.Item key='imdb'>IMDd Rating:</List.Item>
+                                <Rating name="half-rating-read" defaultValue={this.state.movie['imdbRating']} precision={0.1} readOnly  max={10} />
+                                <Divider style={{'width': "15%"}} />
+                                <List.Item key='released'>Veröffentlichungsdatum: {m(this.state.movie['releaseDate']).format("DD.MM.YYYY")}</List.Item>
+                                <Divider style={{'width': "15%"}} />
+                                <List.Item key='actors'>{"Schauspieler: " + this.arrayToString(this.state.movie['actors'])}</List.Item>
+                                <Divider style={{'width': "15%"}} />
+                                <List.Item key='duration'>Länge: {moment.duration((this.state.movie['duration'])).asMinutes()} Minuten</List.Item>
+                                <Divider style={{'width': "15%"}} />
+                                <List.Item key='genres'>{"Genres: " + this.arrayToString(this.state.movie['genres'])}</List.Item>
+                                <Divider style={{'width': "15%"}} />
+                                <List.Item key='story' style={{'lineHeight': '1.9'}}>Beschreibung: {this.state.movie['storyline']}</List.Item>
                             </List>
                         </Grid.Column>
                         <Grid.Column width="6">
-                            <Image style={{'float': 'right'}} size="medium" src={this.state.movie['bild_link']}/>
+                            <Image style={{'float': 'right'}} size="medium" src={this.state.movie['posterurl']}/>
                         </Grid.Column>
                     </Grid.Row>
 
@@ -175,11 +238,12 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                     <Grid.Row columns="1">
                         <Grid.Column style={{'textAlign': 'center'}}>
                             <iframe width="700" height="540"
-                            src={"https://www.youtube.com/embed/"+this.state.movie['trailer_youtube_id']+"?autoplay=1"}>
+                            src={"https://www.youtube.com/embed/"+this.state.movie['youtubeurl']+"?autoplay=1"}>
                             </iframe>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                }                
             </React.Fragment>
         )
     }

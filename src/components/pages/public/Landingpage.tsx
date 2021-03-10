@@ -74,7 +74,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
             infinite: true,
             autoplay: true,
             autoplayspreed: 500,
-            slidesToShow: 7,
+            slidesToShow: 5,
             slidesToScroll: 1
           };
 

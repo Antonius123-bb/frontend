@@ -79,7 +79,11 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         }
 
         this.state.initialMovies.map(movie => {
-            const name = movie['originalTitle'].toLowerCase();
+            let movieTitle = movie['originalTitle'];
+            if (movie['originalTitle'] === ''){
+                movieTitle = movie['title']
+            }
+            const name = movieTitle.toLowerCase();
 
             if(name.indexOf(value.toLowerCase()) > -1) {
                 newMovies.push(movie);
