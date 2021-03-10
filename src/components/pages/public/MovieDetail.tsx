@@ -163,8 +163,17 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
 
                             <h2 style={{'marginBottom': '5%'}}>{this.state.movie['orginalTitle'] != "" ? this.state.movie['title'] : this.state.movie['originalTitle']}</h2>
                             <List>
-                                <List.Item key='imdb'>IMDd Rating:</List.Item>
-                                <Rating name="half-rating-read" defaultValue={this.state.movie['imdbRating']} precision={0.1} readOnly max={10} />
+                                <Grid>
+                                <Grid.Row columns={2}>
+                                    <Grid.Column width={3}>
+                                    <List.Item key='imdb'>IMDd Rating: {this.state.movie['imdbRating']}</List.Item>
+                                    </Grid.Column>
+                                    <Grid.Column>
+                                    <Rating name="half-rating-read" defaultValue={this.state.movie['imdbRating']} precision={0.1} readOnly max={10} />
+                                    </Grid.Column>
+                                </Grid.Row>
+                                </Grid>
+                                
                                 <Divider style={{'width': "15%"}} />
                                 <List.Item key='released'>Veröffentlichungsdatum: {m(this.state.movie['releaseDate']).format("DD.MM.YYYY")}</List.Item>
                                 <Divider style={{'width': "15%"}} />

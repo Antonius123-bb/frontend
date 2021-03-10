@@ -148,7 +148,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                         {this.state.movies.length > 0 && this.state.movies.map((movie, index) => {
                             return (
                                 <Grid.Column key={index}>
-                                    <Card style={{'minHeight': '750px', 'marginBottom': '30px'}}>
+                                    <Card style={{'minHeight': '800px', 'marginBottom': '30px'}}>
                                         <Image src={movie['posterurl']} wrapped ui={false} />
                                         <Card.Content>
                                         <Card.Header>{movie['originalTitle'] != '' ? movie['originalTitle'] : movie['title']}</Card.Header>
