@@ -247,7 +247,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                     <Grid.Row columns="1">
                         <Grid.Column style={{'textAlign': 'center'}}>
                             <iframe width="700" height="540"
-                            src={"https://www.youtube.com/embed/"+this.state.movie['youtubeurl']+"?autoplay=1"}>
+                            src={this.state.movie['youtubeurl']+"?autoplay=1"}>
                             </iframe>
                         </Grid.Column>
                     </Grid.Row>
