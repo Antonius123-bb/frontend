@@ -1,1 +1,1 @@
-- Sterne bei imdb rating statt zahl
+- Sterne bei imdb rating in eine Zeile packen (styling probleme)

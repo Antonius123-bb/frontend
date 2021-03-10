@@ -2,6 +2,7 @@ import * as React from "react";
 import {Card, Image, Button, Grid, Input, Message} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
 import movieService from '../../../services/movieService';
+import Rating from "@material-ui/lab/Rating";
 
 class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, withoutTopBar: boolean, history: any}, {refreshCart: number, movies: any, initialMovies: any, loading: boolean, loadMovies: boolean}> {
 
@@ -110,6 +111,12 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         })
     }
 
+    renderStars = (rating) => {
+        return (
+            <Rating name="half-rating-read" defaultValue={rating} precision={0.1} readOnly  max={10} />
+        )
+    }
+
     render() {
 
         return (
@@ -149,7 +156,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                                             {movie['releaseDate'] && new Date(movie['releaseDate']).getFullYear()}
                                         </Card.Meta>
                                         <Card.Meta>
-                                          Rating: {movie['imdbRating']}
+                                          {this.renderStars(movie['imdbRating'])}
                                         </Card.Meta>
                                         <Card.Description>
                                             {movie['storyline'] && movie['storyline'].substring(0,250)}... <a onClick={() => this.pushToMovieDetailPage(movie)}>mehr lesen</a>
