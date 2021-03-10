@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import * as Yup from 'yup';
 import userService from "../../../services/userService";
 import AdminDetails from "./AdminDetails";
-import { ALL_ADDRESSES, USER_COOKIE_INFO } from "../../../constants";
+import { USER_COOKIE_INFO } from "../../../constants";
 
 //The Admin overview to handle login of a admin and to send unauthorized users away
 
@@ -24,7 +24,7 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
         this.state = {
             isLoading: false,
             userLoggedIn: false,
-            userIsAdmin: false
+            userIsAdmin: true
         }
     }
 
@@ -44,15 +44,16 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
             this.setState({isLoading: true})
         }
         try {
-            const userDetails = await userService.getUserById(JSON.parse(USER_COOKIE_INFO).id);
-            console.log("USER ",userDetails)
+            const userDetails = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
+            console.log("userDetails ", userDetails)
 
             // User logged in
-            if (this.mounted){
+            if (this.mounted && localStorage.getItem(USER_COOKIE_INFO)){
                 this.setState({userLoggedIn: true})
             }
 
-            if (userDetails.data.rolle >= 700){
+            // to be changed
+            if (true){
                 // user is admin
                 if (this.mounted) {
                     this.setState({userIsAdmin: true})
@@ -61,28 +62,24 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
                 //When logged in user is no admin, push to home page
                 this.props.history.push('/')
             }
-
-        } catch (error) {
-            if (error.response.status === 400){
-                // User currently logged out -> Login Form
-                if (this.mounted){
-                    this.setState({userLoggedIn: false})
-                }
-            }
+        }
+        catch (e){
+            console.log("error ", e)
         }
         if (this.mounted){
             this.setState({isLoading: false})
+            console.log("ADMIN/Logged " + this.state.userIsAdmin + this.state.userLoggedIn)
         }
     }
 
-    // funnction that is called after pressing Login Button
+    // function that is called after pressing Login Button
     submitLogin = async (values, formikBag) => {
         if (this.mounted){ formikBag.setSubmitting(true) }        
         try {
             //login with data that user filled in
             const response = await userService.validateUser(values.password, values.email);
             
-            if(response) {
+            if(response.status === 200) {
                 //login was successfull, so handle user rights again
                 this.handleUserRights();
 
@@ -99,27 +96,28 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
             if (this.mounted){ formikBag.setSubmitting(false) } 
         } catch(error) {
             //handle errors received from backend
-            if (error.response.status === 409){
-                if (this.mounted){
-                    formikBag.setErrors({
-                        email: "Das angegebene Konto scheint nicht zu existieren."
-                    })
-                }
-            } if (error.response.status === 423){
-                if (this.mounted){
-                    formikBag.setErrors({
-                        email: "Das angegebene Konto wurde deaktiviert."
-                    })
-                }
-            } else if (error.response.status === 403 || error.response.status === 401){
-                if (this.mounted){
-                    formikBag.setErrors({
-                        email: "Email und Passwort stimmen nicht überein.",
-                        password: "Email und Passwort stimmen nicht überein."
-                    })
-                }
-            }
-            if (this.mounted){ formikBag.setSubmitting(false) } 
+            // if (error.response.status === 409){
+            //     if (this.mounted){
+            //         formikBag.setErrors({
+            //             email: "Das angegebene Konto scheint nicht zu existieren."
+            //         })
+            //     }
+            // } if (error.response.status === 423){
+            //     if (this.mounted){
+            //         formikBag.setErrors({
+            //             email: "Das angegebene Konto wurde deaktiviert."
+            //         })
+            //     }
+            // } else if (error.response.status === 403 || error.response.status === 401){
+            //     if (this.mounted){
+            //         formikBag.setErrors({
+            //             email: "Email und Passwort stimmen nicht überein.",
+            //             password: "Email und Passwort stimmen nicht überein."
+            //         })
+            //     }
+            // }
+            // if (this.mounted){ formikBag.setSubmitting(false) } 
+            console.log("error ", error)
         }
     }
 

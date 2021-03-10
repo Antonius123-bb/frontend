@@ -6,7 +6,7 @@ import movieService from "../../../services/movieService";
 import presentationService from "../../../services/presentationService";
 var m = require('moment');
 
-interface newPresentationState {
+interface updatePresentationState {
     isLoading: boolean,
     activeAdminMenuItem: string,
     presentationStart: any,
@@ -14,12 +14,18 @@ interface newPresentationState {
     movieId: string,
     roomId: string,
     basicPrice: number,
-    movies: Array<{
+    presentationIDs: Array<{
         key: string,
         text: string,
         value: string
     }>,
+    selectedPresentationID: string,
     rooms: Array<{
+        key: string,
+        text: string,
+        value: string
+    }>,
+    movies: Array<{
         key: string,
         text: string,
         value: string
@@ -39,7 +45,7 @@ const roomData = [
     }
 ];
 
-class NewPresentation extends React.Component<{}, newPresentationState> {
+class UpdatePresentation extends React.Component<{}, updatePresentationState> {
 
     private mounted: boolean = false;
 
@@ -54,12 +60,18 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
             movieId: null,
             roomId: null,
             basicPrice: 0,
-            movies: [{
+            presentationIDs: [{
                 key: null,
                 text: null,
                 value: null
             }],
+            selectedPresentationID: null,
             rooms: [{
+                key: null,
+                text: null,
+                value: null
+            }],
+            movies: [{
                 key: null,
                 text: null,
                 value: null
@@ -71,58 +83,90 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
 
     async componentDidMount() {
         this.mounted = true;
+        try {
 
-        //get movieData from backend
-        let movieArr = [];
+            const movies = await movieService.getAllMovies();
+            let movieArr = [];
 
-        const movies = await movieService.getAllMovies();
+            const allPresentations = await presentationService.getAllPresentations();
+            console.log("ALL ", allPresentations)
+    
+            const dropDownData = allPresentations.data.data.map(item => ({
+                key: item._id,
+                text: item._id,
+                value: item._id
+            }))
 
-        const roomArr = roomData.map(item => ({
-            key: item.roomId,
-            text: item.name,
-            value: item.roomId
-        }))
-
-        movies.data.data.forEach(mov => {
-            let movieName = mov.originalTitle;
-            if(mov.originalTitle === ""){
-                movieName = mov.title
-            }
-            const obj = {
-                key: mov._id.toString(),
-                text: movieName,
-                value: mov._id.toString()
-            };
-
-            movieArr.push(obj);
-        })
-
-        //set the states with mapped/modified data from backend
-        if(this.mounted) {
-            this.setState({
-                movies: movieArr,
-                rooms: roomArr
+            movies.data.data.forEach(mov => {
+                let movieName = mov.originalTitle;
+                if(mov.originalTitle === ""){
+                    movieName = mov.title
+                }
+                const obj = {
+                    key: mov._id.toString(),
+                    text: movieName,
+                    value: mov._id.toString()
+                };
+    
+                movieArr.push(obj);
             })
+
+            const roomArr = roomData.map(item => ({
+                key: item.roomId,
+                text: item.name,
+                value: item.roomId
+            }))
+
+            if (this.mounted){
+                this.setState({
+                    movies: movieArr,
+                    rooms: roomArr,
+                    presentationIDs: dropDownData
+                })
+            }
+
+        }
+        catch {
+
+        }
+
+    }
+
+    async componentDidUpdate(prevProps, prevState) {
+        if(prevState.selectedPresentationID != this.state.selectedPresentationID) {
+            if (this.mounted){
+                const presentationData = await presentationService.getPresentationById(this.state.selectedPresentationID);
+                console.log("PRE ", presentationData)
+                //missing basicprice and roomid
+                this.setState({
+                    movieId: presentationData.data.data.movieId,
+                    presentationStart: presentationData.data.data.presentationStart,
+                    presentationEnd: presentationData.data.data.presentationEnd,
+                    selectedPresentationID: presentationData.data.data._id
+                })
+            }
         }
     }
+
 
     componentWillUnmount() {
         this.mounted = false;
     }
 
-    //create presentation with data that admin put in form
-    createPresentation = async () => {
+    //update presentation with data that admin put in form
+    updatePresentation = async () => {
         if (this.mounted) { this.setState({successModal: false}) }
         try {
-            await presentationService.createPresentation(
+            await presentationService.updatePresentationById(
+                this.state.selectedPresentationID,
                 this.state.presentationStart,
                 this.state.presentationEnd,
                 this.state.movieId,
                 this.state.roomId,
-                this.state.basicPrice,
+                this.state.basicPrice
             );
 
-            //if creating was successfull -> Handle Messages and reset input fields
+            //if update was successfull -> Handle Messages and reset input fields
             if(this.mounted) {
                 this.setState({
                     error: "",
@@ -131,7 +175,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                     roomId: '',
                     basicPrice: 0,
                     presentationStart: '',
-                    presentationEnd: ''
+                    presentationEnd: '',
+                    selectedPresentationID: null
                 })
             }
         //if creating was unsuccessfull
@@ -153,6 +198,17 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                 </Dimmer>
                 <Grid columns={1}>
                     <Grid.Column>
+                        <Form.Select 
+                            value={this.state.selectedPresentationID}
+                            options={this.state.presentationIDs}
+                            fluid 
+                            label='Präsentation auswählen' 
+                            placeholder='Präsentation ID'
+                            required
+                            search
+                            onChange={(e, {value}) => {this.setState({selectedPresentationID: value.toString()})}}
+                            />
+                        {this.state.selectedPresentationID != null &&
                         <Form.Group widths='equal'>
                             <Form.Select 
                             value={this.state.movieId}
@@ -183,8 +239,9 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                             onChange={(e, {value}) => {this.setState({basicPrice: parseInt(value)})}}
                             />
                         </Form.Group>
+                        }
 
-
+                        {this.state.selectedPresentationID != null &&
                         <Grid.Row> 
                                 <DateTimeInput     
                                     style={{'width': '32.6%'}}
@@ -208,23 +265,24 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                                     minDate={new Date()}
                                     clearable
                                     />                             
-                                <Button onClick={() => this.createPresentation()} color='green' icon labelPosition='left' basic type='submit'
+                                <Button onClick={() => this.updatePresentation()} color='green' icon labelPosition='left' basic type='submit'
                                     disabled={
                                         this.state.presentationStart === '' ||
                                         this.state.presentationEnd === '' ||
                                         this.state.movieId == null ||
+                                        this.state.selectedPresentationID == null ||
                                         this.state.roomId == null ||
                                         this.state.basicPrice <= 0 }>
 
-                                    <Icon name='plus'/>
-                                    Vorstellung anlegen
+                                    <Icon name='edit'/>
+                                    Änderungen speichern
                                 </Button>    
                                 {this.state.successModal &&
                                 <Message 
                                 positive 
                                 style={{"marginTop": "20px"}} 
                                 header="Erfolgreich."
-                                content="Vorstellung wurde erfolgreich angelegt."                             
+                                content="Vorstellung wurde erfolgreich bearbeitet."                             
                                 />
                                 }
                             
@@ -237,7 +295,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                                 />
                                 }                       
                         </Grid.Row>
-
+                        }
 
                     </Grid.Column>
                 </Grid>
@@ -246,8 +304,4 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
     }
 }
 
-export default NewPresentation;
-
-
-
-
+export default UpdatePresentation;

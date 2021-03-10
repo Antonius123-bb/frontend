@@ -1,8 +1,11 @@
-
-- Statuscode überarbeiten
+- Statuscode überarbeiten und messages
+- Admin Rolle / Mitarbieter / Kunde (undbei getUserById bzw validateUser gönnen)
 - Link YT
 - Bilder fixen
-
+- getPreOrders -> Machen wir Vorbestellungen überhaupt?
+- getPresentationsByMovieId
+- updatePresentationById auch Roomid + basicprice annehmen
+- bei gePresentationById auch roomId und basicPrice zurückgeben
 
 DONE:
 - bei createPresentation auch basicPrice annehmen
