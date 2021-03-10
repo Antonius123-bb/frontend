@@ -2,11 +2,17 @@
 - Admin Rolle / Mitarbieter / Kunde (undbei getUserById bzw validateUser gönnen)
 - Link YT
 - Bilder fixen
-- getPreOrders -> Machen wir Vorbestellungen überhaupt?
+
 - getPresentationsByMovieId
-- updatePresentationById auch Roomid + basicprice annehmen
-- bei gePresentationById auch roomId und basicPrice zurückgeben
+
 
 DONE:
 - bei createPresentation auch basicPrice annehmen
 - Addresse bei validateUser zurückgeben -> tue ich schon!
+- bei getPresentationById auch roomId und basicPrice zurückgeben
+
+Not possible:
+- updatePresentationById auch Roomid + basicprice annehmen
+
+Not required:
+- getPreOrders -> Machen wir Vorbestellungen überhaupt?
