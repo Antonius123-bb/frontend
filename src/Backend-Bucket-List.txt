@@ -1,5 +1,10 @@
 - Addresse bei validateUser zurückgeben
-- Statuscode überarbeiten
+- Statuscode überarbeiten und messages
+- Admin Rolle / Mitarbieter / Kunde (undbei getUserById bzw validateUser gönnen)
 - Link YT
 - Bilder fixen
 - bei createPresentation auch basicPrice annehmen
+- getPreOrders -> Machen wir Vorbestellungen überhaupt?
+- getPresentationsByMovieId
+- updatePresentationById auch Roomid + basicprice annehmen
+- bei gePresentationById auch roomId und basicPrice zurückgeben

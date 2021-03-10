@@ -9,7 +9,7 @@ export default {
 
     //get the details of a presentation by his ID
     getPresentationById: (id) : Promise<any> => {
-        return axios.get(API_URL + '/getPresentationById' + id);
+        return axios.get(API_URL + '/getPresentationById/' + id);
     },
 
     bookSeats: (seats, presentationId, userId, payment) : Promise<any> => {
@@ -19,15 +19,15 @@ export default {
     },
     
     //create a new presentation
-    createPresentation: (presentationStart, presentationEnd, movieId, room) : Promise<any> => {
+    createPresentation: (presentationStart, presentationEnd, movieId, room, basicPrice) : Promise<any> => {
         return axios.post(API_URL + '/createPresentation', {
-            presentationStart, presentationEnd, movieId, room
+            presentationStart, presentationEnd, movieId, room, basicPrice
         });
     },
 
-    updatePresentationById: (id, presentationStart, presentationEnd, movieId) : Promise<any> => {
+    updatePresentationById: (id, presentationStart, presentationEnd, movieId, roomId, basicPrice) : Promise<any> => {
         return axios.post(API_URL + '/updatePresentationById', {
-            id, presentationStart, presentationEnd, movieId
+            id, presentationStart, presentationEnd, movieId, roomId, basicPrice
         });
     },
 
@@ -39,6 +39,6 @@ export default {
 
     //to be changed
     getPresentationByMovieId: (id) : Promise<any> => {
-        return axios.get(API_URL + '/getPresentationById' + id);
+        return axios.get(API_URL + '/getPresentationById/' + id);
     },
 }

@@ -1,7 +1,10 @@
 import * as React from "react";
-import {Segment, Menu} from "semantic-ui-react";
+import {Segment, Menu, Icon} from "semantic-ui-react";
+import DeletePresentation from "./DeletePresentation";
 import NewPresentation from "./NewPresentation";
 import PreOrdersAdmin from "./PreOrdersAdmin";
+import UpdatePresentation from "./UpdatePresentation";
+
 
 /*
 * The Admin Container to see not payed orders or create new presentations
@@ -48,13 +51,29 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
                     name='orders'
                     active={activeAdminMenuItem === 'orders'}
                     onClick={this.handleAdminMenuItemClick}>
+                        <Icon name='eye'/>
                         Vorbestellungen einsehen
                     </Menu.Item>
                     <Menu.Item
                     name='presentations'
                     active={activeAdminMenuItem === 'presentations'}
                     onClick={this.handleAdminMenuItemClick}>
+                        <Icon name='plus'/>
                         Vorstellungen anlegen 
+                    </Menu.Item>
+                    <Menu.Item
+                    name='updatePresentation'
+                    active={activeAdminMenuItem === 'updatePresentation'}
+                    onClick={this.handleAdminMenuItemClick}>
+                        <Icon name='edit'/>
+                        Vorstellungen bearbeiten 
+                    </Menu.Item>
+                    <Menu.Item
+                    name='deletePresentation'
+                    active={activeAdminMenuItem === 'deletePresentation'}
+                    onClick={this.handleAdminMenuItemClick}>
+                        <Icon name='trash'/>
+                        Vorstellungen löschen 
                     </Menu.Item>
                 </Menu>
                 <Segment attached='bottom'>  
@@ -64,6 +83,12 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
                     }
                     {activeAdminMenuItem === 'presentations' &&
                         <NewPresentation />
+                    }
+                    {activeAdminMenuItem === 'updatePresentation' &&
+                        <UpdatePresentation />
+                    }
+                    {activeAdminMenuItem === 'deletePresentation' &&
+                        <DeletePresentation />
                     }
                 </Segment>
             </React.Fragment>
