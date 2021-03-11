@@ -25,9 +25,15 @@ export default {
         });
     },
 
-    addAdressByUserId : (id) : Promise<any> => {
-        return axios.post(API_URL + '/addAdressByUserId', {
-            id
+    addAddressByUserId : (id, name, lastName, street, number, plz, city) : Promise<any> => {
+        return axios.post(API_URL + '/addAddressByUserId', {
+            id, data: {name, lastName, street, number, plz, city}
+        });
+    },
+
+    deleteAddressById : (id, addressid) : Promise<any> => {
+        return axios.post(API_URL + '/deleteAddressById', {
+            id, data: {id: addressid}
         });
     }
 }

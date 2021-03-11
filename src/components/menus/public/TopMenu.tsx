@@ -6,7 +6,7 @@ import Cart from "../../container/Cart";
 import Login from "../../pages/public/Login";
 import Signup from "../../pages/public/Signup";
 import DefaultModal from "../../pages/public/DefaultModal";
-import { ALL_ADDRESSES, USER_COOKIE_INFO, CART_COOKIE } from "../../../constants";
+import { USER_COOKIE_INFO, CART_COOKIE, USER_COOKIE_AUTH_CODE } from "../../../constants";
 import ProfileRoot from "../../pages/private/Profile/ProfileRoot";
 
 /*
@@ -143,7 +143,7 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
     handleLogout() {
         try {
             localStorage.removeItem(USER_COOKIE_INFO);
-            localStorage.removeItem(ALL_ADDRESSES);
+            localStorage.removeItem(USER_COOKIE_AUTH_CODE);
             localStorage.removeItem(CART_COOKIE);
             this.props.history.push('/')
         } catch {

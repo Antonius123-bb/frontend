@@ -4,15 +4,13 @@ export const API_URL = 'http://localhost:8081';
 //name for user localstorage object
 export const USER_COOKIE_INFO = 'userinfo';
 
+export const USER_COOKIE_AUTH_CODE = 'userauth';
+
 //name for cart localstorage object
 export const CART_COOKIE = 'cart';
 
 //name for cookie settings localstorage object
 export const COOKIE_VALUE = 'allowedCookies';
-
-//name for adress localstorage object
-export const ALL_ADDRESSES = 'all-addresses';
-
 
 //all anrede options
 export const ANREDE_OPTIONS = [

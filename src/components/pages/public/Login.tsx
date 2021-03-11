@@ -2,7 +2,7 @@ import * as React from "react";
 import {Button, Form, Grid, Header, Image, Message, Segment, Modal} from "semantic-ui-react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ALL_ADDRESSES, USER_COOKIE_INFO } from '../../../constants';
+import { USER_COOKIE_AUTH_CODE, USER_COOKIE_INFO } from '../../../constants';
 import userService from '../../../services/userService';
 
 interface loginState {
@@ -28,9 +28,24 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
         try {
             const response = await userService.validateUser(values.password, values.email);            
 
+            console.log("RESP ", response)
             if(response) {
-                //set user name in cookie
-                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(response.data.data));
+
+                const userInfo = {
+                    addresses: response.data.data.addresses,
+                    email: response.data.data.email,
+                    id: response.data.data.id,
+                    lastName: response.data.data.lastName,
+                    name: response.data.data.name
+                }
+
+                const userAuth = {
+                    authcode: response.data.data.authcode
+                }
+
+                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(userInfo));
+                localStorage.setItem(USER_COOKIE_AUTH_CODE, JSON.stringify(userAuth));
+                
 
                 // const adresses = (await userService.getUserById(response.data.id)).addresses;
                 // if (adresses.data.adresses && adresses.data.adresses != null){

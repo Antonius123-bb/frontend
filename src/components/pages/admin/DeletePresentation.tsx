@@ -178,8 +178,8 @@ class DeletePresentation extends React.Component<{}, deletePresentationState> {
                                 value={this.state.selectedPresentationIDStart}
                                 options={this.state.presentationIDsforSelectedMovieStart}
                                 fluid 
-                                label='Präsentation auswählen' 
-                                placeholder='Präsentation auswählen'
+                                label='Vorstellung auswählen' 
+                                placeholder='Vorstellung auswählen'
                                 required
                                 search
                                 disabled={this.state.presentationIDsforSelectedMovieStart.length === 0 && this.state.selectedMovieIDStart === null}
