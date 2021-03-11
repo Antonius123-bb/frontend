@@ -10,8 +10,24 @@ import { USER_COOKIE_INFO } from "../../../constants";
 interface ladingpageState {
     refreshCart: number,
     movies: [{}],
+    selectedMoviesForSlider: any,
     isLoading: boolean
 }
+
+const selectedMoviesSlid = [
+    "6043bb2a2f3a0f4d64616c0d", 
+    "6043bb2a2f3a0f4d64616c0b",
+    "6043bb2a2f3a0f4d64616c1d", 
+    "6043bb2a2f3a0f4d64616c20",
+    "6043bb2a2f3a0f4d64616c1f", 
+    "6043bb2a2f3a0f4d64616c30",
+    "6043bb2a2f3a0f4d64616be8", 
+    "6043bb2a2f3a0f4d64616bf4",
+    "6043bb2a2f3a0f4d64616be9", 
+    "6043bb2a2f3a0f4d64616bf0",
+    "6043bb2a2f3a0f4d64616bf4", 
+    "6043bb2a2f3a0f4d64616c02"
+];
 
 class Landingpage extends React.Component<{history: any}, ladingpageState> {
     
@@ -23,6 +39,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
         this.state = {
             refreshCart: 0,
             movies: [{}],
+            selectedMoviesForSlider: [{}],
             isLoading: false
         };
     }
@@ -34,12 +51,21 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
 
         if(this.mounted) {
             this.setState({isLoading: true});
-            var movies = await movieServices.getAllMovies();
+            let movies = await movieServices.getAllMovies();
             
+            console.log("TE E", movies)
+
+            let selectedMovies = [];
+            movies.data.data.map((item) => {
+                if(selectedMoviesSlid.includes(item._id)){
+                    selectedMovies.push(item)
+                }
+            })
 
             if(this.mounted && movies) {
                 this.setState({
-                    movies: movies.data.data
+                    movies: movies.data.data,
+                    selectedMoviesForSlider: selectedMovies
                 })
             }
             this.setState({isLoading: false});
@@ -86,7 +112,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
                     <Grid.Row>
                         <Grid.Column>
                             <Slider {...settings} style={{'textAlign': 'center'}}>
-                                {this.state.movies.map((movie, index) => {
+                                {this.state.selectedMoviesForSlider.map((movie, index) => {
                                     return (
                                         <div key={index}>                                            
                                             <Image
