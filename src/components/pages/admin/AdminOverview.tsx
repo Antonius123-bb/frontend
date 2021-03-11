@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import * as Yup from 'yup';
 import userService from "../../../services/userService";
 import AdminDetails from "./AdminDetails";
-import { USER_COOKIE_INFO } from "../../../constants";
+import { USER_COOKIE_AUTH_CODE, USER_COOKIE_INFO } from "../../../constants";
 
 //The Admin overview to handle login of a admin and to send unauthorized users away
 
@@ -45,7 +45,6 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
         }
         try {
             const userDetails = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-            console.log("userDetails ", userDetails)
 
             // User logged in
             if (this.mounted && localStorage.getItem(USER_COOKIE_INFO)){
@@ -68,7 +67,6 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
         }
         if (this.mounted){
             this.setState({isLoading: false})
-            console.log("ADMIN/Logged " + this.state.userIsAdmin + this.state.userLoggedIn)
         }
     }
 
@@ -83,14 +81,20 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
                 //login was successfull, so handle user rights again
                 this.handleUserRights();
 
-                //update cookie
-                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(response.data.data));
+                const userInfo = {
+                    addresses: response.data.data.addresses,
+                    email: response.data.data.email,
+                    id: response.data.data.id,
+                    lastName: response.data.data.lastName,
+                    name: response.data.data.name
+                }
 
-                // const userinfo = await userService.getUserById(JSON.parse(USER_COOKIE_INFO).id);
-                // if (adresses.data.adresses && adresses.data.adresses != null){
-                //     localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
-                // }
+                const userAuth = {
+                    authcode: response.data.data.authcode
+                }
 
+                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(userInfo));
+                localStorage.setItem(USER_COOKIE_AUTH_CODE, JSON.stringify(userAuth));
             }
 
             if (this.mounted){ formikBag.setSubmitting(false) } 

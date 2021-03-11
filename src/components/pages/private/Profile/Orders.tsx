@@ -51,7 +51,6 @@ class Orders extends React.Component<{}, ordersState> {
 
             // const orderDetails = userInfos.data.bestellungen.forEach((item, index) => {
             //     presentationDetails = this.getPresentationDetails(item["vorstellungsid"])
-            //     console.log("TEst ",presentationDetails)
             //     // return (
             //     //     {
 

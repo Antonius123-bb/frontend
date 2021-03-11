@@ -37,8 +37,6 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
         if(this.mounted) {
             this.setState({isLoading: true});
             let movies = await movieServices.getAllMovies();
-            
-            console.log("TE E", movies)
 
             let selectedMovies = [];
             movies.data.data.map((item) => {

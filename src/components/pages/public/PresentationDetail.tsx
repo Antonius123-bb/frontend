@@ -44,8 +44,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, {lo
                 movie: movie
             })
         }
-
-        console.log(this.state.presentation);
     }
 
     componentWillUnmount() {

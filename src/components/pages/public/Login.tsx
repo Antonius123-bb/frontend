@@ -27,8 +27,6 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
         if (this.mounted){ formikBag.setSubmitting(true) }        
         try {
             const response = await userService.validateUser(values.password, values.email);            
-
-            console.log("RESP ", response)
             if(response) {
 
                 const userInfo = {

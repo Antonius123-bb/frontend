@@ -43,9 +43,6 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                     isLoading: false
                 })
             }
-            console.log("TEST ", this.state.movie)
-            
-
         }
         catch {
 
