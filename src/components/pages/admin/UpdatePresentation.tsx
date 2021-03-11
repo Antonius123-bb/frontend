@@ -33,7 +33,8 @@ interface updatePresentationState {
         value: string
     }>,
     error: string,
-    successModal: boolean
+    successModal: boolean,
+    settingVariables: boolean
 }
 
 class UpdatePresentation extends React.Component<{}, updatePresentationState> {
@@ -64,7 +65,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                 value: null
             }],
             error: "",
-            successModal: false
+            successModal: false,
+            settingVariables: false
         }
     }
 
@@ -114,7 +116,9 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
         try {
             if (this.mounted){
                 this.setState({
-                    selectedPresentationIDStart: null
+                    selectedPresentationIDStart: null,
+                    successModal: false,
+                    error: ""
                 })
             }
             const presentations = await presentationService.getPresentationByMovieId(this.state.selectedMovieIDStart);
@@ -137,8 +141,14 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
     }
 
     getRoom = (roomId) => {
-        const room = ROOM_DATA.find(item => item.roomId === roomId);
-        return room.name
+        try {
+            if(!this.state.settingVariables){
+                const room = ROOM_DATA.find(item => item.roomId === roomId);
+                return room.name
+            }
+        } catch (e){
+
+        }
     }
 
     componentWillUnmount() {
@@ -180,6 +190,11 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
 
     setValues = async () => {
         try {
+            if(this.mounted){
+                this.setState({
+                    settingVariables: true
+                })
+            }
             const presentation = await presentationService.getPresentationById(this.state.selectedPresentationIDStart);
             const date = moment(new Date(presentation.data.data.presentationStart)).format("YYYY-MM-DD HH:mm");
             if (this.mounted){
@@ -187,7 +202,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                     movieId: presentation.data.data.movieId,
                     basicPrice: presentation.data.data.basicPrice,
                     roomId: presentation.data.data.roomId,
-                    presentationStart: date.toString()
+                    presentationStart: date.toString(),
+                    settingVariables: false
                 })
             }
 
@@ -240,10 +256,9 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                             onChange={(e, {value}) => {this.setState({movieId: value.toString()})}}
                             />
                             <Form.Input 
-                            value={this.state.roomId}
-                            options={this.state.rooms}
+                            value={this.getRoom(this.state.roomId)}
                             fluid 
-                            label='Saal auswählen' 
+                            label='Saal' 
                             placeholder='Saal'
                             disabled={true}
                             />
@@ -283,26 +298,26 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
 
                                     <Icon name='edit'/>
                                     Änderungen speichern
-                                </Button>    
-                                {this.state.successModal &&
-                                <Message 
-                                positive 
-                                style={{"marginTop": "20px"}} 
-                                header="Erfolgreich."
-                                content="Vorstellung wurde erfolgreich bearbeitet."                             
-                                />
-                                }
-                            
-                                {this.state.error != "" &&
-                                <Message 
-                                negative
-                                color='grey'
-                                header='Fehler.'
-                                content={this.state.error}
-                                />
-                                }                       
+                                </Button>                         
                         </Grid.Row>
                         }
+                        {this.state.successModal &&
+                        <Message 
+                        positive 
+                        style={{"marginTop": "20px"}} 
+                        header="Erfolgreich."
+                        content="Vorstellung wurde erfolgreich bearbeitet."                             
+                        />
+                        }
+                    
+                        {this.state.error != "" &&
+                        <Message 
+                        negative
+                        color='grey'
+                        header='Fehler.'
+                        content={this.state.error}
+                        />
+                        }  
 
                     </Grid.Column>
                 </Grid>
