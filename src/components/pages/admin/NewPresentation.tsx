@@ -4,6 +4,8 @@ import { DateTimeInput } from "semantic-ui-calendar-react";
 import orderService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
 import presentationService from "../../../services/presentationService";
+import { HOURS, ROOM_DATA } from "../../../constants";
+import moment from "moment";
 var m = require('moment');
 
 interface newPresentationState {
@@ -24,19 +26,10 @@ interface newPresentationState {
         value: string
     }>,
     error: string,
-    successModal: boolean
+    successModal: boolean,
+    currentMovieName: string,
+    currentMovieDuration: number
 }
-
-const roomData = [
-    {
-        'roomId': '6043c266646e955a2881300e',
-        "name": "Saal 1"
-    },
-    {
-        'roomId': '6043c5aed6915558208e0f36',
-        "name": "Saal 2"
-    }
-];
 
 class NewPresentation extends React.Component<{}, newPresentationState> {
 
@@ -63,7 +56,9 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                 value: null
             }],
             error: "",
-            successModal: false
+            successModal: false,
+            currentMovieName: '',
+            currentMovieDuration: null
         }
     }
 
@@ -75,7 +70,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
 
         const movies = await movieService.getAllMovies();
 
-        const roomArr = roomData.map(item => ({
+        const roomArr = ROOM_DATA.map(item => ({
             key: item.roomId,
             text: item.name,
             value: item.roomId
@@ -115,8 +110,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
             await presentationService.createPresentation(
                 this.state.presentationStart,
                 this.state.movieId,
-                this.state.roomId,
                 this.state.basicPrice,
+                this.state.roomId
             );
 
             //if creating was successfull -> Handle Messages and reset input fields
@@ -137,29 +132,78 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                     error: e.response.data
                 })
             }
-
-
-
         }
     }
 
     generatePresentationData = async () => {
-        let hours = ['15:00', '15:15', '15:30', '15:45','16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45', '18:00', '18:15', '18:30', '18:45',
-        '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45', '20:00', '20:15', '20:30', '20:45', '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45',
-        '23:00', '23:15', '23:30', '23:45', '24:00', '24:15', '24:30', '24:45', '00:00'];
+        try {
+            this.state.movies.map(async item => {
+                for(let i = 0; i < 20; i++){
+                    let timeString = "2021-0" + Math.floor(Math.random() * 5 + 1) + "-" + Math.floor(Math.random() * 21 + 10) + " " + HOURS[Math.floor(Math.random() * 24 + 1)];
+                    await presentationService.createPresentation(
+                        timeString,
+                        item.key,
+                        ROOM_DATA[Math.floor(Math.random() * 2 + 0)].roomId,
+                        Math.floor(Math.random() * 10 + 6)
+                    );
+                }
+            })
 
-        this.state.movies.map(async item => {
-            for(let i = 0; i < 20; i++){
-                let timeString = "2021-0" + Math.floor(Math.random() * 5 + 1) + "-" + Math.floor(Math.random() * 21 + 10) + " " + hours[Math.floor(Math.random() * 24 + 1)];
-                await presentationService.createPresentation(
-                    timeString,
-                    item.key,
-                    roomData[Math.floor(Math.random() * 2 + 0)].roomId,
-                    Math.floor(Math.random() * 10 + 6)
-                );
-            }
-        })
+        } catch {
+
+        }
     }
+
+    getMovie = async (id) => {
+        try {
+            if(this.mounted){
+                this.setState({isLoading:true})
+            }
+            
+            const movie = await movieService.getMovieById(id);
+            let movieName = movie.data.data.originalTitle;
+            console.log("movie ", movie)
+            if(movie.data.data.originalTitle === ""){
+                movieName = movie.data.data.title
+            }
+            if(this.mounted){
+                this.setState({isLoading:false})
+            }
+            return (
+                <div>
+                    Die Vorstellung für den Film 
+                    {movieName.toString()}
+                </div>
+            )
+        }
+        catch {
+
+        }
+    }
+
+    async componentDidUpdate (prevProps, prevState) {
+        try {
+            if(prevState.movieId != this.state.movieId && this.mounted && this.state.movieId != '') {
+                console.log("componentDidUpdate")
+                
+                const movie = await movieService.getMovieById(this.state.movieId);
+                console.log("movie ", movie)
+                let movieName = movie.data.data.originalTitle;
+                if(movie.data.data.originalTitle === ""){
+                    movieName = movie.data.data.title
+                }
+                if(this.mounted){
+                    this.setState({
+                        currentMovieName: movieName,
+                        currentMovieDuration: moment.duration(movie.data.data.duration).asMinutes()
+                    })
+                }
+            }
+        } catch {
+
+        }
+    }
+
 
     //render form to create presentation
     render() {
@@ -213,7 +257,12 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                                     iconPosition="left"
                                     minDate={new Date()}
                                     clearable
-                                />                           
+                                />
+                                {this.state.presentationStart != '' && !this.state.isLoading &&
+                                    <div style={{'marginBottom': '10px'}}>
+                                        Die geschätzte Dauer für die Vorstellung des Films "{this.state.currentMovieName}" beträgt {this.state.currentMovieDuration} Minuten.
+                                    </div>
+                                }                         
                                 <Button onClick={() => this.createPresentation()} color='green' icon labelPosition='left' basic type='submit'
                                     disabled={
                                         this.state.presentationStart === '' ||

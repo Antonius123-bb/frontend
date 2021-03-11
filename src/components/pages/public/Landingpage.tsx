@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import MovieOverview from './MovieOverview';
 import movieServices from '../../../services/movieService';
 import userService from "../../../services/userService";
-import { USER_COOKIE_INFO } from "../../../constants";
+import { SELECTED_MOVIE_IDS_FOR_SLIDER, USER_COOKIE_INFO } from "../../../constants";
 
 interface ladingpageState {
     refreshCart: number,
@@ -13,21 +13,6 @@ interface ladingpageState {
     selectedMoviesForSlider: any,
     isLoading: boolean
 }
-
-const selectedMoviesSlid = [
-    "6043bb2a2f3a0f4d64616c0d", 
-    "6043bb2a2f3a0f4d64616c0b",
-    "6043bb2a2f3a0f4d64616c1d", 
-    "6043bb2a2f3a0f4d64616c20",
-    "6043bb2a2f3a0f4d64616c1f", 
-    "6043bb2a2f3a0f4d64616c30",
-    "6043bb2a2f3a0f4d64616be8", 
-    "6043bb2a2f3a0f4d64616bf4",
-    "6043bb2a2f3a0f4d64616be9", 
-    "6043bb2a2f3a0f4d64616bf0",
-    "6043bb2a2f3a0f4d64616bf4", 
-    "6043bb2a2f3a0f4d64616c02"
-];
 
 class Landingpage extends React.Component<{history: any}, ladingpageState> {
     
@@ -57,7 +42,7 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
 
             let selectedMovies = [];
             movies.data.data.map((item) => {
-                if(selectedMoviesSlid.includes(item._id)){
+                if(SELECTED_MOVIE_IDS_FOR_SLIDER.includes(item._id)){
                     selectedMovies.push(item)
                 }
             })

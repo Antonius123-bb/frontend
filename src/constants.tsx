@@ -23,6 +23,37 @@ export const ANREDE_OPTIONS = [
     { key: 'p', text: 'Prof. Dr.', value: 'professor_doktor' }
 ]
 
+export const SELECTED_MOVIE_IDS_FOR_SLIDER = [
+    "6043bb2a2f3a0f4d64616c0d", 
+    "6043bb2a2f3a0f4d64616c0b",
+    "6043bb2a2f3a0f4d64616c1d", 
+    "6043bb2a2f3a0f4d64616c20",
+    "6043bb2a2f3a0f4d64616c1f", 
+    "6043bb2a2f3a0f4d64616c30",
+    "6043bb2a2f3a0f4d64616be8", 
+    "6043bb2a2f3a0f4d64616bf4",
+    "6043bb2a2f3a0f4d64616be9", 
+    "6043bb2a2f3a0f4d64616bf0",
+    "6043bb2a2f3a0f4d64616bf4", 
+    "6043bb2a2f3a0f4d64616c02"
+];
+
+export const ROOM_DATA = [
+    {
+        'roomId': '6043c266646e955a2881300e',
+        "name": "Saal 1"
+    },
+    {
+        'roomId': '6043c5aed6915558208e0f36',
+        "name": "Saal 2"
+    }
+];
+
+export const HOURS = [
+    '15:00', '15:15', '15:30', '15:45','16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45', '18:00', '18:15', '18:30', '18:45',
+    '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45', '20:00', '20:15', '20:30', '20:45', '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45',
+    '23:00', '23:15', '23:30', '23:45', '24:00', '24:15', '24:30', '24:45', '00:00'
+]
 
 //all color options for seat picker
 export const colors = {

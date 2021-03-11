@@ -19,9 +19,9 @@ export default {
     },
     
     //create a new presentation
-    createPresentation: (presentationStart, movieId, roomId, basicPrice) : Promise<any> => {
+    createPresentation: (presentationStart, movieId, basicPrice, roomId ) : Promise<any> => {
         return axios.post(API_URL + '/createPresentation', {
-            presentationStart, movieId, roomId, basicPrice
+            presentationStart, movieId, basicPrice, roomId
         });
     },
 
