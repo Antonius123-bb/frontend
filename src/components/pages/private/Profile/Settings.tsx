@@ -11,9 +11,6 @@ import { DisableValuesPropTypes } from "semantic-ui-calendar-react/dist/types/in
 interface settingsState {
     isLoading: boolean,
     userdata: {},
-    openDeleteAccountModal: boolean,
-    openConfirmEmailModal: boolean,
-    currentPassword: string,
     openSuccessModal: string,
     isLoadingPassword: boolean
 }
@@ -28,9 +25,6 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
         this.state = {
             isLoading: false,
             userdata: this.props.userdata,
-            openDeleteAccountModal: false,
-            openConfirmEmailModal: false,
-            currentPassword: '',
             openSuccessModal: '',
             isLoadingPassword: false
         }
@@ -54,75 +48,61 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
         }
     }
 
-    //function to set a new email in databasa
-    updateEmail = async (values, formikBag) => {
-        // try {           
-        //     const response = await userService.changeEmailRequest(values.currentPassword, values.email);
-        //     if (this.mounted){ this.setState({openConfirmEmailModal: true}) }
-        // } catch (error){
-        //     if (error.response.status === 401){
-        //         formikBag.setErrors({
-        //             currentPassword: "Das eingegebene Passwort ist falsch."
-        //         })
-        //     };
-        // }
-    }
-
-    //function to change the name in database
-    updateName = async (values, formikBag) => {
-        // if (this.mounted){ this.setState({openSuccessModal: ''}) }
-        // try {
-        //     let firstAndLastName = values.name.split(" ");
-
-        //     await userService.updateUserById({name: firstAndLastName[0], lastName: firstAndLastName[1]}, JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-
-        //     const userInfo = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-
-        //     if(this.mounted) {
-        //         this.setState({
-        //             userdata: userInfo.data,
-        //             currentPassword: '', 
-        //             openSuccessModal: 'Name'
-        //         })
-        //     }
-        // } catch (e){
-        // }
-
-    }
-
     submitProfileInfoForm = async (values,formikBag) => {
         if (this.mounted){ this.setState({isLoading: true, openSuccessModal: ''}) }
         try {
             //no changes 
-            if (this.state.userdata['name'] === values.name && this.state.userdata['email'] === values.email){
+            if (this.state.userdata['name'] === values.name && this.state.userdata['email'] === values.email && this.state.userdata['lastName'] === values.lastName){
                 //show errors in form
                 formikBag.setErrors({
                     email: "Es wurde keine Änderung an der Email vorgenommen.",
-                    name: "Es wurde keine Änderung an dem Namen vorgenommen."
+                    name: "Es wurde keine Änderung an dem Vornamen vorgenommen.",
+                    lastName: "Es wurde keine Änderung an dem Nachnamen vorgenommen."
                 })
             } 
+            else {
+                const addresses = JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).addresses;
+                const id = JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id;
+                const response = await userService.updateUserById(
+                    values.name, 
+                    values.lastName, 
+                    values.email, 
+                    addresses, 
+                    id
+                )
+                let obj = {
+                    addresses: addresses,
+                    email: values.email,
+                    id: id,
+                    lastName: values.lastName,
+                    name: values.name
+                }
 
-            //email and name changes
-            else if (this.state.userdata['name'] != values.name && this.state.userdata['email'] != values.email){
+                localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(obj));
 
-                //update name, then email
-                this.updateName(values, formikBag);
-                this.updateEmail(values, formikBag);
+                let messageString = '';
+                let nameChanged = this.state.userdata['name'] != values.name;
+                let emailChanged = this.state.userdata['email'] != values.email;
+                let lastNameChanged = this.state.userdata['lastName'] != values.lastName;
 
-            }
-
-            //only name changes
-            else if (this.state.userdata['name'] != values.name && this.state.userdata['email'] === values.email){
-
-                //update name
-                this.updateName(values, formikBag);
-            }
-
-            //only email changes
-            else if (this.state.userdata['name'] === values.name && this.state.userdata['email'] != values.email){
+                if(nameChanged && emailChanged && lastNameChanged){
+                    messageString =  "Vorname, Nachname und Email";
+                } else if (nameChanged && emailChanged && !lastNameChanged){
+                    messageString =  "Vorname und Email";
+                } else if (nameChanged && !emailChanged && lastNameChanged){
+                    messageString =  "Vorname und Nachname";
+                } else if (!nameChanged && emailChanged && lastNameChanged){
+                    messageString =  "Nachname und Email";
+                } else if (!nameChanged && !emailChanged && lastNameChanged){
+                    messageString =  "Nachname";
+                } else if (nameChanged && !emailChanged && !lastNameChanged){
+                    messageString =  "Vorname";
+                } else if (!nameChanged && emailChanged && !lastNameChanged){
+                    messageString =  "Email";
+                }
                 
-                //update Email
-                this.updateEmail(values, formikBag);
+                if (this.mounted){ this.setState({isLoadingPassword: false, userdata: JSON.parse(localStorage.getItem(USER_COOKIE_INFO)), openSuccessModal: messageString}) };
+                formikBag.resetForm();
             }
 
             if (this.mounted){ this.setState({isLoading: false}) }
@@ -134,68 +114,30 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
     }
 
     changePasswordForm = async (values, formikBag) => {
-        // if (this.mounted){ this.setState({isLoadingPassword: true, openSuccessModal: ''}) }
-        // try {
-        //     const response = await userService.changePassword(values.currentPassword, values.newPassword);
-
-        //     if (this.mounted){ this.setState({isLoadingPassword: false, openSuccessModal: 'Passwort'}) }
-        //     formikBag.resetForm();
-        // }
-        // catch (error){
-        //     if(error.response.status === 401){
-        //         formikBag.setErrors({
-        //             currentPassword: "Das angegebene Passwort ist falsch."
-        //         })
-        //     }
-        //     if (this.mounted){ this.setState({isLoadingPassword: false}) }
-        // }
-    }
-
-    deleteAccountPermanently = async (values, formikBag) => {
-        // if (this.mounted){
-        //     try {                
-        //         await userService.deactivateAccount(values.password);
-        //         this.setState({openDeleteAccountModal: false});
-        //         this.props.closeModal();
-        //         localStorage.removeItem(USER_COOKIE_NAME);
-        //         this.props.history.push('/');                
-        //     } catch (error){
-        //         if (error.response.status === 404){
-        //             if (this.mounted){
-        //                 formikBag.setErrors({
-        //                     password: "Das eingegebene Passwort ist falsch."
-        //                 })
-        //             }
-        //         }
-        //     }
-        // }
-    }
-
-    verifyEmailChange = async (values, formikBag) => {
-        // try {
-        //     await userService.changeEmailConfirm(values.oldEmailCode, values.newEmailCode);
-
-        //     const userInfo = await userService.getUserinfos();
-
-        //     if(this.mounted) {
-        //         this.setState({
-        //             userdata: userInfo.data
-        //         })
-        //     }
-        //     if (this.mounted) { this.setState({openConfirmEmailModal: false, currentPassword: '', openSuccessModal: 'Email'}) };
-        // } catch (error){
-        //     if (error.response.status === 409){
-        //         if(error.response.data.includes("neu")){
-        //             formikBag.setErrors({
-        //                 newEmailCode: "Der Code für die neue Email ist falsch."
-        //             })
-        //         } else if(error.response.data.includes("alt")){
-        //             formikBag.setErrors({
-        //                 oldEmailCode: "Der Code für die alte Email ist falsch."
-        //             })
-        //         }
-        //     }
-        // }
+        if (this.mounted){ this.setState({isLoadingPassword: true, openSuccessModal: ''}) }
+        try {
+            if(values.confirmPassword === values.newPassword){
+                const userId = JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id;
+                const response = await userService.changePassword(userId, values.currentPassword, values.newPassword);
+    
+                if (this.mounted){ this.setState({isLoadingPassword: false, openSuccessModal: 'Passwort'}) }
+                formikBag.resetForm();
+            } else {
+                formikBag.setErrors({
+                    confirmPassword: "Die angegebenen Passwörter stimmen nicht überein.",
+                    newPassword: "Die angegebenen Passwörter stimmen nicht überein."
+                })
+                if (this.mounted){ this.setState({isLoadingPassword: false}) }
+            }
+        }
+        catch (error){
+            if(error.response.status === 401){
+                formikBag.setErrors({
+                    currentPassword: "Das angegebene Passwort ist falsch."
+                })
+            }
+            if (this.mounted){ this.setState({isLoadingPassword: false}) }
+        }
     }
     
     render() {
@@ -213,16 +155,15 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
                             <Card.Content>
                                 <Formik
                                     initialValues={{
-                                        currentPassword: this.state.currentPassword,
                                         name: this.state.userdata['name'],
+                                        lastName: this.state.userdata['lastName'],
                                         email: this.state.userdata['email'],
                                     }}
                                     validationSchema= {Yup.object().shape({
-                                        currentPassword: Yup.string()
-                                            .required('Passwort ist erforderlich.')
-                                            .min(9, 'Passwort muss aus mindestens 9 Zeichen bestehen.'),
                                         name: Yup.string()
-                                            .required('Name ist erforderlich.'),
+                                            .required('Vorname ist erforderlich.'),
+                                        lastName: Yup.string()
+                                                .required('Nachname ist erforderlich.'),
                                         email: Yup.string()
                                             .required('Email ist erforderlich.')
                                             .email('Email ist nicht korrekt.'),
@@ -236,22 +177,21 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
                                                 <Loader inverted content='Lädt' />
                                             </Dimmer>
                                             <Form.Input 
-                                                label='Aktuelles Passwort'
-                                                placeholder='Aktuelles Passwort'
-                                                value={values.currentPassword}
-                                                name="currentPassword" 
-                                                type="password"
-                                                onChange={handleChange} 
-                                                onBlur={handleBlur}
-                                                error={(errors.currentPassword && touched.currentPassword) ? { content: errors.currentPassword, pointing: 'above' } : false}/>
-                                            <Form.Input 
-                                                label='Name'
+                                                label='Vorname'
                                                 value={values.name}
                                                 name="name" 
                                                 type="text"
                                                 onChange={handleChange} 
                                                 onBlur={handleBlur}
                                                 error={(errors.name && touched.name) ? { content: errors.name, pointing: 'above' } : false}/>
+                                            <Form.Input 
+                                                label='Nachname'
+                                                value={values.lastName}
+                                                name="lastName" 
+                                                type="text"
+                                                onChange={handleChange} 
+                                                onBlur={handleBlur}
+                                                error={(errors.lastName && touched.lastName) ? { content: errors.lastName, pointing: 'above' } : false}/>
                                             <Form.Input 
                                                 label='Email'
                                                 value={values.email}
@@ -330,109 +270,16 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
                             </Card.Content>
                         </Card>
                         </Card.Group>
-                        <Card centered style={{'marginTop': '40px'}}>
-                            <Button onClick={() => this.setState({openDeleteAccountModal: true})}>
-                                Konto deaktivieren
-                            </Button>
-                        </Card>
                     </Grid.Column>
                     <Grid.Column computer={1}></Grid.Column>
                 </Grid.Row>
-                {(this.state.openSuccessModal === "Name" || this.state.openSuccessModal === "Email" || this.state.openSuccessModal === "Passwort" || this.state.openSuccessModal === "Name und Email") &&
+                {(this.state.openSuccessModal != '') &&
                 <Grid.Row>
                     <Message success style={{"marginTop": "20px"}} >
-                        {this.state.openSuccessModal} {this.state.openSuccessModal === "Name und Email" ? "wurden" : "wurde"} erfolgreich geändert.
+                        {this.state.openSuccessModal} erfolgreich geändert.
                     </Message>
                 </Grid.Row>
                 }
-
-                <Modal open={this.state.openDeleteAccountModal} onClose={() => this.setState({openDeleteAccountModal: false})} closeIcon>
-                    <Modal.Header>
-                        Konto deaktivieren
-                    </Modal.Header>
-                    <Modal.Content>
-                        Verifizieren Sie sich mit ihrem Passwort, um das Konto zu deaktivieren.
-                        <br/><br/>
-                        <Formik
-                            initialValues={{
-                                password: '',
-                            }}
-                            validationSchema= {Yup.object().shape({
-                                password: Yup.string()
-                                    .required('Passwort ist erforderlich.')
-                                    .min(9, 'Passwort muss aus mindestens 9 Zeichen bestehen.')
-                            })}
-                            onSubmit={this.deleteAccountPermanently}
-                            enableReinitialize
-                        >
-                            {({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => (
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Input 
-                                        placeholder='Passwort eingeben'
-                                        value={values.password}
-                                        name="password" 
-                                        type="password"
-                                        onChange={handleChange} 
-                                        onBlur={handleBlur}
-                                        error={(errors.password && touched.password) ? { content: errors.password, pointing: 'above' } : false}
-                                    />
-                                    <Button type='submit'>Konto deaktivieren</Button>
-                                </Form>
-                            )}
-                        </Formik>                        
-                    </Modal.Content>
-                </Modal>
-                <Modal style={{'marginTop': '20px'}} open={this.state.openConfirmEmailModal} onClose={() => this.setState({openConfirmEmailModal: false})} closeIcon>
-                    <Modal.Header>
-                        Email-Änderung bestätigen
-                    </Modal.Header>
-                    <Modal.Content>
-                        Bestätigen Sie ihre Änderung der Email mit den beiden Code, die sie an die alte sowie an die neue Email erhalten haben.
-                        <br/><br/>
-                        <Formik
-                            initialValues={{
-                                oldEmailCode: '',
-                                newEmailCode: ''
-                            }}
-                            validationSchema= {Yup.object().shape({
-                                oldEmailCode: Yup.string()
-                                    .required('Code ist erforderlich.')
-                                    .matches(/^[0-9]{5}$/, 'Code muss aus 5 Zeichen bestehen.'),
-                                newEmailCode: Yup.string()
-                                    .required('Code ist erforderlich.')
-                                    .matches(/^[0-9]{5}$/, 'Code muss aus 5 Zeichen bestehen.')
-                            })}
-                            onSubmit={this.verifyEmailChange}
-                            enableReinitialize
-                        >
-                            {({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => (
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Input 
-                                        label="Code der alten Email eingeben"
-                                        placeholder='Code der alten Email'
-                                        value={values.oldEmailCode}
-                                        name="oldEmailCode" 
-                                        type="number"
-                                        onChange={handleChange} 
-                                        onBlur={handleBlur}
-                                        error={(errors.oldEmailCode && touched.oldEmailCode) ? { content: errors.oldEmailCode, pointing: 'above' } : false}
-                                    />
-                                    <Form.Input 
-                                        label="Code der neuen Email eingeben"
-                                        placeholder='Code der neuen Email'
-                                        value={values.newEmailCode}
-                                        name="newEmailCode" 
-                                        type="number"
-                                        onChange={handleChange} 
-                                        onBlur={handleBlur}
-                                        error={(errors.newEmailCode && touched.newEmailCode) ? { content: errors.newEmailCode, pointing: 'above' } : false}
-                                    />
-                                    <Button type='submit'>Bestätigen</Button>
-                                </Form>
-                            )}
-                        </Formik>                        
-                    </Modal.Content>
-                </Modal>
             </React.Fragment>
         )
     }

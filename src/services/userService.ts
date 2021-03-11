@@ -13,9 +13,9 @@ export default {
         return axios.get(API_URL + '/getUserById/' + id);
     },
 
-    updateUserById : (data, id) : Promise<any> => {
+    updateUserById : (name, lastName, email, addresses, id) : Promise<any> => {
         return axios.post(API_URL + '/updateUserById', {
-            data, id
+            data:{name, lastName, email, addresses}, id
         });
     },
 
@@ -34,6 +34,12 @@ export default {
     deleteAddressById : (id, addressid) : Promise<any> => {
         return axios.post(API_URL + '/deleteAddressById', {
             id, data: {id: addressid}
+        });
+    },
+
+    changePassword : (id, oldPassword, newPassword) : Promise<any> => {
+        return axios.post(API_URL + '/changePassword', {
+            id, data: {oldPassword, newPassword}
         });
     }
 }

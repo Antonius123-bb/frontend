@@ -56,13 +56,10 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
         //handle open profile modal state
         if(prevProps.openProfileModal != this.props.openProfileModal) {
             const user = localStorage.getItem(USER_COOKIE_INFO);
-
             if(user) {
-                const response = await userService.getUserById(JSON.parse(user).id);
-
                 if(this.mounted) {
                     this.setState({
-                        userdata: response.data
+                        userdata: JSON.parse(user)
                     })
                 }
             }

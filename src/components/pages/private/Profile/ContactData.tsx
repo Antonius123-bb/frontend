@@ -250,12 +250,8 @@ class ContactData extends React.Component<{closeContactDataModal: any}, contactD
         try {
             await userService.deleteAddressById(this.state.userDetails["id"], adressId);
             this.getUserDetails();
-            
-            //modify cookie
-            // localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
-
         } catch (e){
-
+            console.log(e)
         }
     } 
 
