@@ -154,40 +154,10 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
         }
     }
 
-    getMovie = async (id) => {
-        try {
-            if(this.mounted){
-                this.setState({isLoading:true})
-            }
-            
-            const movie = await movieService.getMovieById(id);
-            let movieName = movie.data.data.originalTitle;
-            console.log("movie ", movie)
-            if(movie.data.data.originalTitle === ""){
-                movieName = movie.data.data.title
-            }
-            if(this.mounted){
-                this.setState({isLoading:false})
-            }
-            return (
-                <div>
-                    Die Vorstellung für den Film 
-                    {movieName.toString()}
-                </div>
-            )
-        }
-        catch {
-
-        }
-    }
-
     async componentDidUpdate (prevProps, prevState) {
         try {
             if(prevState.movieId != this.state.movieId && this.mounted && this.state.movieId != '') {
-                console.log("componentDidUpdate")
-                
                 const movie = await movieService.getMovieById(this.state.movieId);
-                console.log("movie ", movie)
                 let movieName = movie.data.data.originalTitle;
                 if(movie.data.data.originalTitle === ""){
                     movieName = movie.data.data.title
@@ -258,7 +228,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                                     minDate={new Date()}
                                     clearable
                                 />
-                                {this.state.presentationStart != '' && !this.state.isLoading &&
+                                {this.state.presentationStart != '' && !this.state.isLoading && this.state.movieId != null &&
                                     <div style={{'marginBottom': '10px'}}>
                                         Die geschätzte Dauer für die Vorstellung des Films "{this.state.currentMovieName}" beträgt {this.state.currentMovieDuration} Minuten.
                                     </div>

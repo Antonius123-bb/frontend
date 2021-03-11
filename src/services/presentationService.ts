@@ -25,9 +25,9 @@ export default {
         });
     },
 
-    updatePresentationById: (id, presentationStart, presentationEnd, movieId, roomId, basicPrice) : Promise<any> => {
+    updatePresentationById: (id, presentationStart, movieId) : Promise<any> => {
         return axios.post(API_URL + '/updatePresentationById', {
-            id, presentationStart, presentationEnd, movieId, roomId, basicPrice
+            id, data: {presentationStart, movieId}
         });
     },
 
@@ -39,6 +39,6 @@ export default {
 
     //to be changed
     getPresentationByMovieId: (id) : Promise<any> => {
-        return axios.get(API_URL + '/getPresentationById/' + id);
+        return axios.get(API_URL + '/getPresentationByMovieId/' + id);
     },
 }

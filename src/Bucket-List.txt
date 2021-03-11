@@ -1,2 +1,4 @@
 
 -> updatepresentation: keine ids abfragen, sondern zuerst movie und dann jeweilige vorstellung abfragen (uhrezit und datum in dropdown)
+-> success msg after update pres
+-> Sall id -> name

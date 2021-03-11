@@ -2,7 +2,6 @@ import * as React from "react";
 import {Segment, Menu, Icon} from "semantic-ui-react";
 import DeletePresentation from "./DeletePresentation";
 import NewPresentation from "./NewPresentation";
-import PreOrdersAdmin from "./PreOrdersAdmin";
 import UpdatePresentation from "./UpdatePresentation";
 
 
@@ -24,7 +23,7 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
 
         this.state = {
             isLoading: false,
-            activeAdminMenuItem: 'orders'
+            activeAdminMenuItem: 'presentations'
         }
     }
 
@@ -48,13 +47,6 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
                 {/*menu to switch between orders and create presentations*/}
                 <Menu attached='top' tabular>
                     <Menu.Item
-                    name='orders'
-                    active={activeAdminMenuItem === 'orders'}
-                    onClick={this.handleAdminMenuItemClick}>
-                        <Icon name='eye'/>
-                        Vorbestellungen einsehen
-                    </Menu.Item>
-                    <Menu.Item
                     name='presentations'
                     active={activeAdminMenuItem === 'presentations'}
                     onClick={this.handleAdminMenuItemClick}>
@@ -77,10 +69,7 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
                     </Menu.Item>
                 </Menu>
                 <Segment attached='bottom'>  
-                    {/*handler to return the correct container*/}                              
-                    {activeAdminMenuItem === 'orders' &&
-                        <PreOrdersAdmin/>
-                    }
+                    {/*handler to return the correct container*/}  
                     {activeAdminMenuItem === 'presentations' &&
                         <NewPresentation />
                     }
