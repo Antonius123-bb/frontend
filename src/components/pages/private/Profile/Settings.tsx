@@ -34,12 +34,12 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
     async componentDidMount() {
         this.mounted = true;
 
-        await presentationService.bookSeats(
-            [1],
-            "604ba09cd92a5928e02d1954",
-            JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
-            "bar"
-        )
+        // await presentationService.bookSeats(
+        //     [1],
+        //     "604ba4d3d92a5928e02d1b9f",
+        //     JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
+        //     "bar"
+        // )
     }
 
     componentWillUnmount() {

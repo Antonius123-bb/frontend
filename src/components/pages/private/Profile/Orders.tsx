@@ -43,71 +43,66 @@ class Orders extends React.Component<{}, ordersState> {
     async componentDidMount() {
         this.mounted = true;
 
+        this.generateRecentOrdersWithAdditionalData();
+    }
+
+    generateRecentOrdersWithAdditionalData = async () => {
         try {
             if(this.mounted){
-
                 this.setState({isLoading: true})
-                
+
                 const response = await orderService.getOrdersByUser(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-                let movies = await movieService.getAllMovies();
-                let allPresentations = await presentationsService.getAllPresentations();
 
                 if (response.data.data.length != 0){
-                    const modifiedData = this.generateRecentOrdersWithAdditionalData(movies.data.data, response.data.data, allPresentations.data.data);
-                    this.setState({
-                        modifiedOrderData: modifiedData
+                    
+
+                    let moviesAll = await movieService.getAllMovies();
+                    let PresentationsAll = await presentationsService.getAllPresentations();
+                    const movies = moviesAll.data.data;
+                    const recentOrders = response.data.data;
+                    const allPresentations = PresentationsAll.data.data;
+
+                    recentOrders.map((ord) => {
+                        ord.movieName = '';
+                        ord.movieDuration = 0;
+                        ord.roomName;
+                        ord.presentationStart = ''
                     })
-                    console.log("MOD ", modifiedData)
+            
+                    recentOrders.forEach((pres) => {
+                        let allPresIndex = allPresentations.findIndex(allPres => allPres._id === pres.presentationId);
+                        if (allPresIndex === -1){
+                            this.setState({
+                                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+                            })
+                        } else {
+                            pres.roomName = getRoomNameById(allPresentations[allPresIndex].roomId);
+                            pres.presentationStart = allPresentations[allPresIndex].presentationStart;
+                            let movieIndex = movies.findIndex(mov => mov._id === allPresentations[allPresIndex].movieId);
+                            let movieData = movies[movieIndex];
+                            let movieName;
+                            if (movieData["originalTitle"] != ""){
+                                movieName= movieData["originalTitle"]
+                            } else {
+                                movieName= movieData["title"]
+                            }
+                            pres.movieName = movieName;
+                            pres.movieDuration = movieData["duration"];
+                        }
+                    })
+
+
+                    this.setState({
+                        modifiedOrderData: recentOrders
+                    })
+
                 } else {
-                    console.log("YEET")
                     this.setState({
                         notDataAvailable: true
                     })
                 }
-                this.setState({
-                    isLoading: false
-                })
-            }
 
-        } catch (e){
-            console.log("err ",e)
-        }
-    }
-
-    generateRecentOrdersWithAdditionalData = (movies, recentOrders, allPresentations) => {
-        try {
-            if(this.mounted){
-                this.setState({isLoading: true})
-                recentOrders.map((ord) => {
-                    ord.movieName = '';
-                    ord.movieDuration = 0;
-                    ord.roomName;
-                    ord.presentationStart = ''
-                })
-        
-                recentOrders.forEach((pres) => {
-                    let allPresIndex = allPresentations.findIndex(allPres => allPres._id === pres.presentationId);
-                    if (allPresIndex === -1){
-                        this.setState({
-                            errorMessage: "Ein unbekannter Fehler ist aufgetreten."
-                        })
-                    } else {
-                        pres.roomName = getRoomNameById(allPresentations[allPresIndex].roomId);
-                        pres.presentationStart = allPresentations[allPresIndex].presentationStart
-                        let movieIndex = movies.findIndex(mov => mov._id === allPresentations[allPresIndex].movieId);
-                        let movieData = movies[movieIndex];
-                        let movieName;
-                        if (movieData["originalTitle"] != ""){
-                            movieName= movieData["originalTitle"]
-                        } else {
-                            movieName= movieData["title"]
-                        }
-                        pres.movieName = movieName;
-                        pres.movieDuration = movieData["duration"];
-                    }
-                })
                 this.setState({isLoading: false})
-                return recentOrders;
 
             }
 
@@ -149,7 +144,7 @@ class Orders extends React.Component<{}, ordersState> {
 
                 const response = await orderService.cancelOrder(this.state.orderOnEdit);
                 this.setState({cancelSuccess: true, editMode: false})
-                
+                this.generateRecentOrdersWithAdditionalData();
 
             }
         } catch (e){

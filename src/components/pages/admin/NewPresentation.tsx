@@ -143,8 +143,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                     await presentationService.createPresentation(
                         timeString,
                         item.key,
-                        ROOM_DATA[Math.floor(Math.random() * 2 + 0)].roomId,
-                        Math.floor(Math.random() * 10 + 6)
+                        Math.floor(Math.random() * 10 + 6),
+                        ROOM_DATA[Math.floor(Math.random() * 2 + 0)].roomId
                     );
                 }
             })
