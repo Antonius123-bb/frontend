@@ -24,7 +24,7 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
         this.state = {
             isLoading: false,
             userLoggedIn: false,
-            userIsAdmin: true
+            userIsAdmin: false
         }
     }
 
@@ -44,23 +44,25 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
             this.setState({isLoading: true})
         }
         try {
-            const userDetails = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-
+            let userInfo = localStorage.getItem(USER_COOKIE_INFO);
             // User logged in
-            if (this.mounted && localStorage.getItem(USER_COOKIE_INFO)){
+            if (this.mounted && userInfo){
                 this.setState({userLoggedIn: true})
             }
 
-            // to be changed
-            if (true){
-                // user is admin
-                if (this.mounted) {
-                    this.setState({userIsAdmin: true})
+            // user is admin
+            if(this.mounted){
+                const response = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
+                if (response && response.data.data.admin){
+                    this.setState({
+                        userIsAdmin: response.data.data.admin
+                    })
                 }
-            } else {
-                //When logged in user is no admin, push to home page
-                this.props.history.push('/')
-            }
+                else {
+                    //When logged in user is no admin, push to home page
+                    this.props.history.push('/')
+                }
+            } 
         }
         catch (e){
             console.log("error ", e)

@@ -29,8 +29,23 @@ class Orders extends React.Component<{}, ordersState> {
     async componentDidMount() {
         this.mounted = true;
 
+        try {
+            console.log("1 ",await presentationsService.getAllPresentations())
+            const response = await presentationsService.bookSeats(
+                [1],
+                "60492cf688d97023e4639c53",
+                JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
+                "bar"
+            );
+            console.log("RESP ", response)
+            console.log("2 ",await presentationsService.getAllPresentations())
+
+        } catch {
+
+        }
+
         //get recent orders from user
-        this.getRecentOrders();
+        // this.getRecentOrders();
     }
 
     getPresentationDetails = async (vorstellungsid) => {

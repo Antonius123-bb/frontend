@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { USER_COOKIE_AUTH_CODE, USER_COOKIE_INFO } from '../../../constants';
 import userService from '../../../services/userService';
+import { responsiveFontSizes } from "@material-ui/core";
 
 interface loginState {
 }
@@ -31,6 +32,7 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
 
                 const userInfo = {
                     addresses: response.data.data.addresses,
+                    admin: response.data.data.admin,
                     email: response.data.data.email,
                     id: response.data.data.id,
                     lastName: response.data.data.lastName,

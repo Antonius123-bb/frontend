@@ -17,6 +17,8 @@ import ThankYou from "./components/pages/public/ThankYou";
 
 
 class App extends Component {
+
+  private mounted: boolean = false;
   
   render() {
     return (
@@ -37,6 +39,7 @@ class App extends Component {
                     <Route path="/checkout" component={Checkout}/>
                     <Route path="/privacy" component={Privacy}/>
                     <Route path="/thankyou" component={ThankYou}/>
+                    <Route component={Landingpage} />
                 </Switch>
             </div>
 

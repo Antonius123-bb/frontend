@@ -8,6 +8,7 @@ import Signup from "../../pages/public/Signup";
 import DefaultModal from "../../pages/public/DefaultModal";
 import { USER_COOKIE_INFO, CART_COOKIE, USER_COOKIE_AUTH_CODE } from "../../../constants";
 import ProfileRoot from "../../pages/private/Profile/ProfileRoot";
+import userService from "../../../services/userService";
 
 /*
 * The Top Menu that occures on every page
@@ -24,7 +25,8 @@ interface topMenuState {
     activePage: string,
     activated: boolean,
     dropdownOpen: boolean,
-    openProfileModal: boolean
+    openProfileModal: boolean,
+    userIsAdmin: boolean
 }
 
 class TopMenu extends React.Component<{refreshCart: number, history: any}, topMenuState> {
@@ -44,7 +46,8 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
             activePage: 'login',
             activated: false,
             dropdownOpen: false,
-            openProfileModal: false
+            openProfileModal: false,
+            userIsAdmin: false
         };
     }
 
@@ -54,6 +57,7 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
         if(this.mounted) {
             this.readFromURL();
             this.getCount();
+            this.getAdminInfo();
         }
     }
 
@@ -167,6 +171,22 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
         });
     }
 
+    getAdminInfo = async () => {
+        try {
+            if(this.mounted){
+                const response = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id)
+                console.log("RESP ", response)
+                if (response) {
+                    this.setState({
+                        userIsAdmin: response.data.data.admin
+                    })
+                }
+            }
+        } catch {
+
+        }
+    }
+
     render() {
         const { activeTopMenuItem, activePage, activated } = this.state
 
@@ -207,8 +227,8 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                                 <Dropdown.Menu>
                                     <Dropdown.Item icon='user circle' text='Mein Profil' onClick={() => this.setState({openProfileModal: true})} />
                                     <Dropdown.Divider />
-                                    {//to be changed: JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).isAdmin
-                                    localStorage.getItem(USER_COOKIE_INFO) &&
+                                    {
+                                    this.state.userIsAdmin &&
                                     <React.Fragment>
                                         <Dropdown.Item icon='adn' text='Admin Bereich' onClick={() => this.props.history.push('/admin')} />
                                         <Dropdown.Divider />
