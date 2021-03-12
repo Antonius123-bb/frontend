@@ -126,11 +126,13 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
 
                 <Grid style={{'marginLeft':'10px', 'marginRight':'10px', 'minHeight': '800px'}}>
 
+                    {!this.state.loadMovies &&
                     <Input
                         style={{'marginTop': '15px', 'maxHeight': '40px', 'width': '40%'}}
                         loading={this.state.loading} 
                         placeholder='Suche...'
                         onChange={(event, {value}) => this.handleSearch(value)} />
+                    }
 
                     {this.state.movies.length === 0 && this.state.loadMovies === false && 
                         <Grid.Row columns={5} centered>

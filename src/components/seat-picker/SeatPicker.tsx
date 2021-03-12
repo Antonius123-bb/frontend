@@ -47,79 +47,79 @@ class SeatPicker extends React.Component<{seats: any, setCosts: any, setButton: 
     //methode to book a seat
     bookSeat = (categorie, id) => {
 
-        //get all seats
-        let seats = this.state.seats;
+        // //get all seats
+        // let seats = this.state.seats;
 
-        //find the correct seat
-        const i = seats.sitze.findIndex(x => x.id === id);
+        // //find the correct seat
+        // const i = seats.sitze.findIndex(x => x.id === id);
 
-        //get costs and the cost per seat list
-        let cost = this.state.cost;
-        let costList = this.state.costList;
+        // //get costs and the cost per seat list
+        // let cost = this.state.cost;
+        // let costList = this.state.costList;
 
-        //get all selected seats
-        let selectedSeats = this.state.selectedSeats;
+        // //get all selected seats
+        // let selectedSeats = this.state.selectedSeats;
 
-        //get the variable cost of the selected seat
-        const varCost = this.state.seats.kategorien.find(x => x.name === categorie);
+        // //get the variable cost of the selected seat
+        // const varCost = this.state.seats.kategorien.find(x => x.name === categorie);
 
-        //if seat is selected by user
-        if(seats.sitze[i].booked) {
-            //unselected the seat
-            seats.sitze[i].booked = false;
-            seats.sitze[i].selected = false;
+        // //if seat is selected by user
+        // if(seats.sitze[i].booked) {
+        //     //unselected the seat
+        //     seats.sitze[i].booked = false;
+        //     seats.sitze[i].selected = false;
 
-            //subtract the costs
-            cost = cost - (this.state.seats.basisPreis + varCost.aufpreis);
-            const costIndex = costList.findIndex(x => x.id === seats.sitze[i].id);
-            costList.splice(costIndex, 1);
+        //     //subtract the costs
+        //     cost = cost - (this.state.seats.basisPreis + varCost.aufpreis);
+        //     const costIndex = costList.findIndex(x => x.id === seats.sitze[i].id);
+        //     costList.splice(costIndex, 1);
 
-            //delete seat from the selected seats array
-            const seatIndex = selectedSeats.findIndex(x => x === id);
-            if(seatIndex > -1) {
-                selectedSeats.splice(seatIndex, 1);
-            }
+        //     //delete seat from the selected seats array
+        //     const seatIndex = selectedSeats.findIndex(x => x === id);
+        //     if(seatIndex > -1) {
+        //         selectedSeats.splice(seatIndex, 1);
+        //     }
 
-        } else {
-            //select the seat
-            seats.sitze[i].booked = true;
-            seats.sitze[i].selected = true;
+        // } else {
+        //     //select the seat
+        //     seats.sitze[i].booked = true;
+        //     seats.sitze[i].selected = true;
 
-            //add the costs
-            cost = cost + (this.state.seats.basisPreis + varCost.aufpreis);
+        //     //add the costs
+        //     cost = cost + (this.state.seats.basisPreis + varCost.aufpreis);
 
-            //add seat to the selected seats array
-            selectedSeats.push(id);
+        //     //add seat to the selected seats array
+        //     selectedSeats.push(id);
 
-            //add seat + some information to the detailed costlist
-            let position = {
-                id: seats.sitze[i].id,
-                price: this.state.seats.basisPreis + varCost.aufpreis,
-                category: categorie
-            }
+        //     //add seat + some information to the detailed costlist
+        //     let position = {
+        //         id: seats.sitze[i].id,
+        //         price: this.state.seats.basisPreis + varCost.aufpreis,
+        //         category: categorie
+        //     }
 
-            costList.push(position);
-        }
+        //     costList.push(position);
+        // }
 
-        //set costs in parent component to return them on the right site (on page)
-        this.props.setCosts(cost, costList);
+        // //set costs in parent component to return them on the right site (on page)
+        // this.props.setCosts(cost, costList);
         
-        //set submit button to disabled if no seats are selected
-        if(selectedSeats.length > 0) {
-            this.props.setButton(true, selectedSeats);
-        } else {
-            this.props.setButton(false, selectedSeats);
-        }
+        // //set submit button to disabled if no seats are selected
+        // if(selectedSeats.length > 0) {
+        //     this.props.setButton(true, selectedSeats);
+        // } else {
+        //     this.props.setButton(false, selectedSeats);
+        // }
 
-        //set updated states
-        if(this.mounted) {
-            this.setState({
-                cost: cost,
-                costList: costList,
-                seats: seats,
-                selectedSeats: selectedSeats
-            })
-        }
+        // //set updated states
+        // if(this.mounted) {
+        //     this.setState({
+        //         cost: cost,
+        //         costList: costList,
+        //         seats: seats,
+        //         selectedSeats: selectedSeats
+        //     })
+        // }
     }
 
     render() {

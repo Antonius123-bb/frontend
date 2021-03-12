@@ -145,7 +145,8 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                 {!this.props.withoutTopBar &&
                 <TopMenu refreshCart={this.state.refreshCart} history={this.props.history} />}
 
-                <Grid style={{'marginLeft':'10px', 'marginRight':'10px'}}>
+                {!this.state.isLoading &&
+                    <Grid style={{'marginLeft':'10px', 'marginRight':'10px'}}>
 
                     <DateInput
                     style={{'marginTop': '10px'}}
@@ -180,7 +181,7 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                                     </Grid.Column>
                                     
                                     <Grid.Column style={{'width': '650px', 'height': '250px', 'lineHeight': '2'}}>
-    
+
                                             <h2>{data && (data['originalTitle'] === "" ? data['title'] : data['originalTitle'])}</h2>
                                             <b>Rating: {data && data['imdbRating']}&nbsp;|&nbsp;
                                             {data && moment.duration(data['duration']).asMinutes()}min.</b> <br/>
@@ -214,6 +215,8 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                     })}
 
                 </Grid>
+                }
+                
             </React.Fragment>
         )
     }

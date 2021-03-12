@@ -168,7 +168,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, {lo
                                 <p style={{'fontSize': '20px'}}>{this.mounted && (this.state.movie["storyline"]).split(" Written by")[0]}</p>
                                 <ul style={{'lineHeight': '1.9', 'fontSize': '18px'}}>
                                     <li>Schauspieler: {arrayToString(this.state.movie['actors'])}</li>
-                                    <li>Genres: {arrayToString(this.state.movie['actors'])}</li>
+                                    <li>Genres: {arrayToString(this.state.movie['genres'])}</li>
                                     <li>Länge: {moment.duration(this.state.movie['duration']).asMinutes()} Minuten</li>
                                     <li>Rating: {this.state.movie['imdbRating']}</li>
                                     <li>{this.state.presentation && getRoomNameById(this.state.presentation['roomId'])}</li>
@@ -185,7 +185,8 @@ class PresentationDetail extends React.Component<{match: any, history: any}, {lo
                             <Grid.Column width="10">
                                 <Header style={{'lineHeight': '3'}} as="h3">Bitte wählen Sie Ihre Plätze aus.</Header>
                                 {this.state.presentation != null &&
-                                    <div style={{'borderRadius': '20px', 'marginLeft': '35px', 'width': this.state.presentation.width * 2, 'background': 'grey', 'height': '60px', 'textAlign': 'center'}}>
+                                    // 'width': this.state.presentation.width * 2
+                                    <div style={{'borderRadius': '20px', 'marginLeft': '35px', 'background': 'grey', 'height': '60px', 'textAlign': 'center'}}>
                                         <br/><span style={{'fontSize': '20px', 'color': 'white'}}>Leinwand</span>
                                     </div>
                                 }
