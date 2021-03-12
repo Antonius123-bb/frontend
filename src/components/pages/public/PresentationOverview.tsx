@@ -42,11 +42,9 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
             var presentations = await presentationsService.getAllPresentations();
             var movies = await movieService.getAllMovies();
         }
-        console.log("MOVIES ", movies); console.log("presentations ", presentations)
 
         //proceed the resolved data to generate a usabled strucutre
         const result = await this.generatePresentationData(movies.data.data, presentations.data.data);
-        console.log("RESULT ", result)
 
         //set states with the return
         if(this.mounted && presentations.data) {

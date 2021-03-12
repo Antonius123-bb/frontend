@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import userService from "../../../../services/userService";
 import { USER_COOKIE_INFO } from "../../../../constants";
 import { DisableValuesPropTypes } from "semantic-ui-calendar-react/dist/types/inputs/BaseInput";
+import presentationService from "../../../../services/presentationService";
 
 //Settings of a user to change email, password, name
 
@@ -32,6 +33,13 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
 
     async componentDidMount() {
         this.mounted = true;
+
+        await presentationService.bookSeats(
+            [1],
+            "604ba09cd92a5928e02d1954",
+            JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
+            "bar"
+        )
     }
 
     componentWillUnmount() {

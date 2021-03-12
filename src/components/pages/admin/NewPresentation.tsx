@@ -243,9 +243,9 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                                     <Icon name='plus'/>
                                     Vorstellung anlegen
                                 </Button>  
-                                {/* <Button onClick={() => this.generatePresentationData()} >
+                                <Button onClick={() => this.generatePresentationData()} >
                                     Generate
-                                </Button>   */}
+                                </Button>  
                                 {this.state.successModal &&
                                 <Message 
                                 positive 
