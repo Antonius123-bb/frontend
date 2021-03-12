@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Button, Message, Table } from "semantic-ui-react";
 import { USER_COOKIE_INFO } from "../../../../constants";
+import orderService from "../../../../services/orderService";
 import presentationsService from "../../../../services/presentationService";
 import userService from "../../../../services/userService";
 
@@ -29,7 +30,6 @@ class Orders extends React.Component<{}, ordersState> {
         this.mounted = true;
 
         //get recent orders from user
-        this.getUserInfos();
         this.getRecentOrders();
     }
 
@@ -37,30 +37,16 @@ class Orders extends React.Component<{}, ordersState> {
         return await presentationsService.getPresentationById(vorstellungsid)
     }
 
-    getUserInfos = async () => {
-        return await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-    }
-
-    getRecentOrders = () => {
+    getRecentOrders = async () => {
         if (this.mounted) { this.setState({isLoading: true}) }
         try {
             
-            let presentationDetails;
-
-            const userInfos = this.getUserInfos();
-
-            // const orderDetails = userInfos.data.bestellungen.forEach((item, index) => {
-            //     presentationDetails = this.getPresentationDetails(item["vorstellungsid"])
-            //     // return (
-            //     //     {
-
-            //     //     }
-            //     // )
-            // })
+            const response = await orderService.getOrdersByUser(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
+            console.log("RESP ", response)
 
             if (this.mounted) {
                 this.setState({
-                    //recentOrders: response.data.bestellungen
+                    recentOrders: response.data.data
                 })
             } 
         } catch {
@@ -69,16 +55,20 @@ class Orders extends React.Component<{}, ordersState> {
         if (this.mounted) { this.setState({isLoading: false})}
     } 
 
-    componentWillUnmount() {
-        this.mounted = false;
+    cancelOrderById = async (orderId) => {
+        try {
+            if (this.mounted) {
+
+                const response = await orderService.cancelOrder(orderId);
+
+            }
+        } catch {
+
+        }
     }
 
-    renderPaidButton = (bezahlt) => {
-        return (
-            <Button color={bezahlt ? "green" : "red"}>
-                {bezahlt ? "bezahlt" : "nicht bezahlt"}
-            </Button>
-        )
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     render() {
@@ -93,7 +83,6 @@ class Orders extends React.Component<{}, ordersState> {
                             <Table.HeaderCell width={3}>Name</Table.HeaderCell>
                             <Table.HeaderCell width={5}>Straße</Table.HeaderCell>
                             <Table.HeaderCell width={3}>Postleitzahl</Table.HeaderCell>
-                            <Table.HeaderCell width={2}></Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -103,7 +92,6 @@ class Orders extends React.Component<{}, ordersState> {
                             <Table.Cell width={3}>{item['name']}</Table.Cell>
                             <Table.Cell width={5}>{item['strasse']}</Table.Cell>
                             <Table.Cell width={3}>{item['plz']}</Table.Cell>
-                            <Table.Cell width={2}>{this.renderPaidButton(item['bezahlt'])}</Table.Cell>
                         </Table.Row>
                     ))}
                     </Table.Body>

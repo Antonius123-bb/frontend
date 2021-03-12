@@ -206,7 +206,19 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
                         {this.state.userLoggedIn && this.state.userIsAdmin && !this.state.isLoading &&
                         //user logged in, and admin
                         <React.Fragment>
-                            <Header as="h3">Markieren Sie Bestellungen als bezahlt oder fügen Sie neue Vorstellungen hinzu.</Header>
+                            <Grid>
+                                <Grid.Row >
+                                    <Grid.Column floated="left" width={13}>
+                                        <Header as="h3">Legen Sie neue Vorstellungen an und bearbeiten oder löschen Sie bestehende Vorstellungen.</Header>
+                                    </Grid.Column>
+                                    <Grid.Column width={3} style={{'textAlign': 'right'}}>
+                                        <Button basic icon labelPosition="left" onClick={() => this.props.history.push('/')}>
+                                            <Icon name="home"/>
+                                            Zurück zu Home
+                                        </Button>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
                             <AdminDetails/>
                         </React.Fragment>
                         }

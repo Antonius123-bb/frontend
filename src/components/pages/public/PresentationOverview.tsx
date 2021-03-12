@@ -4,6 +4,8 @@ import TopMenu from "../../menus/public/TopMenu";
 import presentationsService from '../../../services/presentationService';
 import movieService from '../../../services/movieService';
 import {DateInput} from 'semantic-ui-calendar-react';
+import moment from "moment";
+import { arrayToString } from "../../../constants";
 const m = require('moment');
 
 /*
@@ -40,15 +42,17 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
             var presentations = await presentationsService.getAllPresentations();
             var movies = await movieService.getAllMovies();
         }
+        console.log("MOVIES ", movies); console.log("presentations ", presentations)
 
         //proceed the resolved data to generate a usabled strucutre
-        const result = await this.generatePresentationData(movies.data.filme, presentations.data);
+        const result = await this.generatePresentationData(movies.data.data, presentations.data.data);
+        console.log("RESULT ", result)
 
         //set states with the return
         if(this.mounted && presentations.data) {
             this.setState({
-                initialPresentations: presentations.data,
-                initialMovies: movies.data.filme,
+                initialPresentations: presentations.data.data,
+                initialMovies: movies.data.data,
                 presentationsResult: result,
                 isLoading: false
             })
@@ -67,8 +71,7 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
 
         //find the correct presentation for a movie and save it to the movie object in the array
         presentations.forEach((pres) => {
-            let movieI = movies.findIndex(movie => movie.filmid === pres.filmid);
-
+            let movieI = movies.findIndex(movie => movie._id === pres.movieId);
             movies[movieI].presentations.push(pres);
         })
 
@@ -91,8 +94,9 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
 
     //link to the detail page of a presentation -> param is the id of a presentation
     pushToPresentationDetailPage = (presentation) => {
+        console.log("PRESEM ", presentation)
         this.props.history.push({
-            pathname: '/presentation/'+presentation['vorstellungsid']
+            pathname: '/presentation/'+presentation['_id']
         })
     }
 
@@ -117,7 +121,7 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
         
             //loop through the initial list and find the matching ones
             this.state.initialPresentations.map(pres => {
-                if(m(pres['vorstellungsbeginn']).format("DD-MM-YYYY") === date) {
+                if(m(pres['presentationStart']).format("DD-MM-YYYY") === date) {
                     presentations.push(pres);
                 }
             })
@@ -172,31 +176,31 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                             return (
                                 <Grid.Row style={{'marginLeft':'300px', 'height': '300px'}} key={index}>
                                     <Grid.Column style={{'width': '250px', 'height': '250px'}}>
-                                        <img width="250px" height="250px" src={data && data['bild_link']} />
+                                        <img width="250px" height="250px" src={data && data['posterurl']} />
                                     </Grid.Column>
                                     
                                     <Grid.Column style={{'width': '650px', 'height': '250px', 'lineHeight': '2'}}>
     
-                                            <h2>{data && data['name']}</h2>
-                                            <b>FSK: {data && data['fsk']}&nbsp;|&nbsp;
-                                            {data && data['dauer']}min.</b> <br/>
-                                            {data && data['kurze_beschreibung']} <br/>
+                                            <h2>{data && (data['originalTitle'] === "" ? data['title'] : data['originalTitle'])}</h2>
+                                            <b>Rating: {data && data['imdbRating']}&nbsp;|&nbsp;
+                                            {data && moment.duration(data['duration']).asMinutes()}min.</b> <br/>
+                                            {data && arrayToString(data['genres'])} <br/>
 
                                             <div style={{'width': '1000px'}}>
-                                            {data['presentations'] && data['presentations'].length > 0 && data['presentations'].slice(0,4).map((pres, index2) => {
+                                            {data['presentations'] && data['presentations'].length > 0 && data['presentations'].map((pres, index2) => {
                                                 return (
                                                     <div style={{'float': 'left', 'marginRight': '8px'}}>
-                                                        <b><span style={{'fontSize': '18px'}}>{pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).locale('de').format("dddd")},&nbsp; 
-                                                        {pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).format("DD.MM")}</span></b><br/>
+                                                        <b><span style={{'fontSize': '18px'}}>{pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("dddd")},&nbsp; 
+                                                        {pres['presentationStart'] && m(pres['presentationStart']).format("DD.MM")}</span></b><br/>
                                                         {pres['3d'] ?
                                                             <Popup content='3D Vorstellung' position='top center' trigger={
                                                                 <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'youtube'}>
-                                                                    {pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).locale('de').format("HH:mm")}
+                                                                    {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
                                                                 </Button>
                                                             } /> 
                                                             :
                                                             <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'facebook'}>
-                                                                {pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).locale('de').format("HH:mm")}
+                                                                {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
                                                             </Button>
                                                         }
                                                     </div>

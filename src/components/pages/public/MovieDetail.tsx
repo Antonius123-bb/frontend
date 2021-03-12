@@ -6,6 +6,7 @@ import { DateInput } from "semantic-ui-calendar-react";
 import movieService from "../../../services/movieService";
 import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
+import { arrayToString } from "../../../constants";
 
 
 const m = require('moment');
@@ -34,15 +35,18 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
             window.scrollTo(0, 0);
     
             const getMovie = await movieService.getMovieById(this.props.location.state.movieId);
+
+            const getPresentationById = await presentationsService.getPresentationByMovieId(this.props.location.state.movieId);
     
             if(this.mounted) {
                 this.setState({
-                    //presentations: getPresentationById.data,
-                    //initialPresentations: getPresentationById.data,
+                    presentations: getPresentationById.data.data,
+                    initialPresentations: getPresentationById.data.data,
                     movie: getMovie.data.data,
                     isLoading: false
                 })
             }
+            console.log("HALLO ", this.state.presentations)
         }
         catch {
 
@@ -81,7 +85,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
     pushToPresentationDetailPage = (presentation) => {
         try {
             this.props.history.push({
-                pathname: '/presentation/'+presentation['vorstellungsid']
+                pathname: '/presentation/'+presentation['_id']
             })
 
         }
@@ -105,7 +109,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                 let presentations = [];
         
                 this.state.initialPresentations.map((pres) => {
-                    if(m(pres['vorstellungsbeginn']).format("DD-MM-YYYY") === date) {
+                    if(m(pres['presentationStart']).format("DD-MM-YYYY") === date) {
                         presentations.push(pres);
                     }
                 })
@@ -121,29 +125,6 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         catch {
 
         }
-    }
-
-    arrayToString = (inputArray) => {
-        try {
-            if (this.mounted && inputArray){
-            
-                let string = " ";
-                inputArray.map((item, index) => {
-                    if(index === 0){
-                        string = inputArray[index]
-                    } else {
-                        string = string + ", " + inputArray[index]
-                    }
-                })            
-                return string;
-            } else {
-                return "No data"
-            }
-
-        } catch (e) {
-            console.log("ERROR ", e)
-        }
-
     }
 
     render() {
@@ -174,13 +155,13 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                                 <Divider style={{'width': "15%"}} />
                                 <List.Item key='released'>Veröffentlichungsdatum: {m(this.state.movie['releaseDate']).format("DD.MM.YYYY")}</List.Item>
                                 <Divider style={{'width': "15%"}} />
-                                <List.Item key='actors'>{"Schauspieler: " + this.arrayToString(this.state.movie['actors'])}</List.Item>
+                                <List.Item key='actors'>{"Schauspieler: " + arrayToString(this.state.movie['actors'])}</List.Item>
                                 <Divider style={{'width': "15%"}} />
                                 <List.Item key='duration'>Länge: {moment.duration((this.state.movie['duration'])).asMinutes()} Minuten</List.Item>
                                 <Divider style={{'width': "15%"}} />
-                                <List.Item key='genres'>{"Genres: " + this.arrayToString(this.state.movie['genres'])}</List.Item>
+                                <List.Item key='genres'>{"Genres: " + arrayToString(this.state.movie['genres'])}</List.Item>
                                 <Divider style={{'width': "15%"}} />
-                                <List.Item key='story' style={{'lineHeight': '1.9'}}>Beschreibung: {this.state.movie['storyline']}</List.Item>
+                                <List.Item key='story' style={{'lineHeight': '1.9'}}>Beschreibung: {this.mounted && (this.state.movie["storyline"]).split(" Written by")[0]}</List.Item>
                             </List>
                         </Grid.Column>
                         <Grid.Column width="6">
@@ -216,20 +197,25 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                                 />
                             }
 
-                            {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.slice(0,7).map((pres, index) => {
+                            {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.map((pres, index) => {
                                 return (
                                     <div style={{'float': 'left', 'marginRight': '8px'}}>
-                                        <b><span style={{'fontSize': '18px'}}>{pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).locale('de').format("dddd")},&nbsp; 
-                                        {pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).format("DD.MM")}</span></b><br/>
+                                        <b>
+                                            <span style={{'fontSize': '18px'}}>
+                                                {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("dddd")},&nbsp; 
+                                                {pres['presentationStart'] && m(pres['presentationStart']).format("DD.MM")}
+                                            </span>
+                                        </b>
+                                        <br/>
                                         {pres['3d'] ?
                                             <Popup content='3D Vorstellung' position='top center' trigger={
                                                 <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'youtube'}>
-                                                    {pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).locale('de').format("HH:mm")}
+                                                    {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
                                                 </Button>
                                             } /> 
                                             :
                                             <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'facebook'}>
-                                                {pres['vorstellungsbeginn'] && m(pres['vorstellungsbeginn']).locale('de').format("HH:mm")}
+                                                {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
                                             </Button>
                                         }
                                     </div>
@@ -252,6 +238,9 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                 }                
             </React.Fragment>
         )
+    }
+    arrayToString(arg0: any) {
+        throw new Error("Method not implemented.");
     }
 }
 

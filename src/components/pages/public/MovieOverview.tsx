@@ -148,7 +148,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                         {this.state.movies.length > 0 && this.state.movies.map((movie, index) => {
                             return (
                                 <Grid.Column key={index}>
-                                    <Card style={{'minHeight': '800px', 'marginBottom': '30px'}}>
+                                    <Card key={index} style={{'minHeight': '800px', 'marginBottom': '30px'}}>
                                         <Image src={movie['posterurl']} wrapped ui={false} />
                                         <Card.Content>
                                         <Card.Header>{movie['originalTitle'] != '' ? movie['originalTitle'] : movie['title']}</Card.Header>
@@ -159,7 +159,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                                           {this.renderStars(movie['imdbRating'])}
                                         </Card.Meta>
                                         <Card.Description>
-                                            {movie['storyline'] && movie['storyline'].substring(0,250)}... <a onClick={() => this.pushToMovieDetailPage(movie)}>mehr lesen</a>
+                                            {movie['storyline'] && this.mounted && (movie["storyline"]).split(" Written by")[0].substring(0,250)}... <a onClick={() => this.pushToMovieDetailPage(movie)}>mehr lesen</a>
                                         </Card.Description>
                                         </Card.Content>
                                         <Card.Content extra>

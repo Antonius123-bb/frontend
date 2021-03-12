@@ -21,18 +21,17 @@ export const ANREDE_OPTIONS = [
     { key: 'p', text: 'Prof. Dr.', value: 'professor_doktor' }
 ]
 
-export const SELECTED_MOVIE_IDS_FOR_SLIDER = [
-    "6043bb2a2f3a0f4d64616c0d", 
-    "6043bb2a2f3a0f4d64616c0b",
-    "6043bb2a2f3a0f4d64616c1d", 
-    "6043bb2a2f3a0f4d64616c20",
-    "6043bb2a2f3a0f4d64616c1f", 
-    "6043bb2a2f3a0f4d64616c30",
+export const SELECTED_MOVIE_IDS_FOR_SLIDER = [ 
+    "6043bb2a2f3a0f4d64616c1d",
     "6043bb2a2f3a0f4d64616be8", 
-    "6043bb2a2f3a0f4d64616bf4",
+    "6043bb2a2f3a0f4d64616bf4",  
+    "6043bb2a2f3a0f4d64616c30",
     "6043bb2a2f3a0f4d64616be9", 
-    "6043bb2a2f3a0f4d64616bf0",
+    "6043bb2a2f3a0f4d64616c20",
+    "6043bb2a2f3a0f4d64616c0d",
     "6043bb2a2f3a0f4d64616bf4", 
+    "6043bb2a2f3a0f4d64616c1f",
+    "6043bb2a2f3a0f4d64616bf0",
     "6043bb2a2f3a0f4d64616c02"
 ];
 
@@ -46,6 +45,36 @@ export const ROOM_DATA = [
         "name": "Saal 2"
     }
 ];
+
+export function arrayToString (inputArray) {
+    try {
+        if (inputArray){
+        
+            let string = " ";
+            inputArray.map((item, index) => {
+                if(index === 0){
+                    string = inputArray[index]
+                } else {
+                    string = string + ", " + inputArray[index]
+                }
+            })            
+            return string;
+        } else {
+            return "No data"
+        }
+
+    } catch {
+    }
+}
+
+export function getRoomNameById (roomId) {
+    try {
+        const room = ROOM_DATA.find(item => item.roomId === roomId);
+        return room.name
+    } catch {
+
+    }
+}
 
 export const HOURS = [
     '15:00', '15:15', '15:30', '15:45','16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45', '18:00', '18:15', '18:30', '18:45',

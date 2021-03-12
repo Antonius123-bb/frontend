@@ -3,8 +3,9 @@ import {Icon, Image, Button, Grid, Divider, Header} from "semantic-ui-react";
 import presentationsService from '../../../services/presentationService';
 import movieService from '../../../services/movieService';
 import TopMenu from "../../menus/public/TopMenu";
-import { CART_COOKIE } from '../../../constants';
+import { arrayToString, CART_COOKIE, getRoomNameById } from '../../../constants';
 import SeatPicker from "../../seat-picker/SeatPicker";
+import moment from "moment";
 var m = require('moment');
 
 class PresentationDetail extends React.Component<{match: any, history: any}, {loading: boolean, presentation: any, movie: any, cost: number, costList: any, showButton: boolean, selectedSeats: Array<number>}> {
@@ -26,23 +27,34 @@ class PresentationDetail extends React.Component<{match: any, history: any}, {lo
     }
 
     async componentDidMount() {
-        this.mounted = true;
+        try {
+            this.mounted = true;
+            if (this.mounted){
+                this.setState({
+                    loading:true
+                })
+            }
+            window.scrollTo(0, 0);
+    
+            const id = this.props.match.params.id;
+    
+    
+            const getPresentationById = await presentationsService.getPresentationById(id);
+    
+            let movies = await movieService.getAllMovies();
+    
+            const movie = movies.data.data.find(x => x._id === getPresentationById.data.data.movieId);
+    
+            if(this.mounted) {
+                this.setState({
+                    presentation: getPresentationById.data.data,
+                    movie: movie,
+                    loading: false
+                })
+            }
 
-        window.scrollTo(0, 0);
+        } catch {
 
-        const id = this.props.match.params.id;
-
-        const getPresentationById = await presentationsService.getPresentationById(id);
-
-        let movies = await movieService.getAllMovies();
-
-        const movie = movies.data.filme.find(x => x.filmid === getPresentationById.data.filmid);
-
-        if(this.mounted) {
-            this.setState({
-                presentation: getPresentationById.data,
-                movie: movie
-            })
         }
     }
 
@@ -89,123 +101,130 @@ class PresentationDetail extends React.Component<{match: any, history: any}, {lo
 
     pushToCheckout = () => {
 
-        let cart = localStorage.getItem(CART_COOKIE);
+        // let cart = localStorage.getItem(CART_COOKIE);
 
-        let cartArr = JSON.parse(cart);
+        // let cartArr = JSON.parse(cart);
 
-        if(cart === null) {
-            let cartArr2 = [];
-            const cartObj = {
-                selectedSeats: this.state.selectedSeats,
-                cost: this.state.cost,
-                costList: this.state.costList,
-                movieName: this.state.movie.name,
-                movieImage: this.state.movie.bild_link,
-                presentationId: this.props.match.params.id
-            };
-            cartArr2.push(cartObj);
-            localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr2));
-        } else {
-            const cartObj = {
-                selectedSeats: this.state.selectedSeats,
-                cost: this.state.cost,
-                costList: this.state.costList,
-                movieName: this.state.movie.name,
-                movieImage: this.state.movie.bild_link,
-                presentationId: this.props.match.params.id
-            };
-            cartArr.push(cartObj);
-            localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr));
-        }
+        // if(cart === null) {
+        //     let cartArr2 = [];
+        //     const cartObj = {
+        //         selectedSeats: this.state.selectedSeats,
+        //         cost: this.state.cost,
+        //         costList: this.state.costList,
+        //         movieName: this.state.movie.name,
+        //         movieImage: this.state.movie.bild_link,
+        //         presentationId: this.props.match.params.id
+        //     };
+        //     cartArr2.push(cartObj);
+        //     localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr2));
+        // } else {
+        //     const cartObj = {
+        //         selectedSeats: this.state.selectedSeats,
+        //         cost: this.state.cost,
+        //         costList: this.state.costList,
+        //         movieName: this.state.movie.name,
+        //         movieImage: this.state.movie.bild_link,
+        //         presentationId: this.props.match.params.id
+        //     };
+        //     cartArr.push(cartObj);
+        //     localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr));
+        // }
 
-        this.props.history.push({
-            pathname: '/checkout',
-            state: {
-                presentationId: this.props.match.params.id,
-                selectedSeats: this.state.selectedSeats,
-                cost: this.state.cost,
-                costList: this.state.costList,
-                movieName: this.state.movie.name
-            }
-        })
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     state: {
+        //         presentationId: this.props.match.params.id,
+        //         selectedSeats: this.state.selectedSeats,
+        //         cost: this.state.cost,
+        //         costList: this.state.costList,
+        //         movieName: this.state.movie.name
+        //     }
+        // })
     }
 
     render() {
-
-        const { loading } = this.state;
 
         return (
             <React.Fragment>
                 <TopMenu refreshCart={/*this.state.refreshCart*/0} history={this.props.history} />
 
-                <Button style={{'marginLeft':'10px'}} icon labelPosition='left' onClick={() => window.history.back()}>
-                    <Icon name="arrow left"/>
-                    Zurück
-                </Button>
+                {!this.state.loading &&
+                <React.Fragment>
+                    <Button style={{'marginLeft':'10px'}} icon labelPosition='left' basic onClick={() => window.history.back()}>
+                        <Icon name="arrow left"/>
+                        Zurück
+                    </Button>
 
-                <Grid centered style={{'marginLeft':'10px', 'marginTop': '10px', 'marginRight':'10px'}}>
+                    <Grid centered style={{'marginLeft':'10px', 'marginTop': '10px', 'marginRight':'10px'}}>
 
-                    <Grid.Row columns="2">
-                        <Grid.Column width="10">
-                            {this.state.movie && this.state.presentation &&
-                            <React.Fragment>
-                                <p style={{'fontSize': '20px'}}>{m(this.state.presentation['vorstellungsbeginn']).format("HH:mm")} Uhr am {m(this.state.presentation['vorstellungsbeginn']).format("DD.MM.yyyy")}</p>
-                                <Header as="h2">Tickets reservieren für: <span style={{'textDecoration': 'underline'}}>{this.state.movie.name}</span> {this.state.presentation['3d'] ? "(3D)" : ""}</Header>
-                            </React.Fragment>
-                            }
-                            <p style={{'fontSize': '20px'}}>{this.state.movie['kurze_beschreibung']}.</p>
-                            <ul style={{'lineHeight': '1.9', 'fontSize': '18px'}}>
-                                <li>Länge: {this.state.movie['dauer']} Minuten</li>
-                                <li>FSK: {this.state.movie['fsk']}</li>
-                                <li>Saal: {this.state.presentation && this.state.presentation['saalName']}</li>
-                            </ul>
-                        </Grid.Column>
-                        <Grid.Column width="4">
-                            <Image style={{'float': 'center'}} size="medium" src={this.state.movie['bild_link']}/>
-                        </Grid.Column>
-                    </Grid.Row>
+                        <Grid.Row columns="2">
+                            <Grid.Column width="10">
+                                {this.state.movie && this.state.presentation &&
+                                <React.Fragment>
+                                    <p style={{'fontSize': '20px'}}>{m(this.state.presentation['presentationStart']).format("HH:mm")} Uhr am {m(this.state.presentation['presentationStart']).format("DD.MM.yyyy")}</p>
+                                    <Header as="h2">Tickets reservieren für: <span style={{'textDecoration': 'underline'}}>{this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"]}</span> {this.state.presentation['3d'] ? "(3D)" : ""}</Header>
+                                </React.Fragment>
+                                }
+                                <p style={{'fontSize': '20px'}}>{this.mounted && (this.state.movie["storyline"]).split(" Written by")[0]}</p>
+                                <ul style={{'lineHeight': '1.9', 'fontSize': '18px'}}>
+                                    <li>Schauspieler: {arrayToString(this.state.movie['actors'])}</li>
+                                    <li>Genres: {arrayToString(this.state.movie['actors'])}</li>
+                                    <li>Länge: {moment.duration(this.state.movie['duration']).asMinutes()} Minuten</li>
+                                    <li>Rating: {this.state.movie['imdbRating']}</li>
+                                    <li>{this.state.presentation && getRoomNameById(this.state.presentation['roomId'])}</li>
+                                </ul>
+                            </Grid.Column>
+                            <Grid.Column width="4">
+                                <Image style={{'float': 'center'}} size="medium" src={this.state.movie['posterurl']}/>
+                            </Grid.Column>
+                        </Grid.Row>
 
-                    <Divider />
+                        <Divider />
 
-                    <Grid.Row columns="2">
-                        <Grid.Column width="10">
-                            <Header style={{'lineHeight': '3'}} as="h3">Bitte wählen Sie Ihre Plätze aus.</Header>
-                            {this.state.presentation != null &&
-                                <div style={{'borderRadius': '20px', 'marginLeft': '35px', 'width': this.state.presentation.width * 2, 'background': 'grey', 'height': '60px', 'textAlign': 'center'}}>
-                                    <br/><span style={{'fontSize': '20px', 'color': 'white'}}>Leinwand</span>
-                                </div>
-                            }
+                        <Grid.Row columns="2">
+                            <Grid.Column width="10">
+                                <Header style={{'lineHeight': '3'}} as="h3">Bitte wählen Sie Ihre Plätze aus.</Header>
+                                {this.state.presentation != null &&
+                                    <div style={{'borderRadius': '20px', 'marginLeft': '35px', 'width': this.state.presentation.width * 2, 'background': 'grey', 'height': '60px', 'textAlign': 'center'}}>
+                                        <br/><span style={{'fontSize': '20px', 'color': 'white'}}>Leinwand</span>
+                                    </div>
+                                }
+                                
+                            </Grid.Column>
+                            <Grid.Column width="4" verticalAlign="bottom" textAlign="right">
                             
-                        </Grid.Column>
-                        <Grid.Column width="4" verticalAlign="bottom" textAlign="right">
+                            </Grid.Column>
+                        </Grid.Row>
+
+                        <Grid.Row columns="2">
+                            <Grid.Column width="10">
+
+                                {/* {this.state.presentation != null &&
+                                    <SeatPicker seats={this.state.presentation} setCosts={this.setCosts} setButton={this.setButton}/>
+                                } */}
+
+                            </Grid.Column>
+                            <Grid.Column width="4" verticalAlign="bottom" textAlign="right">
+                                {this.state.costList != null && this.state.costList.map((pos, pIndex) => {
+                                    return (
+                                        <p key={pIndex}>{pos['category']} * {pos['times']} = {pos['cost']}€</p>
+                                    )
+                                })}
+
+                                <b><p style={{'fontSize': '20px'}}>Gesamtpreis: {this.state.cost}€ inkl. MwSt.</p></b>
+                                
+                                <Button onClick={() => this.pushToCheckout()} disabled={!this.state.showButton} style={{'marginTop': '20px'}}>Tickets kaufen</Button>
+                            </Grid.Column>
+                        </Grid.Row>
+
+                        <Divider />
                         
-                        </Grid.Column>
-                    </Grid.Row>
+                    </Grid>
 
-                    <Grid.Row columns="2">
-                        <Grid.Column width="10">
-
-                            {this.state.presentation != null &&
-                                <SeatPicker seats={this.state.presentation} setCosts={this.setCosts} setButton={this.setButton}/>
-                            }
-
-                        </Grid.Column>
-                        <Grid.Column width="4" verticalAlign="bottom" textAlign="right">
-                            {this.state.costList != null && this.state.costList.map((pos, pIndex) => {
-                                return (
-                                    <p key={pIndex}>{pos['category']} * {pos['times']} = {pos['cost']}€</p>
-                                )
-                            })}
-
-                            <b><p style={{'fontSize': '20px'}}>Gesamtpreis: {this.state.cost}€ inkl. MwSt.</p></b>
-                            
-                            <Button onClick={() => this.pushToCheckout()} disabled={!this.state.showButton} style={{'marginTop': '20px'}}>Tickets kaufen</Button>
-                        </Grid.Column>
-                    </Grid.Row>
-
-                    <Divider />
-                    
-                </Grid>
+                </React.Fragment>
+                
+                }
+                
             </React.Fragment>
         )
     }

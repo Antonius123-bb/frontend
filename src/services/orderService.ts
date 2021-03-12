@@ -10,10 +10,10 @@ export default {
     },
 
     getOrdersByUser: (userId) : Promise<any> => {
-        return axios.get(API_URL + '/getOrdersByUser' + userId);
+        return axios.get(API_URL + '/getOrdersByUser/' + userId);
     },
 
     getOrderById: (id) : Promise<any> => {
-        return axios.get(API_URL + '/getOrderById' + id);
+        return axios.get(API_URL + '/getOrderById/' + id);
     },
 }

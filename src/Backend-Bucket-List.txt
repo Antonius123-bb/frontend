@@ -1,6 +1,6 @@
 - Statuscode überarbeiten und messages
 - Admin Rolle / Mitarbieter / Kunde (und bei getUserById bzw validateUser gönnen)
-
+- 3d Property in Vorstellungen
 - Bilder fixen
 
 

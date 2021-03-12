@@ -201,12 +201,19 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
                     {/*user icon*/}
                     {/* in case: user logged in */}
-                    {localStorage.getItem(USER_COOKIE_INFO) &&
+                    {localStorage.getItem(USER_COOKIE_INFO) && localStorage.getItem(USER_COOKIE_AUTH_CODE) &&
                         <React.Fragment>
                             <Dropdown text={JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).name + " " + JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).lastName} style={{"marginTop": "13px", "color": "white", "marginLeft": "50px"}}>
                                 <Dropdown.Menu>
                                     <Dropdown.Item icon='user circle' text='Mein Profil' onClick={() => this.setState({openProfileModal: true})} />
                                     <Dropdown.Divider />
+                                    {//to be changed: JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).isAdmin
+                                    localStorage.getItem(USER_COOKIE_INFO) &&
+                                    <React.Fragment>
+                                        <Dropdown.Item icon='adn' text='Admin Bereich' onClick={() => this.props.history.push('/admin')} />
+                                        <Dropdown.Divider />
+                                    </React.Fragment>
+                                    }
                                     <Dropdown.Item icon='sign-out' text='Logout' onClick={() => this.handleLogout()}/>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -238,12 +245,6 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                     }
                     {activePage === 'signup' && !activated &&  
                         <Signup handleUserManagement={this.handleUserManagement}/>
-                    }
-                    {activePage === 'registerSuccess' && !activated &&  
-                        <DefaultModal handleUserManagement={this.handleUserManagement} success={true} info={true} iconName='check' description='Der Account wurde erfolgreich erstellt, sie können sich jetzt einloggen.'/>
-                    }
-                    {activated &&
-                        <DefaultModal handleUserManagement={this.handleUserManagement} success={true} info={false} iconName='check' description='Ihr Account wurde erfolgreich verifiziert. Sie können sich jetzt einloggen.'/>
                     }
                 </Modal>
 
