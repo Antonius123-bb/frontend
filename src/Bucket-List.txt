@@ -1,0 +1,2 @@
+TODO Niklas: Admin Page getAllPresentations mit getPresentationsByUser ersetzen
+Mein Ansatz ist unten in der Datei drin

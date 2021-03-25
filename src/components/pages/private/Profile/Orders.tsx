@@ -275,5 +275,92 @@ class Orders extends React.Component<{}, ordersState> {
 export default Orders;
 
 
+// Mein Ansatz
+// generateRecentOrdersWithAdditionalData = async () => {
+//     try {
+//         if(this.mounted){
+//             this.setState({isLoading: true})
+
+//             const response = await orderService.getOrdersByUser(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
+//             console.log("RS ", response)
+
+//             if (response.data.data.length != 0){
+                
+
+//                 let moviesAll = await movieService.getAllMovies();
+
+//                 let allPresentationsByUser = [];
+                
+//                 response.data.data.map(async item => {
+//                     const allPresByUser = await presentationsService.getPresentationById(item.presentationId);
+//                     // const tempObj = {
+//                     //     basicPrice: allPresByUser.data.data.basicPrice,
+//                     //     movieId: allPresByUser.data.data.movieId,
+//                     //     presentationEnd: allPresByUser.data.data.presentationEnd,
+//                     //     presentationStart: allPresByUser.data.data.presentationStart,
+//                     //     roomId: allPresByUser.data.data.roomId,
+//                     //     seats: allPresByUser.data.data.roomId,
+//                     //     _id: allPresByUser.data.data._id
+//                     // }
+//                     allPresentationsByUser.push(allPresByUser.data.data)
+//                 });
+//                 const movies = moviesAll.data.data;
+//                 const recentOrders = response.data.data;
+//                 const allPresentations = allPresentationsByUser;
+
+//                 recentOrders.map((ord) => {
+//                     ord.movieName = '';
+//                     ord.movieDuration = 0;
+//                     ord.roomName;
+//                     ord.presentationStart = ''
+//                 })
+
+//                 console.log("REC ", recentOrders);
+//                 console.log("ALLPresentations ", allPresentations)
+
+//                 recentOrders.forEach((pres) => {
+//                     console.log("PRES ", pres)
+//                     console.log("TEST ", allPresentations[0])
+//                     // allPresentations.map((allPres) => {
+//                     //     console.log("ALLPRESS ", allPres)
+//                     // })
+//                     let allPresIndex = allPresentations.findIndex(allPres => allPres._id === pres.presentationId);
+//                     if (allPresIndex === -1){
+//                         this.setState({
+//                             errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+//                         })
+//                     } else {
+//                         pres.roomName = getRoomNameById(allPresentations[allPresIndex].roomId);
+//                         pres.presentationStart = allPresentations[allPresIndex].presentationStart;
+//                         let movieIndex = movies.findIndex(mov => mov._id === allPresentations[allPresIndex].movieId);
+//                         let movieData = movies[movieIndex];
+//                         let movieName;
+//                         if (movieData["originalTitle"] != ""){
+//                             movieName= movieData["originalTitle"]
+//                         } else {
+//                             movieName= movieData["title"]
+//                         }
+//                         pres.movieName = movieName;
+//                         pres.movieDuration = movieData["duration"];
+//                     }
+//                 })
 
 
+//                 this.setState({
+//                     modifiedOrderData: recentOrders
+//                 })
+
+//             } else {
+//                 this.setState({
+//                     notDataAvailable: true
+//                 })
+//             }
+
+//             this.setState({isLoading: false})
+
+//         }
+
+//     } catch (e){
+//         console.log("HALLO ", e)
+//     }
+// }
