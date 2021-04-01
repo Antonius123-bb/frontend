@@ -46,6 +46,28 @@ class Orders extends React.Component<{}, ordersState> {
         this.generateRecentOrdersWithAdditionalData();
     }
 
+    getPresentationDetails = async (id) => {
+        try {
+            const pres = await presentationsService.getPresentationById(id);
+            return pres.data.data;
+        } catch{
+            this.setState({
+                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+            })
+        }
+    }
+
+    getMovieDetails = async (id) => {
+        try {
+            const mov = await movieService.getMovieById(id);
+            return mov.data.data;
+        } catch{
+            this.setState({
+                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+            })
+        }
+    }
+
     generateRecentOrdersWithAdditionalData = async () => {
         try {
             if(this.mounted){
@@ -55,88 +77,53 @@ class Orders extends React.Component<{}, ordersState> {
 
                 if (response.data.data.length != 0){
                     
-
-                    let moviesAll = await movieService.getAllMovies();
-                    let PresentationsAll = await presentationsService.getAllPresentations();
-                    const movies = moviesAll.data.data;
                     const recentOrders = response.data.data;
-                    const allPresentations = PresentationsAll.data.data;
 
-                    recentOrders.map((ord) => {
-                        ord.movieName = '';
-                        ord.movieDuration = 0;
-                        ord.roomName;
-                        ord.presentationStart = ''
-                    })
-            
-                    recentOrders.forEach((pres) => {
-                        let allPresIndex = allPresentations.findIndex(allPres => allPres._id === pres.presentationId);
-                        if (allPresIndex === -1){
-                            this.setState({
-                                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
-                            })
+                    let ordersToShow:any = [];
+
+                    for(const ord of recentOrders) {
+
+                        const pres = await this.getPresentationDetails(ord.presentationId);
+                        const mov = await this.getMovieDetails(pres.movieId);
+                    
+                        ord.movieDuration = mov.duration;
+                        ord.presentationStart = pres.presentationStart;
+                        ord.roomName = getRoomNameById(pres.roomId);
+
+                        if (mov.title != ""){
+                            ord.movieName= mov.title
                         } else {
-                            pres.roomName = getRoomNameById(allPresentations[allPresIndex].roomId);
-                            pres.presentationStart = allPresentations[allPresIndex].presentationStart;
-                            let movieIndex = movies.findIndex(mov => mov._id === allPresentations[allPresIndex].movieId);
-                            let movieData = movies[movieIndex];
-                            let movieName;
-                            if (movieData["originalTitle"] != ""){
-                                movieName= movieData["originalTitle"]
-                            } else {
-                                movieName= movieData["title"]
-                            }
-                            pres.movieName = movieName;
-                            pres.movieDuration = movieData["duration"];
+                            ord.movieName= mov.title
                         }
-                    })
 
+                        ordersToShow.push(ord);
+                    }
 
-                    this.setState({
-                        modifiedOrderData: recentOrders
-                    })
-
+                    if(this.mounted) {
+                        this.setState({
+                            modifiedOrderData: ordersToShow
+                        })
+                    }
                 } else {
-                    this.setState({
-                        notDataAvailable: true
-                    })
+                    if(this.mounted) {
+                        this.setState({
+                            notDataAvailable: true
+                        })
+                    }
                 }
-
-                this.setState({isLoading: false})
-
+                if(this.mounted) {
+                    this.setState({isLoading: false})
+                }
             }
 
-        } catch (e){
-            console.log("HALLO ", e)
-        }
-    }
-
-
-    getPresentationDetails = async (presId) => {
-        try {
-            const response =  await presentationsService.getPresentationById(presId);
-            return response.data.data
-        } catch {
-
-        }
-    }
-
-    getRecentOrders = async () => {
-        if (this.mounted) { this.setState({isLoading: true}) }
-        try {
-            
-            const response = await orderService.getOrdersByUser(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-
-            if (this.mounted) {
+        } catch{
+            if(this.mounted) {
                 this.setState({
-                    recentOrders: response.data.data
+                    errorMessage: "Ein unbekannter Fehler ist aufgetreten."
                 })
-            } 
-        } catch {
-
+            }
         }
-        if (this.mounted) { this.setState({isLoading: false})}
-    } 
+    }
 
     cancelOrder = async () => {
         try {
@@ -147,37 +134,15 @@ class Orders extends React.Component<{}, ordersState> {
                 this.generateRecentOrdersWithAdditionalData();
 
             }
-        } catch (e){
-            this.setState({editMode: false, cancelSuccess: false, errorMessage: e})
+        } catch {
+            this.setState({
+                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+            })
         }
     }
 
     componentWillUnmount() {
         this.mounted = false;
-    }
-
-    getMovieByPresId = async (presId) => {
-        try {
-            if(this.mounted){
-                this.setState({
-                    isLoading: true
-                })
-            }
-            const response = await this.getPresentationDetails(presId);
-            const movie = await movieService.getMovieById(response.movieId);
-            let movieName = movie.data.data["originalTitle"];
-            if (movieName === "") {
-                movieName = movie.data.data["title"]
-            }
-            if(this.mounted){
-                this.setState({
-                    isLoading: false
-                })
-            }
-            return movieName.toString();
-        }catch {
-
-        }
     }
 
     renderEditButton = (orderId) => {
