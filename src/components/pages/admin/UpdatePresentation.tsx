@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Segment} from "semantic-ui-react";
+import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Segment, Checkbox, Divider} from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
 import orderService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
@@ -14,6 +14,7 @@ interface updatePresentationState {
     presentationStart: any,
     movieId: string,
     roomId: string,
+    threeD: boolean,
     basicPrice: number,
     presentationIDsforSelectedMovieStart: Array<{
         key: string,
@@ -50,6 +51,7 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
             presentationStart: '',
             movieId: null,
             roomId: '',
+            threeD: false,
             basicPrice: 0,
             presentationIDsforSelectedMovieStart: [],
             selectedPresentationIDStart: null,
@@ -162,7 +164,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
             await presentationService.updatePresentationById(
                 this.state.selectedPresentationIDStart,
                 this.state.presentationStart,
-                this.state.movieId
+                this.state.movieId,
+                this.state.threeD
             );
 
             //if update was successfull -> Handle Messages and reset input fields
@@ -172,6 +175,7 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                     successModal: true,
                     movieId: '',
                     roomId: '',
+                    threeD: false,
                     basicPrice: 0,
                     presentationStart: '',
                     selectedMovieIDStart: null,
@@ -196,11 +200,13 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                 })
             }
             const presentation = await presentationService.getPresentationById(this.state.selectedPresentationIDStart);
+            console.log('PRES ', presentation)
             const date = moment(new Date(presentation.data.data.presentationStart)).format("YYYY-MM-DD HH:mm");
             if (this.mounted){
                 this.setState({
                     movieId: presentation.data.data.movieId,
                     basicPrice: presentation.data.data.basicPrice,
+                    threeD: presentation.data.data.threeD ? true : false,
                     roomId: presentation.data.data.roomId,
                     presentationStart: date.toString(),
                     settingVariables: false
@@ -245,60 +251,72 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                                 />
                         </Form.Group>
                         {this.state.selectedPresentationIDStart != null &&
-                        <Form.Group widths='equal'>
-                            <Form.Select 
-                            value={this.state.movieId}
-                            options={this.state.movies}
-                            fluid 
-                            label='Film auswählen' 
-                            placeholder='Film'
-                            required
-                            onChange={(e, {value}) => {this.setState({movieId: value.toString()})}}
-                            />
-                            <Form.Input 
-                            value={this.getRoom(this.state.roomId)}
-                            fluid 
-                            label='Saal' 
-                            placeholder='Saal'
-                            disabled={true}
-                            />
-                            <Form.Input
-                            value={this.state.basicPrice}
-                            fluid
-                            name='basicPrice'
-                            label='Basis Preis'
-                            type='number'
-                            placeholder='Basis Preis'
-                            disabled={true}
-                            />
-                        </Form.Group>
+                        <React.Fragment>
+                            <Divider style={{'marginTop': '50px'}} horizontal>Änderungen durchführen</Divider>
+                            <Form.Group widths='equal'>
+                                <Form.Select 
+                                value={this.state.movieId}
+                                options={this.state.movies}
+                                fluid 
+                                label='Film auswählen' 
+                                placeholder='Film'
+                                required
+                                onChange={(e, {value}) => {this.setState({movieId: value.toString()})}}
+                                />
+                                <Form.Input 
+                                value={this.getRoom(this.state.roomId)}
+                                fluid 
+                                label='Saal' 
+                                placeholder='Saal'
+                                disabled={true}
+                                />
+                                <Form.Input
+                                value={this.state.basicPrice}
+                                fluid
+                                name='basicPrice'
+                                label='Basis Preis'
+                                type='number'
+                                placeholder='Basis Preis'
+                                disabled={true}
+                                />
+                            </Form.Group>
+                        </React.Fragment>
                         }
 
                         {this.state.selectedPresentationIDStart != null &&
                         <Grid.Row> 
-                                <DateTimeInput     
-                                    style={{'width': '32.6%'}}
-                                    dateTimeFormat="yyyy-MM-DD HH:mm"                                                               
-                                    animation={null}            
-                                    placeholder="Vorstellungsbeginn"
-                                    value={this.state.presentationStart}
-                                    onChange={(e, {value}) => {this.setState({ presentationStart: value})}}
-                                    iconPosition="left"
-                                    minDate={new Date()}
-                                    clearable
-                                />                          
-                                <Button onClick={() => this.updatePresentation()} color='green' icon labelPosition='left' basic type='submit'
-                                    disabled={
-                                        this.state.presentationStart === '' ||
-                                        this.state.movieId == null ||
-                                        this.state.selectedPresentationIDStart == null ||
-                                        this.state.selectedMovieIDStart == null ||
-                                        this.state.roomId == null ||
-                                        this.state.basicPrice <= 0 }>
+                            <DateTimeInput     
+                                style={{'width': '32.6%'}}
+                                dateTimeFormat="yyyy-MM-DD HH:mm"                                                               
+                                animation={null}            
+                                placeholder="Vorstellungsbeginn"
+                                value={this.state.presentationStart}
+                                onChange={(e, {value}) => {this.setState({ presentationStart: value})}}
+                                iconPosition="left"
+                                minDate={new Date()}
+                                clearable
+                            />   
+                                
+                            <Checkbox 
+                                style={{'marginBottom': '10px'}}
+                                label='3D Vorstellung' 
+                                checked={this.state.threeD} 
+                                onChange={() => this.setState((prevState) => ({ threeD: !prevState.threeD }))}
+                            />          
 
-                                    <Icon name='edit'/>
-                                    Änderungen speichern
-                                </Button>                         
+                            <br/>               
+                            <Button onClick={() => this.updatePresentation()} color='green' icon labelPosition='left' basic type='submit'
+                                disabled={
+                                    this.state.presentationStart === '' ||
+                                    this.state.movieId == null ||
+                                    this.state.selectedPresentationIDStart == null ||
+                                    this.state.selectedMovieIDStart == null ||
+                                    this.state.roomId == null ||
+                                    this.state.basicPrice <= 0 }>
+
+                                <Icon name='edit'/>
+                                Änderungen speichern
+                            </Button>                         
                         </Grid.Row>
                         }
                         {this.state.successModal &&

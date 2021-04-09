@@ -1,2 +1,2 @@
-TODO Niklas: Admin Page getAllPresentations mit getPresentationsByUser ersetzen
-Mein Ansatz ist unten in der Datei drin
+- Suchfilter buggen bei moviedetail und bei presentationoverview
+- Homepage untere hälfte abändern mit Top 5 Filme

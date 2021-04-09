@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Grid, Message, Popup} from "semantic-ui-react";
+import {Button, Divider, Grid, Message, Popup} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
 import presentationsService from '../../../services/presentationService';
 import movieService from '../../../services/movieService';
@@ -7,6 +7,8 @@ import {DateInput} from 'semantic-ui-calendar-react';
 import moment from "moment";
 import { arrayToString } from "../../../constants";
 const m = require('moment');
+import Slider from "react-slick"
+import PresentationDateComponent from "../../container/PresentationDateComponent";
 
 /*
 * Component to show all presentations categorized by movies
@@ -138,6 +140,15 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
 
     render() {
 
+        var settings = {
+            dots: true,
+            infinite: true,
+            arrows: false,
+            speed: 500,
+            slidesToShow: 9,
+            slidesToScroll: 1
+          };
+
         return (
             <React.Fragment>
                 {!this.props.withoutTopBar &&
@@ -145,18 +156,24 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
 
                 {!this.state.isLoading &&
                     <Grid style={{'marginLeft':'10px', 'marginRight':'10px'}}>
+                    <Grid.Row>
+                        <DateInput
+                        style={{'marginTop': '10px', 'marginBottom': '-10px', 'width': '200%'}}
+                        animation={null}
+                        name="date"
+                        placeholder="Datum wählen"
+                        value={this.state.date}
+                        iconPosition="right"
+                        onChange={(event, {value}) => {this.search(value), this.setState({ date: value.toString() })}}
+                        minDate={new Date()}
+                        clearable
+                        />
 
-                    <DateInput
-                    style={{'marginTop': '10px'}}
-                    animation={null}
-                    name="date"
-                    placeholder="Datum wählen"
-                    value={this.state.date}
-                    iconPosition="left"
-                    onChange={(event, {value}) => {this.search(value), this.setState({ date: value.toString() })}}
-                    minDate={new Date()}
-                    clearable
-                    />
+                    </Grid.Row>
+                    <Grid.Row>
+                    <Divider style={{'width': '100%'}}/>
+                    </Grid.Row>
+                    
 
                     {!this.state.dataAvailable && !this.state.isLoading &&
                         <Grid.Row style={{'height': '600px'}} columns={5} centered>
@@ -173,39 +190,25 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                     {this.state.dataAvailable && this.state.presentationsResult.length > 0 && this.state.presentationsResult.map((data, index) => {
                         if(data['presentations'] && data['presentations'].length != 0) {
                             return (
-                                <Grid.Row style={{'marginLeft':'300px', 'height': '300px'}} key={index}>
-                                    <Grid.Column style={{'width': '250px', 'height': '250px'}}>
-                                        <img width="250px" height="250px" src={data && data['posterurl']} />
+                                <Grid.Row style={{'height': '300px', 'marginBottom': '5%'}} key={index}>
+                                    <Grid.Column width="2">
+                                        <img height="300px" src={data && data['posterurl']} />
                                     </Grid.Column>
                                     
-                                    <Grid.Column style={{'width': '650px', 'height': '250px', 'lineHeight': '2'}}>
+                                    <Grid.Column width="14" style={{'lineHeight': '2'}}>
 
                                             <h2>{data && (data['originalTitle'] === "" ? data['title'] : data['originalTitle'])}</h2>
                                             <b>Rating: {data && data['imdbRating']}&nbsp;|&nbsp;
                                             {data && moment.duration(data['duration']).asMinutes()}min.</b> <br/>
                                             {data && arrayToString(data['genres'])} <br/>
 
-                                            <div style={{'width': '1000px'}}>
-                                            {data['presentations'] && data['presentations'].length > 0 && data['presentations'].map((pres, index2) => {
-                                                return (
-                                                    <div style={{'float': 'left', 'marginRight': '8px'}}>
-                                                        <b><span style={{'fontSize': '18px'}}>{pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("dddd")},&nbsp; 
-                                                        {pres['presentationStart'] && m(pres['presentationStart']).format("DD.MM")}</span></b><br/>
-                                                        {pres['3d'] ?
-                                                            <Popup content='3D Vorstellung' position='top center' trigger={
-                                                                <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'youtube'}>
-                                                                    {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
-                                                                </Button>
-                                                            } /> 
-                                                            :
-                                                            <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'facebook'}>
-                                                                {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
-                                                            </Button>
-                                                        }
-                                                    </div>
-                                                )
-                                            })}
-                                            </div>
+                                            <Slider {...settings}>
+                                                {data['presentations'] && data['presentations'].length > 0 && data['presentations'].map((pres, index2) => {
+                                                    return (
+                                                        <PresentationDateComponent presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                                    )
+                                                })}
+                                            </Slider>
                                     </Grid.Column>
                                 </Grid.Row>
                             )

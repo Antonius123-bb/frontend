@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Segment} from "semantic-ui-react";
+import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Segment, Checkbox} from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
 import orderService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
@@ -14,6 +14,7 @@ interface newPresentationState {
     presentationStart: any,
     movieId: string,
     roomId: string,
+    threeD: boolean,
     basicPrice: number,
     movies: Array<{
         key: string,
@@ -44,6 +45,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
             presentationStart: '',
             movieId: null,
             roomId: null,
+            threeD: false,
             basicPrice: 0,
             movies: [{
                 key: null,
@@ -111,7 +113,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                 this.state.presentationStart,
                 this.state.movieId,
                 this.state.basicPrice,
-                this.state.roomId
+                this.state.roomId,
+                this.state.threeD
             );
 
             //if creating was successfull -> Handle Messages and reset input fields
@@ -121,6 +124,7 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                     successModal: true,
                     movieId: '',
                     roomId: '',
+                    threeD: false,
                     basicPrice: 0,
                     presentationStart: ''
                 })
@@ -144,7 +148,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                         timeString,
                         item.key,
                         Math.floor(Math.random() * 10 + 6),
-                        ROOM_DATA[Math.floor(Math.random() * 2 + 0)].roomId
+                        ROOM_DATA[Math.floor(Math.random() * 2 + 0)].roomId,
+                        Math.floor(Math.random() * 2 + 0) === 0 ? true : false
                     );
                 }
             })
@@ -217,52 +222,61 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
 
 
                         <Grid.Row> 
-                                <DateTimeInput     
-                                    style={{'width': '32.6%'}}
-                                    dateTimeFormat="yyyy-MM-DD HH:mm"                                                               
-                                    animation={null}            
-                                    placeholder="Vorstellungsbeginn"
-                                    value={this.state.presentationStart}
-                                    onChange={(e, {value}) => {this.setState({ presentationStart: value})}}
-                                    iconPosition="left"
-                                    minDate={new Date()}
-                                    clearable
-                                />
-                                {this.state.presentationStart != '' && !this.state.isLoading && this.state.movieId != null &&
-                                    <div style={{'marginBottom': '10px'}}>
-                                        Die geschätzte Dauer für die Vorstellung des Films "{this.state.currentMovieName}" beträgt {this.state.currentMovieDuration} Minuten.
-                                    </div>
-                                }                         
-                                <Button onClick={() => this.createPresentation()} color='green' icon labelPosition='left' basic type='submit'
-                                    disabled={
-                                        this.state.presentationStart === '' ||
-                                        this.state.movieId == null ||
-                                        this.state.roomId == null ||
-                                        this.state.basicPrice <= 0 }>
+                            <DateTimeInput     
+                                style={{'width': '32.6%'}}
+                                dateTimeFormat="yyyy-MM-DD HH:mm"                                                               
+                                animation={null}            
+                                placeholder="Vorstellungsbeginn"
+                                value={this.state.presentationStart}
+                                onChange={(e, {value}) => {this.setState({ presentationStart: value})}}
+                                iconPosition="left"
+                                minDate={new Date()}
+                                clearable
+                            />
+                            <Checkbox 
+                                style={{'marginBottom': '10px'}}
+                                label='3D Vorstellung' 
+                                checked={this.state.threeD} 
+                                onChange={() => this.setState((prevState) => ({ threeD: !prevState.threeD }))}
+                            />  
 
-                                    <Icon name='plus'/>
-                                    Vorstellung anlegen
-                                </Button>  
-                                <Button onClick={() => this.generatePresentationData()} >
-                                    Generate
-                                </Button>  
-                                {this.state.successModal &&
-                                <Message 
-                                positive 
-                                style={{"marginTop": "20px"}} 
-                                header="Erfolgreich."
-                                content="Vorstellung wurde erfolgreich angelegt."                             
-                                />
-                                }
-                            
-                                {this.state.error != "" &&
-                                <Message 
-                                negative
-                                color='grey'
-                                header='Fehler.'
-                                content={this.state.error}
-                                />
-                                }                       
+                            {this.state.presentationStart != '' && !this.state.isLoading && this.state.movieId != null &&
+                                <div style={{'marginBottom': '10px'}}>
+                                    Die geschätzte Dauer für die Vorstellung des Films "{this.state.currentMovieName}" beträgt {this.state.currentMovieDuration} Minuten.
+                                </div>
+                            } 
+                            <br/>
+
+                            <Button onClick={() => this.createPresentation()} color='green' icon labelPosition='left' basic type='submit'
+                                disabled={
+                                    this.state.presentationStart === '' ||
+                                    this.state.movieId == null ||
+                                    this.state.roomId == null ||
+                                    this.state.basicPrice <= 0 }>
+
+                                <Icon name='plus'/>
+                                Vorstellung anlegen
+                            </Button>  
+                            <Button onClick={() => this.generatePresentationData()} >
+                                Generate
+                            </Button>  
+                            {this.state.successModal &&
+                            <Message 
+                            positive 
+                            style={{"marginTop": "20px"}} 
+                            header="Erfolgreich."
+                            content="Vorstellung wurde erfolgreich angelegt."                             
+                            />
+                            }
+                        
+                            {this.state.error != "" &&
+                            <Message 
+                            negative
+                            color='grey'
+                            header='Fehler.'
+                            content={this.state.error}
+                            />
+                            }                       
                         </Grid.Row>
 
 

@@ -19,15 +19,15 @@ export default {
     },
     
     //create a new presentation
-    createPresentation: (presentationStart, movieId, basicPrice, roomId ) : Promise<any> => {
+    createPresentation: (presentationStart, movieId, basicPrice, roomId, threeD ) : Promise<any> => {
         return axios.post(API_URL + '/createPresentation', {
-            presentationStart, movieId, basicPrice, roomId
+            presentationStart, movieId, basicPrice, roomId, threeD
         });
     },
 
-    updatePresentationById: (id, presentationStart, movieId) : Promise<any> => {
+    updatePresentationById: (id, presentationStart, movieId, threeD) : Promise<any> => {
         return axios.post(API_URL + '/updatePresentationById', {
-            id, data: {presentationStart, movieId}
+            id, data: {presentationStart, movieId, threeD}
         });
     },
 

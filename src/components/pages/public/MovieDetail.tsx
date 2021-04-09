@@ -7,7 +7,8 @@ import movieService from "../../../services/movieService";
 import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import { arrayToString } from "../../../constants";
-
+import PresentationDateComponent from "../../container/PresentationDateComponent";
+import Slider from "react-slick"
 
 const m = require('moment');
 
@@ -81,18 +82,6 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         }
     }
 
-    pushToPresentationDetailPage = (presentation) => {
-        try {
-            this.props.history.push({
-                pathname: '/presentation/'+presentation['_id']
-            })
-
-        }
-        catch {
-
-        }
-    }
-
     
     search = async (date) => {
         try {
@@ -109,6 +98,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         
                 this.state.initialPresentations.map((pres) => {
                     if(m(pres['presentationStart']).format("DD-MM-YYYY") === date) {
+                        console.log("T")
                         presentations.push(pres);
                     }
                 })
@@ -129,6 +119,14 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
     render() {
 
         const m = require('moment');
+        var settings = {
+            dots: true,
+            infinite: true,
+            arrows: false,
+            speed: 500,
+            slidesToShow: 8,
+            slidesToScroll: 1
+          };
 
         return (
             <React.Fragment>
@@ -182,7 +180,6 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                         minDate={new Date()}
                         clearable
                         />
-
                     </Grid.Row>
 
                     <Grid.Row columns={3}>
@@ -195,31 +192,13 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                                 content='An dem gewählten Datum zeigen wir die gewünschte Vorstellung leider nicht.'
                                 />
                             }
-
-                            {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.map((pres, index) => {
-                                return (
-                                    <div style={{'float': 'left', 'marginRight': '8px'}}>
-                                        <b>
-                                            <span style={{'fontSize': '18px'}}>
-                                                {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("dddd")},&nbsp; 
-                                                {pres['presentationStart'] && m(pres['presentationStart']).format("DD.MM")}
-                                            </span>
-                                        </b>
-                                        <br/>
-                                        {pres['3d'] ?
-                                            <Popup content='3D Vorstellung' position='top center' trigger={
-                                                <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'youtube'}>
-                                                    {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
-                                                </Button>
-                                            } /> 
-                                            :
-                                            <Button onClick={() => this.pushToPresentationDetailPage(pres)} inverted color={'facebook'}>
-                                                {pres['presentationStart'] && m(pres['presentationStart']).locale('de').format("HH:mm")}
-                                            </Button>
-                                        }
-                                    </div>
-                                )
-                            })}
+                            <Slider {...settings}>
+                                {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.map((pres, index) => {
+                                    return (
+                                        <PresentationDateComponent presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                    )
+                                })}
+                            </Slider>
                         </Grid.Column>
                         <Grid.Column width={1}></Grid.Column>
                     </Grid.Row>

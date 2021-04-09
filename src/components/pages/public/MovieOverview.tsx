@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Card, Image, Button, Grid, Input, Message} from "semantic-ui-react";
+import {Card, Image, Button, Grid, Input, Message, Divider} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
 import movieService from '../../../services/movieService';
 import Rating from "@material-ui/lab/Rating";
@@ -127,11 +127,20 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                 <Grid style={{'marginLeft':'10px', 'marginRight':'10px', 'minHeight': '800px'}}>
 
                     {!this.state.loadMovies &&
-                    <Input
-                        style={{'marginTop': '15px', 'maxHeight': '40px', 'width': '40%'}}
-                        loading={this.state.loading} 
-                        placeholder='Suche...'
-                        onChange={(event, {value}) => this.handleSearch(value)} />
+                    <React.Fragment>
+                        <Grid.Row>
+                        <Input
+                            style={{'marginTop': '15px', 'maxHeight': '40px', 'width': '40%', 'marginBottom': '-10px'}}
+                            loading={this.state.loading} 
+                            placeholder='Suche...'
+                            onChange={(event, {value}) => this.handleSearch(value)} />
+
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Divider style={{'width': '100%'}}/>
+                        </Grid.Row>
+
+                    </React.Fragment>
                     }
 
                     {this.state.movies.length === 0 && this.state.loadMovies === false && 
