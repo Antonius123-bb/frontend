@@ -32,13 +32,13 @@ class Footer extends React.Component<{history: any}, {}> {
     render() {
 
         return (
-            <Segment style={{'background': '#94618E', 'borderRadius': 0}}>
-                <div style={{'textAlign': 'center', 'color': '#F4DECB'}}>DHBW Kino</div>
+            <Segment style={{'background': '#5D5C61', 'borderRadius': 0}}>
+                <div style={{'textAlign': 'center', 'color': 'white'}}>Corona Kino</div>
                 <div style={{'textAlign': 'center'}}>
                     <p>
-                        <a style={{'color': '#F4DECB', 'cursor': 'pointer', 'textDecoration': 'underline'}} onClick={() => this.props.history.push("/imprint")}>Impressum</a>
+                        <a style={{'color': 'white', 'cursor': 'pointer', 'textDecoration': 'underline'}} onClick={() => this.props.history.push("/imprint")}>Impressum</a>
                         | 
-                        <a style={{'color': '#F4DECB', 'cursor': 'pointer', 'textDecoration': 'underline'}} onClick={() => this.props.history.push("/privacy")}>Datenschutzerklärung</a>
+                        <a style={{'color': 'white', 'cursor': 'pointer', 'textDecoration': 'underline'}} onClick={() => this.props.history.push("/privacy")}>Datenschutzerklärung</a>
                     </p>
                 </div>
             </Segment>

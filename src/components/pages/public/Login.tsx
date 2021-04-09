@@ -108,11 +108,11 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
                             <Grid.Column style={{ maxWidth: 450 }}>
                                 <Header as='h1' color='purple' textAlign='center'>
                                     <Image src='../../../../src/assets/images/favicon.png'/>
-                                    <span style={{'color': '#94618E'}}> DHBW KINO</span>
+                                    <span style={{'color': '#557A95'}}>Corona Kino</span>
                                 </Header>
                                 <p>Hier können Sie Kinotickets reservieren und buchen.</p>
                                 <Header as='h2' textAlign='center'>
-                                    <span style={{'color': '#94618E'}}>Einloggen</span>
+                                    <span style={{'color': '#557A95'}}>Einloggen</span>
                                 </Header>
                                 <Message color='grey'
                                     attached>Melden Sie sich mit ihren Zugangsdaten an.</Message>
@@ -137,13 +137,13 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
                                                 pointing: 'above'
                                             } : false} />
                                         <Button fluid size='large'
-                                            style={{'marginTop': '10px', 'background': '#94618E', 'color': '#ffffff'}}
+                                            style={{'marginTop': '10px', 'background': '#557A95', 'color': '#ffffff'}}
                                             type="submit">Einloggen</Button>
                                     </Segment>
                                 </Form>
                                 <Message>
                                     Neu bei uns? &nbsp; 
-                                    <a style={{'cursor': 'pointer', 'color': '#94618E'}} onClick={() => this.props.handleUserManagement('signup')}>Registrieren</a>
+                                    <a style={{'cursor': 'pointer', 'color': '#557A95'}} onClick={() => this.props.handleUserManagement('signup')}>Registrieren</a>
                                 </Message>
                             </Grid.Column>
                         </Grid>

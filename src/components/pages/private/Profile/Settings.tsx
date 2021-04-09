@@ -16,7 +16,7 @@ interface settingsState {
     isLoadingPassword: boolean
 }
 
-class Settings extends React.Component<{userdata: {}, history: any, closeModal: any}, settingsState> {
+class Settings extends React.Component<{userdata: {}, history: any}, settingsState> {
 
     private mounted: boolean = false;
 
@@ -34,12 +34,12 @@ class Settings extends React.Component<{userdata: {}, history: any, closeModal: 
     async componentDidMount() {
         this.mounted = true;
 
-        await presentationService.bookSeats(
-            [1],
-            "605cbac2be1673495cdf8e90",
-            JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
-            "bar"
-        )
+        // await presentationService.bookSeats(
+        //     [1],
+        //     "607019d812312556a4e00a2e",
+        //     JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
+        //     "bar"
+        // )
     }
 
     componentWillUnmount() {

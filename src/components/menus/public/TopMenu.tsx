@@ -38,7 +38,7 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
         this.state = {
             activeTopMenuItem: 'Home',
-            activeProfileMenuItem: 'overview',
+            activeProfileMenuItem: 'orders',
             showCart: false,
             count: 0,
             openModal: false,
@@ -175,7 +175,6 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
         try {
             if(this.mounted){
                 const response = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id)
-                console.log("RESP ", response)
                 if (response) {
                     this.setState({
                         userIsAdmin: response.data.data.admin
@@ -192,12 +191,12 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
         return (
             <React.Fragment>
-                <Segment style={{'background': '#94618E', 'borderRadius': 0, 'marginBottom': '-20px'}}>
+                <Segment style={{'background': '#5D5C61', 'borderRadius': 0, 'marginBottom': '-20px'}}>
                     <Header as="h2" style={{'textAlign': 'center', 'color': 'white', 'fontSize': '40px', 'fontFamily': 'Lato, sans-serif'}}>
-                        DHBW Kino
+                    Corona Kino
                     </Header>
                 </Segment>
-                <Segment style={{'background': '#94618E', 'borderRadius': 0, 'borderTop': '0px'}}>
+                <Segment style={{'background': '#5D5C61', 'borderRadius': 0, 'borderTop': '0px'}}>
                     <Menu pointing secondary size="huge" widths="8" style={{'borderBottom': '0px'}}>
 
                     {/*render the pages that are in TopMenuData.ts*/}

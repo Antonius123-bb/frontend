@@ -170,7 +170,7 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
                                                 pointing: 'above'
                                             } : false} />
                                         <Button fluid size='large'
-                                            style={{'marginTop': '10px', 'background': '#94618E', 'color': '#ffffff'}}
+                                            style={{'marginTop': '10px', 'background': '#557A95', 'color': '#ffffff'}}
                                             type="submit">Einloggen</Button>
                                     </Segment>
                                 </Form>
@@ -186,8 +186,8 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
 
         return (
             <Grid> 
-                <Segment style={{'background': '#94618E', 'borderRadius': 0, 'height': '80px', 'width': '100%', 'textAlign': 'center'}}>
-                    <Header as="h2" style={{'paddingTop': '20px', 'color': 'rgb(244, 222, 203)'}}>Admin Bereich</Header>
+                <Segment style={{'background': '#5D5C61', 'borderRadius': 0, 'height': '80px', 'width': '100%', 'textAlign': 'center'}}>
+                    <Header as="h2" style={{'paddingTop': '20px', 'color': 'white'}}>Admin Bereich</Header>
                 </Segment>
                 <Grid.Row columns={3} style={{'marginTop': '50px'}}>
                     <Grid.Column width={1}></Grid.Column>

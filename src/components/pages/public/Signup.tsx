@@ -102,11 +102,11 @@ class Signup extends React.Component<{ handleUserManagement: any }, signupState>
                         <Grid.Column style={{ maxWidth: 450 }}>
                             <Header as='h1' textAlign='center'>
                                 <Image src='../../../../src/assets/images/favicon.png'/>
-                                <span style={{'color': '#94618E'}}> DHBW KINO</span>
+                                <span style={{'color': '#557A95'}}>Corona Kino</span>
                             </Header>
                             <p>Hier können Sie Kinotickets reservieren und buchen.</p>
                             <Header as='h2' textAlign='center'>
-                                <span style={{'color': '#94618E'}}>Registrieren</span>
+                                <span style={{'color': '#557A95'}}>Registrieren</span>
                             </Header>
                             <Message color='grey'
                                 attached>Registrieren Sie sich mit ihren Daten.</Message>
@@ -157,12 +157,12 @@ class Signup extends React.Component<{ handleUserManagement: any }, signupState>
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         error={(errors.passwordCheck && touched.passwordCheck) ? { content: errors.passwordCheck, pointing: 'above' } : false} />
-                                    <Button style={{'background': '#94618E', 'color': '#ffffff'}} fluid size='large' type="submit">Registrieren</Button>
+                                    <Button style={{'background': '#557A95', 'color': '#ffffff'}} fluid size='large' type="submit">Registrieren</Button>
                                 </Segment>
                             </Form>
                             <Message>
                                 Ich habe bereits einen Account. &nbsp;
-                                <a style={{'cursor': 'pointer', 'color': '#94618E'}} onClick={() => this.props.handleUserManagement('login')}>Einloggen</a>
+                                <a style={{'cursor': 'pointer', 'color': '#557A95'}} onClick={() => this.props.handleUserManagement('login')}>Einloggen</a>
                             </Message>
                         </Grid.Column>
                     </Grid>

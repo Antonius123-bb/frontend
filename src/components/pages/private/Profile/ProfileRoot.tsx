@@ -78,7 +78,6 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
     }
 
     render() {
-
         const activeProfileMenuItem = this.state.activeProfileMenuItem;
 
         return (
@@ -90,7 +89,7 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
                 <Grid doubling padded style={{'marginTop': '25px'}}> 
                     <Grid.Row centered style={{'marginBottom': '-10px'}}>
                         <Segment secondary style={{'width': '98%'}}>
-                            <Icon onClick={() => {this.setState({ activeProfileMenuItem: 'overview'}); this.props.closeProfileModal()}} name='cancel' size='big' style={{'top': 10, 'right': 5, 'position': 'absolute', 'color':'#94618E', 'cursor': 'pointer'}}/>                             
+                            <Icon onClick={() => {this.setState({ activeProfileMenuItem: 'orders'}); this.props.closeProfileModal()}} name='cancel' size='big' style={{'top': 10, 'right': 5, 'position': 'absolute', 'color':'#557A95', 'cursor': 'pointer'}}/>                             
                             <Header as="h2" style={{'marginTop': '-5px'}}>
                                 Profil
                             </Header>                            
@@ -123,10 +122,10 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
                             <Segment>                     
                             {/* opens the different pages, depending on activeProfileMenuItem state */}
                             {activeProfileMenuItem === 'orders' &&
-                                <Orders/>
+                                <Orders history={this.props.history}/>
                             }
                             {activeProfileMenuItem === 'settings' &&
-                                <Settings userdata={this.state.userdata} history={this.props.history} closeModal={this.props.closeProfileModal}/>
+                                <Settings userdata={this.state.userdata} history={this.props.history}/>
                             }
                             {activeProfileMenuItem === 'contactData' &&
                                 <ContactData closeContactDataModal={null} />

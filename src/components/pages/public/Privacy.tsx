@@ -35,7 +35,7 @@ class Privacy extends React.Component<{history: any}, {}> {
                         <p>I. Informationen über uns als Verantwortliche<br/>II. Rechte der Nutzer und Betroffenen<br/>III. Informationen zur Datenverarbeitung</p>
                         <h3>I. Informationen über uns als Verantwortliche</h3>
                         <p>Verantwortlicher Anbieter dieses Internetauftritts im datenschutzrechtlichen Sinne ist:</p>
-                        <p>Adrian Albrecht, Noah Hölterhoff, Niklas Borg, Patryk Jarzab, Marius Naukotis, Leon Flory<br/>Holbeinstr. 13<br/>68163 Mannheim<br/>Deutschland</p>
+                        <p>Adrian Albrecht, Niklas Borg<br/>Holbeinstr. 13<br/>68163 Mannheim<br/>Deutschland</p>
                         <p>Telefon: +49 176 26326256<br/>E-Mail: info@dhbw-kino.de</p>
                         <h3>II. Rechte der Nutzer und Betroffenen</h3>
                         <p>Mit Blick auf die nachfolgend noch näher beschriebene Datenverarbeitung haben die Nutzer und Betroffenen das Recht</p>

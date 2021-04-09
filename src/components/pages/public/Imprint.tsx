@@ -28,7 +28,7 @@ class Imprint extends React.Component<{history: any}, {}> {
                     <Grid.Column width={1}></Grid.Column>
                     <Grid.Column width={14}>
                         <h2>Impressum</h2>
-                        <p>Adrian Albrecht, Noah Hölterhoff, Niklas Borg, Patryk Jarzab, Marius Naukotis, Leon Flory<br/>Holbeinstr. 13<br/>68163 Mannheim<br/>Deutschland</p>
+                        <p>Adrian Albrecht, Niklas Borg<br/>Holbeinstr. 13<br/>68163 Mannheim<br/>Deutschland</p>
                         <p>Telefon: +49 176 26326256<br/>E-Mail: info@dhbw-kino.de</p>
                     </Grid.Column>
                     <Grid.Column width={1}></Grid.Column>

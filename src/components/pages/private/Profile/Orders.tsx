@@ -1,6 +1,6 @@
 import moment from "moment";
 import * as React from "react";
-import { Button, Form, Grid, Icon, Message, Table } from "semantic-ui-react";
+import { Button, Form, Grid, Icon, Message, Table, Image, List, Divider, Popup } from "semantic-ui-react";
 import { getRoomNameById, USER_COOKIE_INFO } from "../../../../constants";
 import movieService from "../../../../services/movieService";
 import orderService from "../../../../services/orderService";
@@ -15,13 +15,13 @@ interface ordersState {
     recentOrders: Array<{}>,
     modifiedOrderData: [],
     editMode: boolean,
-    orderOnEdit: string,
+    orderOnEdit: Object,
     cancelSuccess: boolean,
     errorMessage: string,
     notDataAvailable: boolean
 }
 
-class Orders extends React.Component<{}, ordersState> {
+class Orders extends React.Component<{history:any}, ordersState> {
 
     private mounted: boolean = false;
 
@@ -44,6 +44,7 @@ class Orders extends React.Component<{}, ordersState> {
         this.mounted = true;
 
         this.generateRecentOrdersWithAdditionalData();
+        
     }
 
     getPresentationDetails = async (id) => {
@@ -87,13 +88,17 @@ class Orders extends React.Component<{}, ordersState> {
                         const mov = await this.getMovieDetails(pres.movieId);
                     
                         ord.movieDuration = mov.duration;
+                        ord.posterurl = mov.posterurl;
+                        ord.movieId = mov._id;
+                        ord.releaseYear = moment(mov.releaseDate).format('YYYY')
                         ord.presentationStart = pres.presentationStart;
+                        ord.presentationEnd = pres.presentationEnd;
                         ord.roomName = getRoomNameById(pres.roomId);
 
-                        if (mov.title != ""){
+                        if (mov.originalTitle === ""){
                             ord.movieName= mov.title
                         } else {
-                            ord.movieName= mov.title
+                            ord.movieName= mov.originalTitle
                         }
 
                         ordersToShow.push(ord);
@@ -101,7 +106,7 @@ class Orders extends React.Component<{}, ordersState> {
 
                     if(this.mounted) {
                         this.setState({
-                            modifiedOrderData: ordersToShow
+                            modifiedOrderData: ordersToShow.sort((a, b) => b.presentationStart - a.presentationStart)
                         })
                     }
                 } else {
@@ -129,8 +134,8 @@ class Orders extends React.Component<{}, ordersState> {
         try {
             if (this.mounted) {
 
-                const response = await orderService.cancelOrder(this.state.orderOnEdit);
-                this.setState({cancelSuccess: true, editMode: false})
+                const response = await orderService.cancelOrder(this.state.orderOnEdit['_id']);
+                this.setState({cancelSuccess: true, editMode: false, orderOnEdit: ''})
                 this.generateRecentOrdersWithAdditionalData();
 
             }
@@ -147,15 +152,65 @@ class Orders extends React.Component<{}, ordersState> {
 
     renderEditButton = (orderId) => {
         try {
-            return (
-                <Button onClick={() => this.setState({editMode: true, orderOnEdit: orderId, cancelSuccess: false, errorMessage: ''})}>
-                    Stornieren
-                </Button>
-            )
+            const order = this.getOrderById(orderId);
+            let orderInPast;
+            if (order['presentationStart'] < (new Date()).getTime()){
+                orderInPast = true
+            }
+            if (orderInPast){
+                return (
+                    <Popup position='top center' content='Die Bestellung kann nicht mehr storniert werden.' trigger={
+                        <Button style={{'cursor': 'default'}}>
+                            Stornieren
+                        </Button>
+                    } />
+                )
+            } else {
+                return (
+                    <Button color='green' onClick={() => this.setState({editMode: true, orderOnEdit: order, cancelSuccess: false, errorMessage: ''})}>
+                        Stornieren
+                    </Button>
+                )
+            }
         } catch {
 
         }
     }
+
+    getOrderById = (orderId) => {
+        try {
+            let temp:any = this.state.modifiedOrderData;
+            let orderOnEdit = temp.find(obj => obj['_id'] === orderId);
+            console.log("ORDER ON EDIT ", orderOnEdit)
+            return orderOnEdit;
+        } catch {
+            return ''
+        }
+    }
+
+    getPresentationString = (presentationStart, presentationEnd, movieDuration) => {
+        try {
+            return moment(presentationStart).format('DD.MM.YYYY') + ' ' + moment(presentationStart).format('HH:mm') + 'Uhr - ' + moment(presentationEnd).format('HH:mm') + 'Uhr (' +  moment.duration(movieDuration).asMinutes() + " Minuten)"
+        } catch {
+
+        }
+    }
+
+    pushToMovieDetailPage = () => {
+        try {
+            const movieString = (this.state.orderOnEdit['movieName'].replace(/ /g, '-')).toLowerCase();
+            if(!((window.location.href).includes(movieString))){
+                this.props.history.push({
+                    pathname: '/movie',
+                    search: '?name='+movieString,
+                    state: { movieId: this.state.orderOnEdit['movieId'] }
+                })
+            }
+
+        } catch {
+
+        }
+    };
 
     render() {
 
@@ -176,7 +231,7 @@ class Orders extends React.Component<{}, ordersState> {
                     </Table.Header>
                     <Table.Body>
                     {this.state.modifiedOrderData.map((item, index) => (
-                        <Table.Row key={index} onClick={() => this.setState({editMode: true, orderOnEdit: item["_id"], cancelSuccess: false, errorMessage: ''})}>
+                        <Table.Row key={index}>
                             <Table.Cell width={3}>{item['movieName']}</Table.Cell>
                             <Table.Cell width={2}>{item['seats']['length']}</Table.Cell>
                             <Table.Cell width={2}>{moment(item["presentationStart"]).format("DD.MM.YYYY HH:mm")}</Table.Cell>
@@ -189,8 +244,30 @@ class Orders extends React.Component<{}, ordersState> {
                     </Table.Body>
                 </Table>
                 }
-                {this.state.editMode && !this.state.isLoading &&
-                <Grid>
+
+                {this.state.editMode && !this.state.isLoading && !this.state.notDataAvailable && this.state.orderOnEdit != '' &&
+                <Grid centered>
+                    <Grid.Row style={{'marginLeft':'50px', 'marginRight':'50px'}} columns={2}>
+                        <Grid.Column floated="left" width={4}>
+                            <Image style={{'cursor': 'pointer'}} src={this.state.orderOnEdit['posterurl']} onClick={() => this.pushToMovieDetailPage()}/>
+                            <div onClick={() => this.pushToMovieDetailPage()} style={{'textAlign': 'center', 'fontWeight': 'bold', 'marginTop': '10px', 'cursor': 'pointer'}}>{this.state.orderOnEdit['movieName']} ({this.state.orderOnEdit['releaseYear']})</div>
+                        </Grid.Column>
+                        <Grid.Column width={12}>
+                            <List style={{'marginTop': '50px'}}>
+                                <List.Item key='1'>Vorstellungszeit: {this.getPresentationString(this.state.orderOnEdit['presentationStart'], this.state.orderOnEdit['presentationEnd'], this.state.orderOnEdit['movieDuration'])}</List.Item>
+                                <Divider/>
+                                <List.Item key='2'>Zeitpunkt der Bestellung: {moment(this.state.orderOnEdit["time"]).format("DD.MM.YYYY HH:mm")} </List.Item>
+                                <Divider/>
+                                <List.Item key='3'>Anzahl Tickets: {this.state.orderOnEdit['seats']['length']}</List.Item>
+                                <Divider/>
+                                <List.Item key='4'>{this.state.orderOnEdit['roomName']}</List.Item>
+                                <Divider/>
+                                <List.Item key='5'>Bezahlmethode: {this.state.orderOnEdit['payment'] === 'bar' ? 'Barzahlung' : 'PayPal'}</List.Item>
+                                <Divider/>
+                            </List>
+                        </Grid.Column>
+
+                    </Grid.Row>
                     <Grid.Row>
                         <Grid.Column floated="left">
                         <Button color='green' basic icon labelPosition='left' onClick={() => this.setState({editMode: false, orderOnEdit: ''})}>
@@ -199,16 +276,16 @@ class Orders extends React.Component<{}, ordersState> {
                         </Button>  
 
                         </Grid.Column>
-                        <Grid.Column floated="right">
+                        <Grid.Column>
     
-                        <Button color='red' icon labelPosition='left' basic onClick={() => this.cancelOrder()}>
-                            <Icon name='save'/>
-                            Bestellung stornieren
+                        <Button color='red' floated="right" icon labelPosition='left' basic onClick={() => this.cancelOrder()}>
+                            <Icon name='cancel'/>
+                            Stornieren
                         </Button> 
 
                         </Grid.Column>                                      
                     </Grid.Row>
-                </Grid> 
+                </Grid>                 
                 }
                 {this.state.cancelSuccess && !this.state.editMode && !this.state.isLoading && 
                 // TODO: Genauen Rückersttaungs betrag anzeigen in message
@@ -238,94 +315,3 @@ class Orders extends React.Component<{}, ordersState> {
 }
 
 export default Orders;
-
-
-// Mein Ansatz
-// generateRecentOrdersWithAdditionalData = async () => {
-//     try {
-//         if(this.mounted){
-//             this.setState({isLoading: true})
-
-//             const response = await orderService.getOrdersByUser(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id);
-//             console.log("RS ", response)
-
-//             if (response.data.data.length != 0){
-                
-
-//                 let moviesAll = await movieService.getAllMovies();
-
-//                 let allPresentationsByUser = [];
-                
-//                 response.data.data.map(async item => {
-//                     const allPresByUser = await presentationsService.getPresentationById(item.presentationId);
-//                     // const tempObj = {
-//                     //     basicPrice: allPresByUser.data.data.basicPrice,
-//                     //     movieId: allPresByUser.data.data.movieId,
-//                     //     presentationEnd: allPresByUser.data.data.presentationEnd,
-//                     //     presentationStart: allPresByUser.data.data.presentationStart,
-//                     //     roomId: allPresByUser.data.data.roomId,
-//                     //     seats: allPresByUser.data.data.roomId,
-//                     //     _id: allPresByUser.data.data._id
-//                     // }
-//                     allPresentationsByUser.push(allPresByUser.data.data)
-//                 });
-//                 const movies = moviesAll.data.data;
-//                 const recentOrders = response.data.data;
-//                 const allPresentations = allPresentationsByUser;
-
-//                 recentOrders.map((ord) => {
-//                     ord.movieName = '';
-//                     ord.movieDuration = 0;
-//                     ord.roomName;
-//                     ord.presentationStart = ''
-//                 })
-
-//                 console.log("REC ", recentOrders);
-//                 console.log("ALLPresentations ", allPresentations)
-
-//                 recentOrders.forEach((pres) => {
-//                     console.log("PRES ", pres)
-//                     console.log("TEST ", allPresentations[0])
-//                     // allPresentations.map((allPres) => {
-//                     //     console.log("ALLPRESS ", allPres)
-//                     // })
-//                     let allPresIndex = allPresentations.findIndex(allPres => allPres._id === pres.presentationId);
-//                     if (allPresIndex === -1){
-//                         this.setState({
-//                             errorMessage: "Ein unbekannter Fehler ist aufgetreten."
-//                         })
-//                     } else {
-//                         pres.roomName = getRoomNameById(allPresentations[allPresIndex].roomId);
-//                         pres.presentationStart = allPresentations[allPresIndex].presentationStart;
-//                         let movieIndex = movies.findIndex(mov => mov._id === allPresentations[allPresIndex].movieId);
-//                         let movieData = movies[movieIndex];
-//                         let movieName;
-//                         if (movieData["originalTitle"] != ""){
-//                             movieName= movieData["originalTitle"]
-//                         } else {
-//                             movieName= movieData["title"]
-//                         }
-//                         pres.movieName = movieName;
-//                         pres.movieDuration = movieData["duration"];
-//                     }
-//                 })
-
-
-//                 this.setState({
-//                     modifiedOrderData: recentOrders
-//                 })
-
-//             } else {
-//                 this.setState({
-//                     notDataAvailable: true
-//                 })
-//             }
-
-//             this.setState({isLoading: false})
-
-//         }
-
-//     } catch (e){
-//         console.log("HALLO ", e)
-//     }
-// }
