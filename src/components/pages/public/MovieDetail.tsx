@@ -124,7 +124,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
             infinite: true,
             arrows: false,
             speed: 500,
-            slidesToShow: 8,
+            slidesToShow: Math.min(this.state.presentations.length, 8),
             slidesToScroll: 1
           };
 
@@ -195,7 +195,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                             <Slider {...settings}>
                                 {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.map((pres, index) => {
                                     return (
-                                        <PresentationDateComponent presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                        <PresentationDateComponent index={index} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
                                     )
                                 })}
                             </Slider>

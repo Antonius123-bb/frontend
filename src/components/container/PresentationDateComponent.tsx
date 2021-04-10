@@ -5,7 +5,8 @@ import { Button, Divider, Popup, Segment } from 'semantic-ui-react';
 interface cartProps {
     presentation: any
     threeD: any,
-    history: any
+    history: any,
+    index: any
 }
 
 class PresentationDateComponent extends React.Component<cartProps> {

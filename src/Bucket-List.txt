@@ -1,2 +1,2 @@
-- Suchfilter buggen bei moviedetail und bei presentationoverview
+- Suchfilter bugt bei presentationoverview
 - Homepage untere hälfte abändern mit Top 5 Filme

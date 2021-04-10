@@ -14,7 +14,6 @@ import PresentationDateComponent from "../../container/PresentationDateComponent
 * Component to show all presentations categorized by movies
 */
 
-
 class PresentationOverview extends React.Component<{withoutTopBar: any, history: any}, {isLoading: boolean, dataAvailable: boolean; date: string, refreshCart: number, initialPresentations: any, presentationsResult: any, initialMovies: any}> {
     
     private mounted: boolean = false;
@@ -106,13 +105,13 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
         if (this.mounted) { this.setState({isLoading: true}) };
         //if reverse the date picker to print all presentations
         if(date.length === 0) {
-
             //generate the structured printable data
             const result = await this.generatePresentationData(this.state.initialMovies, this.state.initialPresentations);
 
             if(this.mounted) {
                 this.setState({
-                    presentationsResult: result
+                    presentationsResult: result,
+                    isLoading: false
                 })
             } 
         } else {
@@ -139,7 +138,6 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
     }
 
     render() {
-
         var settings = {
             dots: true,
             infinite: true,
@@ -196,19 +194,22 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                                     </Grid.Column>
                                     
                                     <Grid.Column width="14" style={{'lineHeight': '2'}}>
-
+                                        <Grid.Row>
                                             <h2>{data && (data['originalTitle'] === "" ? data['title'] : data['originalTitle'])}</h2>
                                             <b>Rating: {data && data['imdbRating']}&nbsp;|&nbsp;
                                             {data && moment.duration(data['duration']).asMinutes()}min.</b> <br/>
                                             {data && arrayToString(data['genres'])} <br/>
-
+                                        </Grid.Row>
+                                        <Divider hidden/>
+                                        <Grid.Row>
                                             <Slider {...settings}>
                                                 {data['presentations'] && data['presentations'].length > 0 && data['presentations'].map((pres, index2) => {
                                                     return (
-                                                        <PresentationDateComponent presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                                        <PresentationDateComponent index={{index2}} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
                                                     )
                                                 })}
                                             </Slider>
+                                        </Grid.Row>
                                     </Grid.Column>
                                 </Grid.Row>
                             )
