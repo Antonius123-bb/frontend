@@ -27,6 +27,7 @@ class MostPopularFilms extends React.Component<{history: any, movies: any}, Most
         this.getPopMovData();
     }
 
+    // get the specific data fro the three movies
     getPopMovData = () => {
         try {
             if(this.mounted){
@@ -55,8 +56,8 @@ class MostPopularFilms extends React.Component<{history: any, movies: any}, Most
                     mostPopMov: arrayThree
                 })
             }
-        } catch {
-
+        } catch (e) {
+            console.log("Error ",e)
         }
     }
 
@@ -64,14 +65,20 @@ class MostPopularFilms extends React.Component<{history: any, movies: any}, Most
         this.mounted = false;
     }
 
+    // push to movie detail page with movie object
     pushToMovieDetailPage = (movie) => {
-        this.props.history.push({
-            pathname: '/movie',
-            search: '?name='+(movie['title'].replace(/ /g, '-')).toLowerCase(),
-            state: { movieId: movie['_id'] }
-        })
+        try {
+            this.props.history.push({
+                pathname: '/movie',
+                search: '?name='+(movie['title'].replace(/ /g, '-')).toLowerCase(),
+                state: { movieId: movie['_id'] }
+            })
+        } catch (e) {
+            console.log("Error ",e)
+        }
     }
 
+    // get column for the three movies with different border, backgroundColor, marginTop and place
     returnColumn = (indexInArray) => {
         let border = '';
         let backgroundColor = '';

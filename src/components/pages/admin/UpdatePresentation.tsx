@@ -1,7 +1,6 @@
 import * as React from "react";
-import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Segment, Checkbox, Divider} from "semantic-ui-react";
+import { Icon, Button, Grid, Dimmer, Loader, Form, Message, Checkbox, Divider}  from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
-import orderService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
 import presentationService from "../../../services/presentationService";
 import { ROOM_DATA } from "../../../constants";
@@ -10,7 +9,6 @@ var m = require('moment');
 
 interface updatePresentationState {
     isLoading: boolean,
-    activeAdminMenuItem: string,
     presentationStart: any,
     movieId: string,
     roomId: string,
@@ -47,7 +45,6 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
 
         this.state = {
             isLoading: false,
-            activeAdminMenuItem: 'orders',
             presentationStart: '',
             movieId: null,
             roomId: '',
@@ -73,9 +70,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
     }
 
     async componentDidMount() {
-        this.mounted = true;
         try {
-
+            this.mounted = true;
             const movies = await movieService.getAllMovies();
             let movieArr = [];
 
@@ -107,8 +103,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
             }
 
         }
-        catch {
-
+        catch (e) {
+            console.log("Error ",e)
         }
 
     }
@@ -137,8 +133,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                 })
             }
 
-        } catch {
-
+        } catch (e){
+            console.log("Error ",e)
         }
     }
 
@@ -149,7 +145,7 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                 return room.name
             }
         } catch (e){
-
+            console.log("Error ",e)
         }
     }
 
@@ -159,7 +155,12 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
 
     //update presentation with data that admin put in form
     updatePresentation = async () => {
-        if (this.mounted) { this.setState({successModal: false}) }
+        if (this.mounted) { 
+            this.setState({
+                successModal: false,
+                isLoading: true
+            }) 
+        }
         try {
             await presentationService.updatePresentationById(
                 this.state.selectedPresentationIDStart,
@@ -184,11 +185,18 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
             }
         //if creating was unsuccessfull
         } catch (e) {
+            console.log("Error ",e)
+            
             if(this.mounted) {
                 this.setState({
                     error: e.response.data
                 })
             }
+        }
+        if (this.mounted){
+            this.setState({
+                isLoading: false
+            })
         }
     }
 
@@ -200,7 +208,6 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                 })
             }
             const presentation = await presentationService.getPresentationById(this.state.selectedPresentationIDStart);
-            console.log('PRES ', presentation)
             const date = moment(new Date(presentation.data.data.presentationStart)).format("YYYY-MM-DD HH:mm");
             if (this.mounted){
                 this.setState({
@@ -212,9 +219,8 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
                     settingVariables: false
                 })
             }
-
-        } catch {
-
+        } catch (e) {
+            console.log("Error ",e)
         }
     };
 
@@ -343,5 +349,4 @@ class UpdatePresentation extends React.Component<{}, updatePresentationState> {
         )
     }
 }
-
 export default UpdatePresentation;

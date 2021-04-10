@@ -1,2 +1,0 @@
-- Suchfilter bugt bei presentationoverview
-- Homepage untere hälfte abändern mit Top 5 Filme

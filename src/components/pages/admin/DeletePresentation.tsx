@@ -76,8 +76,8 @@ class DeletePresentation extends React.Component<{}, deletePresentationState> {
             }
 
         }
-        catch {
-
+        catch (e) {
+            console.log("Error ",e)
         }
 
     }
@@ -106,8 +106,8 @@ class DeletePresentation extends React.Component<{}, deletePresentationState> {
                 })
             }
 
-        } catch {
-
+        } catch (e){
+            console.log("Error ",e)
         }
     }
 
@@ -118,7 +118,7 @@ class DeletePresentation extends React.Component<{}, deletePresentationState> {
                 return room.name
             }
         } catch (e){
-
+            console.log("Error ",e)
         }
     }
 
@@ -128,7 +128,9 @@ class DeletePresentation extends React.Component<{}, deletePresentationState> {
 
     //delete presentation with data that admin put in form
     deletePresentation = async () => {
-        if (this.mounted) { this.setState({successModal: false}) }
+        if (this.mounted) { 
+            this.setState({successModal: false}) 
+        }
         try {
             await presentationService.deletePresentationById(
                 this.state.selectedPresentationIDStart
@@ -145,6 +147,8 @@ class DeletePresentation extends React.Component<{}, deletePresentationState> {
             }
         //if deleting was unsuccessfull
         } catch (e) {
+            console.log("Error ",e)
+            
             if(this.mounted) {
                 this.setState({
                     error: e.response.data

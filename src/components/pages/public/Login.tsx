@@ -1,10 +1,9 @@
 import * as React from "react";
-import {Button, Form, Grid, Header, Image, Message, Segment, Modal} from "semantic-ui-react";
+import { Button, Form, Grid, Header, Image, Message, Segment, Modal } from "semantic-ui-react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { USER_COOKIE_AUTH_CODE, USER_COOKIE_INFO } from '../../../constants';
 import userService from '../../../services/userService';
-import { responsiveFontSizes } from "@material-ui/core";
 
 interface loginState {
 }
@@ -60,6 +59,7 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
             if (this.mounted){ formikBag.setSubmitting(false) } 
         }
         catch(error) {
+            console.log("Error ", error)
             if (error.response.status === 409){
                 if (this.mounted){
                     formikBag.setErrors({

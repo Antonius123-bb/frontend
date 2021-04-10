@@ -93,7 +93,6 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
 
     //link to the detail page of a presentation -> param is the id of a presentation
     pushToPresentationDetailPage = (presentation) => {
-        console.log("PRESEM ", presentation)
         this.props.history.push({
             pathname: '/presentation/'+presentation['_id']
         })

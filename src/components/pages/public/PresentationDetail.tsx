@@ -8,7 +8,17 @@ import SeatPicker from "../../seat-picker/SeatPicker";
 import moment from "moment";
 var m = require('moment');
 
-class PresentationDetail extends React.Component<{match: any, history: any}, {loading: boolean, presentation: any, movie: any, cost: number, costList: any, showButton: boolean, selectedSeats: Array<number>}> {
+interface PresentationDetailState {
+    loading: boolean, 
+    presentation: any,
+    movie: any, 
+    cost: number, 
+    costList: any, 
+    showButton: boolean, 
+    selectedSeats: Array<number>
+}
+
+class PresentationDetail extends React.Component<{match: any, history: any}, PresentationDetailState> {
 
     private mounted: boolean = false;
 

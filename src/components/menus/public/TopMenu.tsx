@@ -5,26 +5,23 @@ import { Link } from "react-router-dom";
 import Cart from "../../container/Cart";
 import Login from "../../pages/public/Login";
 import Signup from "../../pages/public/Signup";
-import DefaultModal from "../../pages/public/DefaultModal";
 import { USER_COOKIE_INFO, CART_COOKIE, USER_COOKIE_AUTH_CODE } from "../../../constants";
 import ProfileRoot from "../../pages/private/Profile/ProfileRoot";
 import userService from "../../../services/userService";
 
-/*
-* The Top Menu that occures on every page
-* Gets data/pages from TopMenuData.ts
-*/
+
+// The Top Menu that occures on every page
+// Gets data/pages from TopMenuData.ts
+
 
 interface topMenuState {
     activeTopMenuItem: string,
-    activeProfileMenuItem: string,
     showCart: boolean,
     count: number,
     openModal: boolean,
     refreshCart: number,
     activePage: string,
     activated: boolean,
-    dropdownOpen: boolean,
     openProfileModal: boolean,
     userIsAdmin: boolean
 }
@@ -38,14 +35,12 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
         this.state = {
             activeTopMenuItem: 'Home',
-            activeProfileMenuItem: 'orders',
             showCart: false,
             count: 0,
             openModal: false,
             refreshCart: 0,
             activePage: 'login',
             activated: false,
-            dropdownOpen: false,
             openProfileModal: false,
             userIsAdmin: false
         };
@@ -54,10 +49,15 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
     componentDidMount(): void {
         this.mounted = true;
         
-        if(this.mounted) {
-            this.readFromURL();
-            this.getCount();
-            this.getAdminInfo();
+        //get initial data
+        try {
+            if(this.mounted) {
+                this.readFromURL();
+                this.getCount();
+                this.getAdminInfo();
+            }
+        } catch (e) {
+            console.log("Error ", e)
         }
     }
 
@@ -67,13 +67,17 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
     //counter to manipulate the states and refresh the cart
     componentDidUpdate(prevProps: any) {
-        if(prevProps.refreshCart != this.props.refreshCart && this.mounted) {
-            this.setState({
-                refreshCart: this.props.refreshCart
-            })
-
-            //calculate new sum of presentations that are in the card
-            this.getCount();
+        try {
+            if(prevProps.refreshCart != this.props.refreshCart && this.mounted) {
+                this.setState({
+                    refreshCart: this.props.refreshCart
+                })
+    
+                //calculate new sum of presentations that are in the card
+                this.getCount();
+            }
+        } catch (e) {
+            console.log("Error ", e)
         }
     }
 
@@ -84,24 +88,28 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
     //read the url param after "/" to underline the correct top menu item
     readFromURL = () => {
-        const url = window.location.href;
-
-        if (url.includes('activated')){
-            if(this.mounted) { this.setState({ activated: true }) }
-        }
-
-        if (url.includes('movie')){
-            if(this.mounted) {  this.setState({ activeTopMenuItem: 'Filme' }) }
-        } else if (url.includes('login')){
-            if(this.mounted) { this.setState({ activeTopMenuItem: 'Login' }) }
-        } else if (url.includes('presentations')){
-            if(this.mounted) { this.setState({ activeTopMenuItem: 'Vorstellungen' }) }
-        } else if (url.includes('presentation')){
-            if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
-        } else if (url.includes('checkout')){
-            if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
-        } else if (url.includes('thankyou')){
-            if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
+        try {
+            const url = window.location.href;
+    
+            if (url.includes('activated')){
+                if(this.mounted) { this.setState({ activated: true }) }
+            }
+    
+            if (url.includes('movie')){
+                if(this.mounted) {  this.setState({ activeTopMenuItem: 'Filme' }) }
+            } else if (url.includes('login')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: 'Login' }) }
+            } else if (url.includes('presentations')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: 'Vorstellungen' }) }
+            } else if (url.includes('presentation')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
+            } else if (url.includes('checkout')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
+            } else if (url.includes('thankyou')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
+            }
+        } catch (e) {
+            console.log("Error ", e)
         }
     }
 
@@ -150,8 +158,8 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
             localStorage.removeItem(USER_COOKIE_AUTH_CODE);
             localStorage.removeItem(CART_COOKIE);
             this.props.history.push('/')
-        } catch {
-
+        } catch (e){
+            console.log("Error ",e)
         }
     }
 
@@ -181,14 +189,13 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                     })
                 }
             }
-        } catch {
-
+        } catch (e) {
+            console.log("Error ",e)
         }
     }
 
     render() {
         const { activeTopMenuItem, activePage, activated } = this.state
-
         return (
             <React.Fragment>
                 <Segment style={{'background': '#5D5C61', 'borderRadius': 0, 'marginBottom': '-20px'}}>

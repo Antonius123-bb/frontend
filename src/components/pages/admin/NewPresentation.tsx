@@ -1,16 +1,13 @@
 import * as React from "react";
-import {Icon, Button, Grid, Dimmer, Loader, Form, Message, Segment, Checkbox} from "semantic-ui-react";
+import { Icon, Button, Grid, Dimmer, Loader, Form, Message, Checkbox } from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
-import orderService from "../../../services/orderService";
 import movieService from "../../../services/movieService";
 import presentationService from "../../../services/presentationService";
 import { HOURS, ROOM_DATA } from "../../../constants";
 import moment from "moment";
-var m = require('moment');
 
 interface newPresentationState {
     isLoading: boolean,
-    activeAdminMenuItem: string,
     presentationStart: any,
     movieId: string,
     roomId: string,
@@ -41,7 +38,6 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
 
         this.state = {
             isLoading: false,
-            activeAdminMenuItem: 'orders',
             presentationStart: '',
             movieId: null,
             roomId: null,
@@ -67,37 +63,41 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
     async componentDidMount() {
         this.mounted = true;
 
-        //get movieData from backend
-        let movieArr = [];
+        try {
+            //get movieData from backend
+            let movieArr = [];
 
-        const movies = await movieService.getAllMovies();
+            const movies = await movieService.getAllMovies();
 
-        const roomArr = ROOM_DATA.map(item => ({
-            key: item.roomId,
-            text: item.name,
-            value: item.roomId
-        }))
+            const roomArr = ROOM_DATA.map(item => ({
+                key: item.roomId,
+                text: item.name,
+                value: item.roomId
+            }))
 
-        movies.data.data.forEach(mov => {
-            let movieName = mov.originalTitle;
-            if(mov.originalTitle === ""){
-                movieName = mov.title
-            }
-            const obj = {
-                key: mov._id.toString(),
-                text: movieName,
-                value: mov._id.toString()
-            };
+            movies.data.data.forEach(mov => {
+                let movieName = mov.originalTitle;
+                if(mov.originalTitle === ""){
+                    movieName = mov.title
+                }
+                const obj = {
+                    key: mov._id.toString(),
+                    text: movieName,
+                    value: mov._id.toString()
+                };
 
-            movieArr.push(obj);
-        })
-
-        //set the states with mapped/modified data from backend
-        if(this.mounted) {
-            this.setState({
-                movies: movieArr,
-                rooms: roomArr
+                movieArr.push(obj);
             })
+
+            //set the states with mapped/modified data from backend
+            if(this.mounted) {
+                this.setState({
+                    movies: movieArr,
+                    rooms: roomArr
+                })
+            }
+        } catch (e) {
+            console.log("Error ",e)
         }
     }
 
@@ -131,6 +131,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
             }
         //if creating was unsuccessfull
         } catch (e) {
+            console.log("Error ",e)
+
             if(this.mounted) {
                 this.setState({
                     error: e.response.data
@@ -154,8 +156,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                 }
             })
 
-        } catch {
-
+        } catch (e) {
+            console.log("Error ",e)
         }
     }
 
@@ -174,8 +176,8 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                     })
                 }
             }
-        } catch {
-
+        } catch (e) {
+            console.log("Error ",e)
         }
     }
 
@@ -219,8 +221,6 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                             onChange={(e, {value}) => {this.setState({basicPrice: parseInt(value)})}}
                             />
                         </Form.Group>
-
-
                         <Grid.Row> 
                             <DateTimeInput     
                                 style={{'width': '32.6%'}}
@@ -278,17 +278,10 @@ class NewPresentation extends React.Component<{}, newPresentationState> {
                             />
                             }                       
                         </Grid.Row>
-
-
                     </Grid.Column>
                 </Grid>
             </Form>
         )
     }
 }
-
 export default NewPresentation;
-
-
-
-

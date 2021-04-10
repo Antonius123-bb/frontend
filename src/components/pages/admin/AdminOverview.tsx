@@ -65,7 +65,7 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
             } 
         }
         catch (e){
-            console.log("error ", e)
+            console.log("Error ", e)
         }
         if (this.mounted){
             this.setState({isLoading: false})
@@ -101,29 +101,7 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
 
             if (this.mounted){ formikBag.setSubmitting(false) } 
         } catch(error) {
-            //handle errors received from backend
-            // if (error.response.status === 409){
-            //     if (this.mounted){
-            //         formikBag.setErrors({
-            //             email: "Das angegebene Konto scheint nicht zu existieren."
-            //         })
-            //     }
-            // } if (error.response.status === 423){
-            //     if (this.mounted){
-            //         formikBag.setErrors({
-            //             email: "Das angegebene Konto wurde deaktiviert."
-            //         })
-            //     }
-            // } else if (error.response.status === 403 || error.response.status === 401){
-            //     if (this.mounted){
-            //         formikBag.setErrors({
-            //             email: "Email und Passwort stimmen nicht überein.",
-            //             password: "Email und Passwort stimmen nicht überein."
-            //         })
-            //     }
-            // }
-            // if (this.mounted){ formikBag.setSubmitting(false) } 
-            console.log("error ", error)
+            console.log("Error ", error)
         }
     }
 
@@ -131,59 +109,57 @@ class AdminOverview extends React.Component<{history: any}, adminOverviewState> 
     renderLoginForm = () => {
         return (
             <Formik
-                    initialValues={{
-                        email: '',
-                        password: '',
-                    }}
-                    validationSchema={Yup.object().shape({
-                        email: Yup.string()
-                            .required('Email ist erforderlich.')
-                            .max(254, 'Email darf maximal 254 Zeichen beinhalten.'),
-                        password: Yup.string()
-                            .required('Passwort ist erforderlich.')
-                            .min(9, 'Passwort muss aus mindestens 9 Zeichen bestehen.')
-                            .max(50, 'Passwort darf maximal 50 Zeichen beinhalten.'),
-                    })}
-                    onSubmit={this.submitLogin}
-                >
-                    {({ errors, touched, handleChange, handleBlur, handleSubmit }) => (
-                        <Grid style={{'marginTop': '50px', 'marginBottom': '50px'}} textAlign='center'>
-                            <Grid.Column style={{ maxWidth: 450 }}>
-                                <Message color='grey'
-                                    attached>Melden Sie sich mit ihren Zugangsdaten an.</Message>
-                                <Form onSubmit={handleSubmit}>
-                                    <Segment stacked>
-                                        <Form.Input fluid icon="at" iconPosition="left"
-                                            placeholder='Email'
-                                            name="email" type="text"
-                                            onChange={handleChange} onBlur={handleBlur}
-                                            error={(errors.email && touched.email) ? {
-                                                content: errors.email,
-                                                pointing: 'above'
-                                            } : false} />
-                                        <Form.Input fluid icon='lock' iconPosition='left'
-                                            placeholder='Passwort' type='password'
-                                            name="password"
-                                            onChange={handleChange} onBlur={handleBlur}
-                                            error={(errors.password && touched.password) ? {
-                                                content: errors.password,
-                                                pointing: 'above'
-                                            } : false} />
-                                        <Button fluid size='large'
-                                            style={{'marginTop': '10px', 'background': '#557A95', 'color': '#ffffff'}}
-                                            type="submit">Einloggen</Button>
-                                    </Segment>
-                                </Form>
-                            </Grid.Column>
-                        </Grid>
-                    )}
-                </Formik>
+                initialValues={{
+                    email: '',
+                    password: '',
+                }}
+                validationSchema={Yup.object().shape({
+                    email: Yup.string()
+                        .required('Email ist erforderlich.')
+                        .max(254, 'Email darf maximal 254 Zeichen beinhalten.'),
+                    password: Yup.string()
+                        .required('Passwort ist erforderlich.')
+                        .min(9, 'Passwort muss aus mindestens 9 Zeichen bestehen.')
+                        .max(50, 'Passwort darf maximal 50 Zeichen beinhalten.'),
+                })}
+                onSubmit={this.submitLogin}
+            >
+                {({ errors, touched, handleChange, handleBlur, handleSubmit }) => (
+                    <Grid style={{'marginTop': '50px', 'marginBottom': '50px'}} textAlign='center'>
+                        <Grid.Column style={{ maxWidth: 450 }}>
+                            <Message color='grey'
+                                attached>Melden Sie sich mit ihren Zugangsdaten an.</Message>
+                            <Form onSubmit={handleSubmit}>
+                                <Segment stacked>
+                                    <Form.Input fluid icon="at" iconPosition="left"
+                                        placeholder='Email'
+                                        name="email" type="text"
+                                        onChange={handleChange} onBlur={handleBlur}
+                                        error={(errors.email && touched.email) ? {
+                                            content: errors.email,
+                                            pointing: 'above'
+                                        } : false} />
+                                    <Form.Input fluid icon='lock' iconPosition='left'
+                                        placeholder='Passwort' type='password'
+                                        name="password"
+                                        onChange={handleChange} onBlur={handleBlur}
+                                        error={(errors.password && touched.password) ? {
+                                            content: errors.password,
+                                            pointing: 'above'
+                                        } : false} />
+                                    <Button fluid size='large'
+                                        style={{'marginTop': '10px', 'background': '#557A95', 'color': '#ffffff'}}
+                                        type="submit">Einloggen</Button>
+                                </Segment>
+                            </Form>
+                        </Grid.Column>
+                    </Grid>
+                )}
+            </Formik>
         )
     }
 
-
     render() {
-
         return (
             <Grid> 
                 <Segment style={{'background': '#5D5C61', 'borderRadius': 0, 'height': '80px', 'width': '100%', 'textAlign': 'center'}}>

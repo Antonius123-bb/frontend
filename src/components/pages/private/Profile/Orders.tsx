@@ -1,14 +1,12 @@
 import moment from "moment";
 import * as React from "react";
-import { Button, Form, Grid, Icon, Message, Table, Image, List, Divider, Popup } from "semantic-ui-react";
+import { Button, Grid, Icon, Message, Table, Image, List, Divider, Popup } from "semantic-ui-react";
 import { getRoomNameById, USER_COOKIE_INFO } from "../../../../constants";
 import movieService from "../../../../services/movieService";
 import orderService from "../../../../services/orderService";
 import presentationsService from "../../../../services/presentationService";
-import userService from "../../../../services/userService";
 
 //The Orders Container to watch the latest orders
-//TODO: create orders page in modal
 
 interface ordersState {
     isLoading: boolean,
@@ -43,15 +41,17 @@ class Orders extends React.Component<{history:any}, ordersState> {
     async componentDidMount() {
         this.mounted = true;
 
+        // get data inititally
         this.generateRecentOrdersWithAdditionalData();
-        
     }
 
+    // get presentation data by id
     getPresentationDetails = async (id) => {
         try {
             const pres = await presentationsService.getPresentationById(id);
             return pres.data.data;
-        } catch{
+        } catch (e) {
+            console.log("Error ", e)
             this.setState({
                 errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
                 isLoading: false
@@ -59,11 +59,13 @@ class Orders extends React.Component<{history:any}, ordersState> {
         }
     }
 
+    // return movie data by id
     getMovieDetails = async (id) => {
         try {
             const mov = await movieService.getMovieById(id);
             return mov.data.data;
-        } catch{
+        } catch (e){
+            console.log("Error ", e)
             this.setState({
                 errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
                 isLoading: false
@@ -71,6 +73,7 @@ class Orders extends React.Component<{history:any}, ordersState> {
         }
     }
 
+    // get initial data by matching movie, presentation and order data
     generateRecentOrdersWithAdditionalData = async () => {
         try {
             if(this.mounted){
@@ -124,6 +127,7 @@ class Orders extends React.Component<{history:any}, ordersState> {
             }
 
         } catch (e){
+            console.log("error ", e)
             if(this.mounted) {
                 this.setState({
                     errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
@@ -133,16 +137,16 @@ class Orders extends React.Component<{history:any}, ordersState> {
         }
     }
 
+    // cancel order by id (in state)
     cancelOrder = async () => {
         try {
             if (this.mounted) {
-
-                const response = await orderService.cancelOrder(this.state.orderOnEdit['_id']);
+                await orderService.cancelOrder(this.state.orderOnEdit['_id']);
                 this.setState({cancelSuccess: true, editMode: false, orderOnEdit: ''})
                 this.generateRecentOrdersWithAdditionalData();
-
             }
-        } catch {
+        } catch (e){
+            console.log("Error ", e)
             this.setState({
                 errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
                 isLoading: false
@@ -154,6 +158,7 @@ class Orders extends React.Component<{history:any}, ordersState> {
         this.mounted = false;
     }
 
+    // render the edit button, check if order was in past -> then show other button
     renderEditButton = (orderId) => {
         try {
             const order = this.getOrderById(orderId);
@@ -176,29 +181,34 @@ class Orders extends React.Component<{history:any}, ordersState> {
                     </Button>
                 )
             }
-        } catch {
+        } catch (e){
+            console.log("Error ", e)
 
         }
     }
 
+    // get order data by id
     getOrderById = (orderId) => {
         try {
             let temp:any = this.state.modifiedOrderData;
             let orderOnEdit = temp.find(obj => obj['_id'] === orderId);
             return orderOnEdit;
-        } catch {
+        } catch (e){
+            console.log("Error ", e)
             return ''
         }
     }
 
+    // get presentation string by start, end and duration attributes
     getPresentationString = (presentationStart, presentationEnd, movieDuration) => {
         try {
             return moment(presentationStart).format('DD.MM.YYYY') + ' ' + moment(presentationStart).format('HH:mm') + 'Uhr - ' + moment(presentationEnd).format('HH:mm') + 'Uhr (' +  moment.duration(movieDuration).asMinutes() + " Minuten)"
-        } catch {
-
+        } catch (e){
+            console.log("Error ", e)
         }
     }
 
+    //push to the specific movie detail page by id (in state)
     pushToMovieDetailPage = () => {
         try {
             const movieString = (this.state.orderOnEdit['movieName'].replace(/ /g, '-')).toLowerCase();
@@ -210,14 +220,12 @@ class Orders extends React.Component<{history:any}, ordersState> {
                 })
             }
 
-        } catch {
-
+        } catch (e) {
+            console.log("Error ", e)
         }
-    };
+    }
 
     render() {
-
-        console.log(this.state)
         return (
            <React.Fragment>
                {!this.state.notDataAvailable && !this.state.isLoading && !this.state.editMode &&
@@ -248,7 +256,6 @@ class Orders extends React.Component<{history:any}, ordersState> {
                     </Table.Body>
                 </Table>
                 }
-
                 {this.state.editMode && !this.state.isLoading && !this.state.notDataAvailable && this.state.orderOnEdit != '' &&
                 <Grid centered>
                     <Grid.Row style={{'marginLeft':'50px', 'marginRight':'50px'}} columns={2}>

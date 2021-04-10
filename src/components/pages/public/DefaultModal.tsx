@@ -15,12 +15,15 @@ interface defaultModalProps {
 class DefaultModal extends React.Component<defaultModalProps, {}> {
     constructor(props: any) {
         super(props);
-
     }
 
     handleButtonOnClick = () => {
-        history.pushState('', '', '/');
-        this.props.handleUserManagement('login');
+        try {
+            history.pushState('', '', '/');
+            this.props.handleUserManagement('login');
+        } catch (e) {
+            console.log("Error ", e)
+        }
     }
 
     render() {

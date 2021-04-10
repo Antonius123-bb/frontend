@@ -30,45 +30,55 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
 
     async componentDidMount() {
         this.mounted = true;
-        
-        //get user name from cookie and set state
-        const user = localStorage.getItem(USER_COOKIE_INFO);
-
-        if(user) {
-            const response = await userService.getUserById(JSON.parse(user).id);
-
-
-            if(this.mounted) {
-                this.setState({
-                    userdata: response.data
-                })
-            }
-        }
+        this.getUserNameFromCookie()
     }
 
     componentWillUnmount() {
         this.mounted = false;
     }
 
-    //called every single time the state/props update
-    async componentDidUpdate(prevProps) {
-        
-        //handle open profile modal state
-        if(prevProps.openProfileModal != this.props.openProfileModal) {
+    //get user name from cookie and set state
+    getUserNameFromCookie = async () => {
+        try {
             const user = localStorage.getItem(USER_COOKIE_INFO);
+
             if(user) {
+                const response = await userService.getUserById(JSON.parse(user).id);
+
+
                 if(this.mounted) {
                     this.setState({
-                        userdata: JSON.parse(user)
+                        userdata: response.data
                     })
                 }
             }
+        } catch (e){
+            console.log("Error ", e)
+        }
+    }
 
-            if(this.mounted) {
-                this.setState({
-                    openProfileModal: this.props.openProfileModal
-                })
+    //called every single time the state/props update
+    async componentDidUpdate(prevProps) {
+        try {
+            //handle open profile modal state
+            if(prevProps.openProfileModal != this.props.openProfileModal) {
+                const user = localStorage.getItem(USER_COOKIE_INFO);
+                if(user) {
+                    if(this.mounted) {
+                        this.setState({
+                            userdata: JSON.parse(user)
+                        })
+                    }
+                }
+
+                if(this.mounted) {
+                    this.setState({
+                        openProfileModal: this.props.openProfileModal
+                    })
+                }
             }
+        } catch (e) {
+            console.log("Error ", e)
         }
     }
 
@@ -79,13 +89,8 @@ class ProfileRoot extends React.Component<{ openProfileModal: boolean, closeProf
 
     render() {
         const activeProfileMenuItem = this.state.activeProfileMenuItem;
-
         return (
-            <Modal
-                open={this.state.openProfileModal}
-                onClose={() => this.props.closeProfileModal()}
-                style={{'width': '90%', 'height': '90%'}}
-            >                    
+            <Modal open={this.state.openProfileModal} onClose={() => this.props.closeProfileModal()} style={{'width': '90%', 'height': '90%'}}>                    
                 <Grid doubling padded style={{'marginTop': '25px'}}> 
                     <Grid.Row centered style={{'marginBottom': '-10px'}}>
                         <Segment secondary style={{'width': '98%'}}>

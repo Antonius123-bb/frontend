@@ -29,8 +29,6 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
             this.setState({loadMovies: true})
             var movies = await movieService.getAllMovies();
         }
-
-
         if(this.mounted && movies) {
             this.setState({
                 movies: movies.data.data,
@@ -44,6 +42,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         this.mounted = false;
     }
 
+    //functioon to add to shopping cart
     saveToCart(id: any) {
         var cart = {};
 
@@ -71,6 +70,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         }
     }
 
+    //handle search filter
     handleSearch = (value) => {
         let newMovies = [];
         if(this.mounted) {
@@ -99,6 +99,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         }
     }
 
+    //push to detail mage with movie object
     pushToMovieDetailPage = (movie) => {
         let movieTitle = movie['originalTitle'];
         if (movie['originalTitle'] === ''){
@@ -111,6 +112,7 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
         })
     }
 
+    //render stars with specific rating
     renderStars = (rating) => {
         return (
             <Rating name="half-rating-read" defaultValue={rating} precision={0.1} readOnly  max={10} />
@@ -118,7 +120,6 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
     }
 
     render() {
-
         return (
             <React.Fragment>
                 {!this.props.withoutTopBar &&

@@ -251,7 +251,7 @@ class ContactData extends React.Component<{closeContactDataModal: any}, contactD
             await userService.deleteAddressById(this.state.userDetails["id"], adressId);
             this.getUserDetails();
         } catch (e){
-            console.log(e)
+            console.log("Error ", e)
         }
     } 
 

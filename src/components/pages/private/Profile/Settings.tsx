@@ -1,10 +1,9 @@
 import * as React from "react";
-import {Card, Button, Grid, Dimmer, Loader, Form, Modal, Message} from "semantic-ui-react";
+import {Card, Button, Grid, Dimmer, Loader, Form, Message} from "semantic-ui-react";
 import { Formik } from "formik";
 import * as Yup from 'yup';
 import userService from "../../../../services/userService";
 import { USER_COOKIE_INFO } from "../../../../constants";
-import { DisableValuesPropTypes } from "semantic-ui-calendar-react/dist/types/inputs/BaseInput";
 import presentationService from "../../../../services/presentationService";
 
 //Settings of a user to change email, password, name
@@ -33,13 +32,7 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
 
     async componentDidMount() {
         this.mounted = true;
-
-        await presentationService.bookSeats(
-            [1],
-            "6071d93d2513650ae8b42ce1",
-            JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
-            "bar"
-        )
+        this.bookSeatsById("id")
     }
 
     componentWillUnmount() {
@@ -55,7 +48,22 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
             }
         }
     }
+    
+    //todo: to be cleared
+    bookSeatsById = async (id) => {
+        try {
+            await presentationService.bookSeats(
+            [1],
+            id,
+            JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
+            "bar"
+            )
+        } catch (e) {
+            console.log("Error ", e)
+        }
+    }
 
+    // called after profil change
     submitProfileInfoForm = async (values,formikBag) => {
         if (this.mounted){ this.setState({isLoading: true, openSuccessModal: ''}) }
         try {
@@ -71,7 +79,7 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
             else {
                 const addresses = JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).addresses;
                 const id = JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id;
-                const response = await userService.updateUserById(
+                await userService.updateUserById(
                     values.name, 
                     values.lastName, 
                     values.email, 
@@ -116,11 +124,12 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
             if (this.mounted){ this.setState({isLoading: false}) }
         }
         catch (e){
+            console.log("Error ", e)
             if (this.mounted){ this.setState({isLoading: false}) }
         }
-
     }
 
+    //called after change password click
     changePasswordForm = async (values, formikBag) => {
         if (this.mounted){ this.setState({isLoadingPassword: true, openSuccessModal: ''}) }
         try {
@@ -139,6 +148,7 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
             }
         }
         catch (error){
+            console.log("Error ", error)
             if(error.response.status === 401){
                 formikBag.setErrors({
                     currentPassword: "Das angegebene Passwort ist falsch."
@@ -149,7 +159,6 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
     }
     
     render() {
-
         return (
             <React.Fragment>
                 <Grid.Row columns={4}>
@@ -292,9 +301,4 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
         )
     }
 }
-
 export default Settings;
-
-
-
-

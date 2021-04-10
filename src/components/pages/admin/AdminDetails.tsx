@@ -4,13 +4,9 @@ import DeletePresentation from "./DeletePresentation";
 import NewPresentation from "./NewPresentation";
 import UpdatePresentation from "./UpdatePresentation";
 
-
-/*
-* The Admin Container to see not payed orders or create new presentations
-*/
+// The Admin Container
 
 interface adminDetailsState {
-    isLoading: boolean,
     activeAdminMenuItem: string
 }
 
@@ -22,7 +18,6 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
         super(props);
 
         this.state = {
-            isLoading: false,
             activeAdminMenuItem: 'presentations'
         }
     }
@@ -36,15 +31,20 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
     }
 
     handleAdminMenuItemClick = (e: any, { name }: any) => {
-        this.setState({ activeAdminMenuItem: name })
+        try {
+            if (this.mounted){
+                this.setState({ activeAdminMenuItem: name })
+            }
+        } catch (e) {
+            console.log("Error ",e)
+        }
     }
 
     render() {
         const activeAdminMenuItem = this.state.activeAdminMenuItem;
-
         return (
             <React.Fragment>
-                {/*menu to switch between orders and create presentations*/}
+                {/*menu to switch between create, update and delete presentations*/}
                 <Menu attached='top' tabular>
                     <Menu.Item
                     name='presentations'
@@ -81,13 +81,7 @@ class AdminDetails extends React.Component<{}, adminDetailsState> {
                     }
                 </Segment>
             </React.Fragment>
-            
         )
     }
 }
-
 export default AdminDetails;
-
-
-
-

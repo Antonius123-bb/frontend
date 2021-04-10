@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Image, Button, Grid, List, Divider, Message, Popup} from "semantic-ui-react";
+import {Image, Grid, List, Divider, Message, Popup} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
 import presentationsService from "../../../services/presentationService";
 import { DateInput } from "semantic-ui-calendar-react";
@@ -9,10 +9,16 @@ import Rating from "@material-ui/lab/Rating";
 import { arrayToString } from "../../../constants";
 import PresentationDateComponent from "../../container/PresentationDateComponent";
 import Slider from "react-slick"
-
 const m = require('moment');
 
-class MovieDetail extends React.Component<{location: any, history: any}, {movie: any, presentations: any, initialPresentations: any, date: string, isLoading: boolean}> {
+interface MovieDetailState {
+    movie: any, 
+    presentations: any, 
+    initialPresentations: any, 
+    date: string, 
+    isLoading: boolean
+}
+class MovieDetail extends React.Component<{location: any, history: any}, MovieDetailState> {
     
     private mounted: boolean = false;
 
@@ -32,13 +38,11 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         try {
             this.mounted = true;
             if (this.mounted){ this.setState({isLoading: true}) };
-    
-            window.scrollTo(0, 0);
-    
+            window.scrollTo(0, 0)            
             const getMovie = await movieService.getMovieById(this.props.location.state.movieId);
-
             const getPresentationById = await presentationsService.getPresentationByMovieId(this.props.location.state.movieId);
-    
+
+             //set inital states with data
             if(this.mounted) {
                 this.setState({
                     presentations: getPresentationById.data.data,
@@ -48,8 +52,8 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                 })
             }
         }
-        catch {
-
+        catch (e) {
+            console.log("Error ", e)
         }
     }
 
@@ -77,12 +81,12 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
             }
 
         }
-        catch {
-
+        catch (e) {
+            console.log("Error ", e)
         }
     }
 
-    
+    // handle the serach filter
     search = async (date) => {
         try {
 
@@ -98,7 +102,6 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
         
                 this.state.initialPresentations.map((pres) => {
                     if(m(pres['presentationStart']).format("DD-MM-YYYY") === date) {
-                        console.log("T")
                         presentations.push(pres);
                     }
                 })
@@ -111,15 +114,14 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
             }
 
         }
-        catch {
-
+        catch (e) {
+            console.log("Error ", e)
         }
     }
 
     render() {
-
         const m = require('moment');
-        var settings = {
+        let settings = {
             dots: true,
             infinite: true,
             arrows: false,
@@ -216,9 +218,6 @@ class MovieDetail extends React.Component<{location: any, history: any}, {movie:
                 }                
             </React.Fragment>
         )
-    }
-    arrayToString(arg0: any) {
-        throw new Error("Method not implemented.");
     }
 }
 
