@@ -35,6 +35,8 @@ export const SELECTED_MOVIE_IDS_FOR_SLIDER = [
     "6043bb2a2f3a0f4d64616c02"
 ];
 
+export const SELECTED_MOST_POPULAR_MOVIES = [0, 3, 6]
+
 export const ROOM_DATA = [
     {
         'roomId': '6043c266646e955a2881300e',

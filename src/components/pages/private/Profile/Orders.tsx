@@ -53,7 +53,8 @@ class Orders extends React.Component<{history:any}, ordersState> {
             return pres.data.data;
         } catch{
             this.setState({
-                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+                errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
+                isLoading: false
             })
         }
     }
@@ -64,7 +65,8 @@ class Orders extends React.Component<{history:any}, ordersState> {
             return mov.data.data;
         } catch{
             this.setState({
-                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+                errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
+                isLoading: false
             })
         }
     }
@@ -121,10 +123,11 @@ class Orders extends React.Component<{history:any}, ordersState> {
                 }
             }
 
-        } catch{
+        } catch (e){
             if(this.mounted) {
                 this.setState({
-                    errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+                    errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
+                    isLoading: false
                 })
             }
         }
@@ -141,7 +144,8 @@ class Orders extends React.Component<{history:any}, ordersState> {
             }
         } catch {
             this.setState({
-                errorMessage: "Ein unbekannter Fehler ist aufgetreten."
+                errorMessage: "Ein unbekannter Fehler ist aufgetreten.",
+                isLoading: false
             })
         }
     }
@@ -181,7 +185,6 @@ class Orders extends React.Component<{history:any}, ordersState> {
         try {
             let temp:any = this.state.modifiedOrderData;
             let orderOnEdit = temp.find(obj => obj['_id'] === orderId);
-            console.log("ORDER ON EDIT ", orderOnEdit)
             return orderOnEdit;
         } catch {
             return ''
@@ -214,6 +217,7 @@ class Orders extends React.Component<{history:any}, ordersState> {
 
     render() {
 
+        console.log(this.state)
         return (
            <React.Fragment>
                {!this.state.notDataAvailable && !this.state.isLoading && !this.state.editMode &&

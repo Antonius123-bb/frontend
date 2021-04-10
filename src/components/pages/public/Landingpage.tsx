@@ -1,11 +1,12 @@
 import * as React from "react";
-import {Grid, Image} from "semantic-ui-react";
+import {Divider, Grid, Image, Segment} from "semantic-ui-react";
 import TopMenu from "../../menus/public/TopMenu";
 import Slider from "react-slick";
 import MovieOverview from './MovieOverview';
 import movieServices from '../../../services/movieService';
 import userService from "../../../services/userService";
 import { SELECTED_MOVIE_IDS_FOR_SLIDER, USER_COOKIE_INFO } from "../../../constants";
+import MostPopularFilms from "./MostPopularFilms";
 
 interface ladingpageState {
     refreshCart: number,
@@ -91,8 +92,8 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
             <React.Fragment>
                 <TopMenu refreshCart={this.state.refreshCart} history={this.props.history}/>
 
-                <Grid>
-                    <Grid.Row>
+                {!this.state.isLoading && <Grid>
+                    <Grid.Row style={{'marginBottom': '100px'}}>
                         <Grid.Column>
                             <Slider {...settings} style={{'textAlign': 'center'}}>
                                 {this.state.selectedMoviesForSlider.map((movie, index) => {
@@ -111,16 +112,14 @@ class Landingpage extends React.Component<{history: any}, ladingpageState> {
                                 
                             </Slider>
                         </Grid.Column>
-                    </Grid.Row>
-
-                    <Grid.Row>
-                        <Grid.Column>
-                            <h2 style={{'textAlign': 'center', 'fontSize': '36px'}}>Unsere Filme</h2>
-                            <MovieOverview history={this.props.history} handleCartCountOnLandingpage={this.handleCartCountOnLandingpage} withoutTopBar={true}/>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <MostPopularFilms history={this.props.history} movies={this.state.selectedMoviesForSlider}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                }
             </React.Fragment>
         )
     }
