@@ -61,7 +61,7 @@ class PresentationDateComponent extends React.Component<cartProps> {
                     } /> 
                     :
                     // when presentation is not 3d
-                    <Segment color='blue' stacked compact style={{'width': '120px', 'cursor': 'pointer', 'textAlign': 'center'}} floated='left' onClick={() => this.pushToPresentationDetailPage(presentation)}>
+                    <Segment color='blue' stacked compact style={{'width': '120px', 'cursor': 'pointer', 'textAlign': 'center', 'marginRight': '44px', 'marginTop': '0px'}} floated='left' onClick={() => this.pushToPresentationDetailPage(presentation)}>
                         {presentationStart && moment(presentationStart).locale('de').format("dddd")} <br/>
                         <Divider style={{'marginLeft': '-10%', 'marginRight': '-10%'}} fitted/>
                         {presentationStart && moment(presentationStart).format("DD.MM.YYYY")} <br/>

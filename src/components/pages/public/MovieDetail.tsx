@@ -126,7 +126,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, MovieDe
             infinite: true,
             arrows: false,
             speed: 500,
-            slidesToShow: Math.min(this.state.presentations.length, 8),
+            slidesToShow: 8,
             slidesToScroll: 1
           };
 
@@ -194,13 +194,22 @@ class MovieDetail extends React.Component<{location: any, history: any}, MovieDe
                                 content='An dem gewählten Datum zeigen wir die gewünschte Vorstellung leider nicht.'
                                 />
                             }
-                            <Slider {...settings}>
-                                {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.map((pres, index) => {
+                            {this.state.presentations && this.state.presentations.length >= 8 &&
+                                <Slider {...settings}>
+                                    {this.state.presentations.map((pres, index) => {
+                                        return (
+                                            <PresentationDateComponent index={{index}} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                        )
+                                    })}
+                                </Slider>
+                                }
+                            {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.length < 8 &&
+                                this.state.presentations.map((pres, index) => {
                                     return (
-                                        <PresentationDateComponent index={index} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                        <PresentationDateComponent index={{index}} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
                                     )
-                                })}
-                            </Slider>
+                                })
+                            }
                         </Grid.Column>
                         <Grid.Column width={1}></Grid.Column>
                     </Grid.Row>

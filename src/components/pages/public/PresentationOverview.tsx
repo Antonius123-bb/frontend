@@ -201,13 +201,22 @@ class PresentationOverview extends React.Component<{withoutTopBar: any, history:
                                         </Grid.Row>
                                         <Divider hidden/>
                                         <Grid.Row>
+                                            {data['presentations'] && data['presentations'].length >= 9 &&
                                             <Slider {...settings}>
-                                                {data['presentations'] && data['presentations'].length > 0 && data['presentations'].map((pres, index2) => {
+                                                {data['presentations'].map((pres, index2) => {
                                                     return (
                                                         <PresentationDateComponent index={{index2}} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
                                                     )
                                                 })}
                                             </Slider>
+                                            }
+                                            {data['presentations'] && data['presentations'].length > 0 && data['presentations'].length < 9 &&
+                                                data['presentations'].map((pres, index2) => {
+                                                    return (
+                                                        <PresentationDateComponent index={{index2}} presentation={pres} threeD={pres['3d']} history={this.props.history}/>
+                                                    )
+                                                })
+                                            }
                                         </Grid.Row>
                                     </Grid.Column>
                                 </Grid.Row>
