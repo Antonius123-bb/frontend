@@ -44,13 +44,6 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
 
                 localStorage.setItem(USER_COOKIE_INFO, JSON.stringify(userInfo));
                 localStorage.setItem(USER_COOKIE_AUTH_CODE, JSON.stringify(userAuth));
-                
-
-                // const adresses = (await userService.getUserById(response.data.id)).addresses;
-                // if (adresses.data.adresses && adresses.data.adresses != null){
-                //     localStorage.setItem(ALL_ADDRESSES, JSON.stringify(adresses.data.adressen));
-                // }
-
             }
 
             // close Modal
@@ -60,23 +53,11 @@ class Login extends React.Component<{ handleUserManagement: any, handleOpenModal
         }
         catch(error) {
             console.log("Error ", error)
-            if (error.response.status === 409){
+            if (error.response.status === 411){
                 if (this.mounted){
                     formikBag.setErrors({
-                        email: "Das angegebene Konto scheint nicht zu existieren."
-                    })
-                }
-            } if (error.response.status === 423){
-                if (this.mounted){
-                    formikBag.setErrors({
-                        email: "Das angegebene Konto wurde deaktiviert."
-                    })
-                }
-            } else if (error.response.status === 403 || error.response.status === 401){
-                if (this.mounted){
-                    formikBag.setErrors({
-                        email: "Email und Passwort stimmen nicht überein.",
-                        password: "Email und Passwort stimmen nicht überein."
+                        email: "Benutzername oder Passwort falsch.",
+                        password: "Benutzername oder Passwort falsch."
                     })
                 }
             }

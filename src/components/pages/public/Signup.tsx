@@ -38,20 +38,16 @@ class Signup extends React.Component<{ handleUserManagement: any }, signupState>
 
             if (response){
                 //send checkEmail to parent component -> opens another modal
-                this.props.handleUserManagement('registerSuccess')
+                this.props.handleUserManagement('login')
             }
 
             formikBag.setSubmitting(false);
         } catch (error) {
             //handle some potential errors and set formik bags to let the user know what is going on
             console.log("Error ", error)
-            if (error.response.status === 409){
+            if (error.response.status === 400){
                 formikBag.setErrors({
                     email: "Zu der angegebenen Email-Adresse existiert bereits ein Konto."
-                })
-            } else if (error.response.status === 403){
-                formikBag.setErrors({
-                    name: "Bitte geben Sie Ihren vollständigen Namen (Vor- und Nachname) ein."
                 })
             }
             formikBag.setSubmitting(false);
