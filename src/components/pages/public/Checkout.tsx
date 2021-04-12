@@ -59,12 +59,16 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
         if(user != null) {
             const userData = await userService.getUserById(JSON.parse(user).id);
 
+            console.log("U", userData)
+
             if(this.mounted) {
                 this.setState({
-                    user: userData.data.name + " " + userData.data.lastName,
-                    adressen: userData.data.adresses
+                    user: userData.data.data.name + " " + userData.data.data.lastName,
+                    adressen: userData.data.data.addresses
                 })
             }
+
+            console.log("T",userData.data.data.addresses)
         }
 
         //to avoid unautorized checkout calls
@@ -528,7 +532,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                                 onClick={() => this.setState({selectedAdress: index})}
                                                 >
                                                 <Icon name={this.state.selectedAdress === index ? 'circle' : 'circle outline'} />
-                                                {item.anrede} {item.name}, {item.strasse} ({item.plz})
+                                                {item.anrede} {item.name} {item.lastName}, {item.street} ({item.plz})
                                                 </Accordion.Title>
                                                 <Accordion.Content active={this.state.selectedAdress === index}>
                                                 <p>
@@ -597,7 +601,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                 <Grid.Column width="7">
 
                                 </Grid.Column>
-                                <Grid.Column width="4">
+                                <Grid.Column width="3">
                                 {this.state.paymentMethode === 'Paypal' && this.state.adressen != undefined &&
                                     <Paypal history={this.props.history} selectedAdress={this.state.selectedAdress} selectedSeats={this.state.selectedSeats} user={this.state.user} presId={this.props.location.state.presentationId} totalCost={this.state.cost} desc={this.state.movieName} />
                                 }

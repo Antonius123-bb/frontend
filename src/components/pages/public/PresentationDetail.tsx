@@ -54,7 +54,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
             let movies = await movieService.getAllMovies();
     
             const movie = movies.data.data.find(x => x._id === getPresentationById.data.data.movieId);
-    
+
             if(this.mounted) {
                 this.setState({
                     presentation: getPresentationById.data.data,
@@ -73,6 +73,8 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
     }
 
     setCosts = (cost, costList) => {
+
+        console.log("setCosts");
 
         let costs = [];
 
@@ -98,6 +100,8 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                 costList: costs
             })
         }
+
+        console.log(costs)
     }
 
     setButton = (showButton, selectedSeats) => {
@@ -111,45 +115,46 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
 
     pushToCheckout = () => {
 
-        // let cart = localStorage.getItem(CART_COOKIE);
+        let cart = localStorage.getItem(CART_COOKIE);
 
-        // let cartArr = JSON.parse(cart);
+        let cartArr = JSON.parse(cart);
 
-        // if(cart === null) {
-        //     let cartArr2 = [];
-        //     const cartObj = {
-        //         selectedSeats: this.state.selectedSeats,
-        //         cost: this.state.cost,
-        //         costList: this.state.costList,
-        //         movieName: this.state.movie.name,
-        //         movieImage: this.state.movie.bild_link,
-        //         presentationId: this.props.match.params.id
-        //     };
-        //     cartArr2.push(cartObj);
-        //     localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr2));
-        // } else {
-        //     const cartObj = {
-        //         selectedSeats: this.state.selectedSeats,
-        //         cost: this.state.cost,
-        //         costList: this.state.costList,
-        //         movieName: this.state.movie.name,
-        //         movieImage: this.state.movie.bild_link,
-        //         presentationId: this.props.match.params.id
-        //     };
-        //     cartArr.push(cartObj);
-        //     localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr));
-        // }
+        if(cart === null) {
+            let cartArr2 = [];
+            const cartObj = {
+                selectedSeats: this.state.selectedSeats,
+                cost: this.state.cost,
+                costList: this.state.costList,
+                movieName: this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"],
+                movieImage: this.state.movie.posterurl,
+                presentationId: this.props.match.params.id
+            };
+            cartArr2.push(cartObj);
+            console.log("1", cartObj);
+            localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr2));
+        } else {
+            const cartObj = {
+                selectedSeats: this.state.selectedSeats,
+                cost: this.state.cost,
+                costList: this.state.costList,
+                movieName: this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"],
+                movieImage: this.state.movie.posterurl,
+                presentationId: this.props.match.params.id
+            };
+            cartArr.push(cartObj);
+            localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr));
+        }
 
-        // this.props.history.push({
-        //     pathname: '/checkout',
-        //     state: {
-        //         presentationId: this.props.match.params.id,
-        //         selectedSeats: this.state.selectedSeats,
-        //         cost: this.state.cost,
-        //         costList: this.state.costList,
-        //         movieName: this.state.movie.name
-        //     }
-        // })
+        this.props.history.push({
+            pathname: '/checkout',
+            state: {
+                presentationId: this.props.match.params.id,
+                selectedSeats: this.state.selectedSeats,
+                cost: this.state.cost,
+                costList: this.state.costList,
+                movieName: this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"],
+            }
+        })
     }
 
     render() {
@@ -172,7 +177,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                                 {this.state.movie && this.state.presentation &&
                                 <React.Fragment>
                                     <p style={{'fontSize': '20px'}}>{m(this.state.presentation['presentationStart']).format("HH:mm")} Uhr am {m(this.state.presentation['presentationStart']).format("DD.MM.yyyy")}</p>
-                                    <Header as="h2">Tickets reservieren für: <span style={{'textDecoration': 'underline'}}>{this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"]}</span> {this.state.presentation['3d'] ? "(3D)" : ""}</Header>
+                                    <Header as="h2">Tickets reservieren für: <span style={{'textDecoration': 'underline'}}>{this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"]}</span> {this.state.presentation['threeD'] ? "(3D)" : ""}</Header>
                                 </React.Fragment>
                                 }
                                 <p style={{'fontSize': '20px'}}>{this.mounted && (this.state.movie["storyline"]).split(" Written by")[0]}</p>
@@ -210,9 +215,9 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                         <Grid.Row columns="2">
                             <Grid.Column width="10">
 
-                                {/* {this.state.presentation != null &&
-                                    <SeatPicker seats={this.state.presentation} setCosts={this.setCosts} setButton={this.setButton}/>
-                                } */}
+                                {this.state.presentation != null &&
+                                    <SeatPicker seats={this.state.presentation.seats} setCosts={this.setCosts} setButton={this.setButton}/>
+                                }
 
                             </Grid.Column>
                             <Grid.Column width="4" verticalAlign="bottom" textAlign="right">

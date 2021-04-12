@@ -1,4 +1,2 @@
 - Statuscode überarbeiten und messages
     -> Diese bitte dann in der Backend Readme ausformulieren
-- 3d Property in Vorstellungen
-    -> schauen ob es im Frontend alles passt (die entsprechenden vorstellungen haben eine rote farbe und es erscheint ein popup)
