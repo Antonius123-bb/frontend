@@ -114,12 +114,49 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
 
     //render stars with specific rating
     renderStars = (rating) => {
-        return (
-            <Rating name="half-rating-read" defaultValue={rating} precision={0.1} readOnly  max={10} />
-        )
+        const device = this.getDeviceType();
+
+        if (device === "desktop"){
+            return (
+                <Rating name="half-rating-read" defaultValue={rating} precision={0.1} readOnly max={10} />
+            )
+        } else {
+            return (
+                <Rating name="half-rating-read" defaultValue={rating/2} precision={0.2} readOnly max={5} />
+            )
+        }
     }
 
+    getDeviceType = () => {
+        const ua = navigator.userAgent;
+        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+          return "tablet";
+        }
+        if (
+          /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+            ua
+          )
+        ) {
+          return "mobile";
+        }
+        return "desktop";
+    };
+
+    getColumnSize= () => {
+        const device = this.getDeviceType();
+
+        if (device === "tablet"){
+            return 3
+        } else if (device === "desktop"){
+            return 5
+        } else if (device === "mobile"){
+            return 2
+        }
+    }
+
+
     render() {
+        console.log("TEST ", this.getDeviceType())
         return (
             <React.Fragment>
                 {!this.props.withoutTopBar &&
@@ -155,12 +192,12 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
                         </Grid.Row>
                     }
 
-                    <Grid.Row columns={5}>
+                    <Grid.Row columns={this.getColumnSize()}>
                         
                         {this.state.movies.length > 0 && this.state.movies.map((movie, index) => {
                             return (
-                                <Grid.Column key={index}>
-                                    <Card key={index} style={{'minHeight': '800px', 'marginBottom': '30px'}}>
+                                <Grid.Column key={index} style={{}}>
+                                    <Card key={index} style={{'minHeight': '800px', 'marginBottom': '30px', 'marginRight': 'auto', 'marginLeft': 'auto'}}>
                                         <Image src={movie['posterurl']} wrapped ui={false} />
                                         <Card.Content>
                                         <Card.Header>{movie['originalTitle'] != '' ? movie['originalTitle'] : movie['title']}</Card.Header>
