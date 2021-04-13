@@ -32,7 +32,6 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
 
     async componentDidMount() {
         this.mounted = true;
-        this.bookSeatsById("id")
     }
 
     componentWillUnmount() {
