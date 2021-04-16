@@ -17,6 +17,12 @@ export default {
             seats, presentationId, userId, payment
         });
     },
+
+    bookSeatsAsGuest: (seats, presentationId, userData, payment) : Promise<any> => {
+        return axios.post(API_URL + '/bookSeats', {
+            seats, presentationId, userData, payment
+        });
+    },
     
     //create a new presentation
     createPresentation: (presentationStart, movieId, basicPrice, roomId, threeD ) : Promise<any> => {

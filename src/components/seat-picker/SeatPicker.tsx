@@ -125,6 +125,8 @@ class SeatPicker extends React.Component<{seats: any, setCosts: any, setButton: 
 
     render() {
 
+        console.log("SS", this.state.seats.seats)
+
         return (
 
             <div style={{'height': this.state.seats.height, 'width': this.state.seats.width * 2, 'marginTop': '25px'}}>
@@ -135,7 +137,7 @@ class SeatPicker extends React.Component<{seats: any, setCosts: any, setButton: 
                         const cat = this.state.classes.find(x => x.name === seat.category);
                         
                         /*show seats that are selected by user with a green check icon*/
-                        if(seat.booked === true && seat.selected === true) {
+                        if(seat.selected === true) {
                             return (
                                 <Popup key={index} content="belegt" trigger={
                                     //------------------------------call book function on click on seat
@@ -156,7 +158,7 @@ class SeatPicker extends React.Component<{seats: any, setCosts: any, setButton: 
                                     </div>
                                 } />
                             )
-                        } else if(seat.belegt === true && !seat.selected) {
+                        } else if(seat.booked === true) {
                             /*show seats that are not available any more in grey with an "x" icon so they are not selectable*/
                             return (
                                 <Popup key={index} content="belegt" trigger={

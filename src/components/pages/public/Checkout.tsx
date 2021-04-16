@@ -189,59 +189,49 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
     buy = async (values, formikBag) => {
 
         if(values === "") {
-
-            // const rechnung = {
-            //     titel: this.state.user.adressen[this.state.selectedAdress].anrede,
-            //     name: this.state.user.name,
-            //     strasse: this.state.user.adressen[this.state.selectedAdress].strasse + " " + this.state.user.adressen[this.state.selectedAdress].hausnummer,
-            //     plz: this.state.user.adressen[this.state.selectedAdress].plz,
-            //     stadt: this.state.user.adressen[this.state.selectedAdress].stadt
-            // };
     
             console.log("S", this.state);
 
-            const response = await presentationsService.bookSeats(parseInt(this.props.location.state.presentationId), this.state.userId, this.state.paymentMethode, this.state.selectedSeats);
+            const response = await presentationsService.bookSeats(this.state.selectedSeats, this.props.location.state.presentationId, this.state.userId, this.state.paymentMethode);
         
-            // if(response.status === 200) {
-            //     this.props.history.push("/thankyou");
-            //     localStorage.removeItem(CART_COOKIE);
+            if(response.status === 200) {
+                this.props.history.push("/thankyou");
+                localStorage.removeItem(CART_COOKIE);
 
-            //     if(this.state.error != "" && this.mounted) {
-            //         this.setState({
-            //             error: ""
-            //         })
-            //     }
-            // } else {
-            //     if(this.mounted) {
-            //         this.setState({
-            //             error: response.data
-            //         })
-            //     }
-            // }
+                if(this.state.error != "" && this.mounted) {
+                    this.setState({
+                        error: ""
+                    })
+                }
+            } else {
+                if(this.mounted) {
+                    this.setState({
+                        error: response.data
+                    })
+                }
+            }
         } else {
-            // const rechnung = {
-            //     titel: values.anrede,
-            //     name: values.name,
-            //     strasse: values.straße + " " + values.hausnummer,
-            //     plz: values.postleitzahl.toString(),
-            //     stadt: values.stadt,
-            //     telefon: values.präfix + values.telefonnummer
-            // };
-
-            console.log("S", this.state);
+            const userData = {
+                titel: values.anrede,
+                name: values.name,
+                strasse: values.straße + " " + values.hausnummer,
+                plz: values.postleitzahl.toString(),
+                stadt: values.stadt,
+                telefon: values.präfix + values.telefonnummer
+            };
     
-            // const response = await presentationsService.bookSeats(parseInt(this.props.location.state.presentationId), values.email, this.state.selectedSeats, 0, rechnung);
-
-            // if(response.status === 200) {
-            //     this.props.history.push("/thankyou");
-            //     localStorage.removeItem(CART_COOKIE);
-            // } else {
-            //     if(this.state.error != "" && this.mounted) {
-            //         this.setState({
-            //             error: ""
-            //         })
-            //     }
-            // }
+            const response = await presentationsService.bookSeatsAsGuest(this.state.selectedSeats, this.props.location.state.presentationId, userData, this.state.paymentMethode);
+        
+            if(response.status === 200) {
+                this.props.history.push("/thankyou");
+                localStorage.removeItem(CART_COOKIE);
+            } else {
+                if(this.state.error != "" && this.mounted) {
+                    this.setState({
+                        error: ""
+                    })
+                }
+            }
         };
     }
 
@@ -298,8 +288,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                             validationSchema= {Yup.object().shape({
                                 name: Yup.string()
                                     .required('Name ist erforderlich.'),
-                                anrede: Yup.string()
-                                    .required('Anrede ist erforderlich.'),
                                 straße: Yup.string()
                                     .required('Straße ist erforderlich.'),
                                 hausnummer: Yup.number('Falsche Hausnummer.')
@@ -343,7 +331,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                                 />
                                                 <Form.Input
                                                 value={values.anrede}
-                                                required
                                                 fluid
                                                 name='anrede'
                                                 label='Anrede'
