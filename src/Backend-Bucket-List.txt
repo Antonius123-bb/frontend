@@ -1,2 +1,0 @@
-- Statuscode überarbeiten und messages
-    -> Diese bitte dann in der Backend Readme ausformulieren

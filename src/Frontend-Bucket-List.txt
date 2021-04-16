@@ -1,7 +1,0 @@
-- Shopping Cart
-- Seatpicker
-- Checkout Process
-
-
-TODO
-pres Kacheln nicht in der richtigen Reihenfolge

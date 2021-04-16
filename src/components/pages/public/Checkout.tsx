@@ -15,7 +15,7 @@ import presentationsService from "../../../services/presentationService";
 //Todo show result thank you page, etc
 
 
-class Checkout extends React.Component<{location: any, history: any}, {error: string, openContactDataModal: boolean, updated: boolean, selectedAdress: number, adressen: any, loading: boolean, user: any, openModal: boolean, activePage: string, activated: boolean, buyAsGuest: boolean, paymentMethode: string, selectedSeats: Array<number>, cost: number, costList: any, movieName: string}> {
+class Checkout extends React.Component<{location: any, history: any}, {error: string, openContactDataModal: boolean, updated: boolean, selectedAdress: number, adressen: any, loading: boolean, user: any, openModal: boolean, activePage: string, activated: boolean, buyAsGuest: boolean, paymentMethode: string, selectedSeats: Array<number>, cost: number, costList: any, movieName: string, userId: string}> {
     
     private mounted: boolean = false;
 
@@ -38,7 +38,8 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
             cost: 0,
             costList: null,
             movieName: null,
-            error: ""
+            error: "",
+            userId: null
         };
 
     }
@@ -63,6 +64,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
 
             if(this.mounted) {
                 this.setState({
+                    userId: userData.data.data.id,
                     user: userData.data.data.name + " " + userData.data.data.lastName,
                     adressen: userData.data.data.addresses
                 })
@@ -188,15 +190,17 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
 
         if(values === "") {
 
-            const rechnung = {
-                titel: this.state.user.adressen[this.state.selectedAdress].anrede,
-                name: this.state.user.name,
-                strasse: this.state.user.adressen[this.state.selectedAdress].strasse + " " + this.state.user.adressen[this.state.selectedAdress].hausnummer,
-                plz: this.state.user.adressen[this.state.selectedAdress].plz,
-                stadt: this.state.user.adressen[this.state.selectedAdress].stadt
-            };
+            // const rechnung = {
+            //     titel: this.state.user.adressen[this.state.selectedAdress].anrede,
+            //     name: this.state.user.name,
+            //     strasse: this.state.user.adressen[this.state.selectedAdress].strasse + " " + this.state.user.adressen[this.state.selectedAdress].hausnummer,
+            //     plz: this.state.user.adressen[this.state.selectedAdress].plz,
+            //     stadt: this.state.user.adressen[this.state.selectedAdress].stadt
+            // };
     
-            // const response = await presentationsService.placeOrder(parseInt(this.props.location.state.presentationId), this.state.user.email, this.state.selectedSeats, 0, rechnung);
+            console.log("S", this.state);
+
+            const response = await presentationsService.bookSeats(parseInt(this.props.location.state.presentationId), this.state.userId, this.state.paymentMethode, this.state.selectedSeats);
         
             // if(response.status === 200) {
             //     this.props.history.push("/thankyou");
@@ -215,16 +219,18 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
             //     }
             // }
         } else {
-            const rechnung = {
-                titel: values.anrede,
-                name: values.name,
-                strasse: values.straße + " " + values.hausnummer,
-                plz: values.postleitzahl.toString(),
-                stadt: values.stadt,
-                telefon: values.präfix + values.telefonnummer
-            };
+            // const rechnung = {
+            //     titel: values.anrede,
+            //     name: values.name,
+            //     strasse: values.straße + " " + values.hausnummer,
+            //     plz: values.postleitzahl.toString(),
+            //     stadt: values.stadt,
+            //     telefon: values.präfix + values.telefonnummer
+            // };
+
+            console.log("S", this.state);
     
-            // const response = await presentationsService.placeOrder(parseInt(this.props.location.state.presentationId), values.email, this.state.selectedSeats, 0, rechnung);
+            // const response = await presentationsService.bookSeats(parseInt(this.props.location.state.presentationId), values.email, this.state.selectedSeats, 0, rechnung);
 
             // if(response.status === 200) {
             //     this.props.history.push("/thankyou");
