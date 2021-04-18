@@ -259,13 +259,13 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                         </Grid.Row>
                         <Grid.Row columns="2" centered>
                             <Grid.Column width="6">
-                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'textAlign': 'center', 'color': 'rgb(148, 97, 142)'}} onClick={() => this.setState({openModal: true})}>
+                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'textAlign': 'center', 'color': 'rgb(93,92,97)'}} onClick={() => this.setState({openModal: true})}>
                                     Login<br/>
                                     <Icon style={{'marginTop': '50px', 'marginLeft': '50px'}} name="user circle" size="huge"/>
                                 </Button>
                             </Grid.Column>
                             <Grid.Column width="6">
-                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'color': 'rgb(148, 97, 142)'}} onClick={() => this.setState({buyAsGuest: true})}>
+                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'color': 'rgb(93,92,97)'}} onClick={() => this.setState({buyAsGuest: true})}>
                                     Als Gast kaufen<br/>
                                     <Icon style={{'marginTop': '50px', 'marginLeft': '40px'}} name="users" size="huge"/></Button>
                             </Grid.Column>
@@ -442,7 +442,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                         <Grid.Row columns="2">
                                             <Grid.Column width="6">
                                                 <div style={{'marginLeft': '20px'}}>
-                                                    <Header style={{'color': 'rgb(148, 97, 142)', 'fontSize': '26px'}} as="h3">
+                                                    <Header style={{'color': 'rgb(85, 122, 149)', 'fontSize': '26px'}} as="h3">
                                                         Ihre Bestellung:
                                                     </Header>
                                                 
@@ -459,7 +459,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                             </Grid.Column>
 
                                             <Grid.Column width="6">
-                                                <Header style={{'color': 'rgb(148, 97, 142)'}} as="h4">
+                                                <Header style={{'color': 'rgb(85, 122, 149)'}} as="h4">
                                                     Bezahlung wählen.
                                                 </Header>
                                                 <Accordion styled>
@@ -512,7 +512,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                             </Grid.Column>
 
                             <Grid.Column width="6">
-                                <Header style={{'color': 'rgb(148, 97, 142)'}} as="h4">
+                                <Header style={{'color': 'rgb(85, 122, 149)'}} as="h4">
                                     Adresse auswählen.
                                 </Header>
                                 <Accordion styled>
@@ -544,7 +544,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
 
                         <Grid.Row columns="2">
                             <Grid.Column width="6">
-                                <Header style={{'color': 'rgb(148, 97, 142)', 'fontSize': '26px'}} as="h3">
+                                <Header style={{'color': 'rgb(85, 122, 149)', 'fontSize': '26px'}} as="h3">
                                     Ihre Bestellung:
                                 </Header>
                                 <h3>{this.state.movieName}</h3>
@@ -559,7 +559,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                             </Grid.Column>
 
                             <Grid.Column width="6">
-                                <Header style={{'color': 'rgb(148, 97, 142)'}} as="h4">
+                                <Header style={{'color': 'rgb(85, 122, 149)'}} as="h4">
                                     Bezahlung wählen.
                                 </Header>
                                 <Accordion styled>

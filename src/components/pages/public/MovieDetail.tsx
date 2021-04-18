@@ -138,7 +138,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, MovieDe
                     <Grid.Row columns="2">
                         <Grid.Column width="10" floated="right">
 
-                            <h2 style={{'marginBottom': '5%'}}>{this.state.movie['orginalTitle'] != "" ? this.state.movie['title'] : this.state.movie['originalTitle']}</h2>
+                            <h2 style={{'marginBottom': '5%', 'color': 'rgb(85, 122, 149)'}}>{this.state.movie['orginalTitle'] != "" ? this.state.movie['title'] : this.state.movie['originalTitle']}</h2>
                             <List>
                                 <Grid>
                                 <Grid.Row columns={2}>
