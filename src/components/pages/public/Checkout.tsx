@@ -136,6 +136,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
         }
 
         if(!this.state.updated) {
+            console.log("TEster")
             //update user after forceUpdate() after login
             const user = localStorage.getItem(USER_COOKIE_INFO);
             if(user != null) {
@@ -147,13 +148,15 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                     })
                 }
 
-                if(userDetails.data.adressen) {
+                if(userDetails.data.data.addresses) {
                     if(this.mounted) {
                         this.setState({
-                            adressen: userDetails.data.adressen,
+                            adressen: userDetails.data.data.addresses,
                         })
                     }
                 }
+
+                console.log("SETTED", userDetails.data)
             }
         }
     }
