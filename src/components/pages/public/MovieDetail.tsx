@@ -198,7 +198,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, MovieDe
                                 <Slider {...settings}>
                                     {this.state.presentations.map((pres, index) => {
                                         return (
-                                            <PresentationDateComponent index={{index}} presentation={pres} threeD={pres['threeD']} history={this.props.history}/>
+                                            <PresentationDateComponent key={index} index={{index}} presentation={pres} threeD={pres['threeD']} history={this.props.history}/>
                                         )
                                     })}
                                 </Slider>
@@ -206,7 +206,7 @@ class MovieDetail extends React.Component<{location: any, history: any}, MovieDe
                             {this.state.presentations && this.state.presentations.length > 0 && this.state.presentations.length < 8 &&
                                 this.state.presentations.map((pres, index) => {
                                     return (
-                                        <PresentationDateComponent index={{index}} presentation={pres} threeD={pres['threeD']} history={this.props.history}/>
+                                        <PresentationDateComponent key={index} index={{index}} presentation={pres} threeD={pres['threeD']} history={this.props.history}/>
                                     )
                                 })
                             }
