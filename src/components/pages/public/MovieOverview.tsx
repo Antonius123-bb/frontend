@@ -156,7 +156,6 @@ class MovieOverview extends React.Component<{handleCartCountOnLandingpage: any, 
 
 
     render() {
-        console.log("TEST ", this.getDeviceType())
         return (
             <React.Fragment>
                 {!this.props.withoutTopBar &&

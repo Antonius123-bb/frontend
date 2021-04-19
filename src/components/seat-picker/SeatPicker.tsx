@@ -87,7 +87,6 @@ class SeatPicker extends React.Component<{seats: any, setCosts: any, setButton: 
 
             //add the costs
             cost = cost + (this.state.seats.basicprice + varCost.upsell);
-            console.log("S,C:", this.state.seats)
 
             //add seat to the selected seats array
             selectedSeats.push(id);
@@ -124,8 +123,6 @@ class SeatPicker extends React.Component<{seats: any, setCosts: any, setButton: 
     }
 
     render() {
-
-        console.log("SS", this.state.seats.seats)
 
         return (
 

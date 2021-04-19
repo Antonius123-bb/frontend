@@ -60,8 +60,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
         if(user != null) {
             const userData = await userService.getUserById(JSON.parse(user).id);
 
-            console.log("U", userData)
-
             if(this.mounted) {
                 this.setState({
                     userId: userData.data.data.id,
@@ -69,8 +67,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                     adressen: userData.data.data.addresses
                 })
             }
-
-            console.log("T",userData.data.data.addresses)
         }
 
         //to avoid unautorized checkout calls
@@ -136,7 +132,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
         }
 
         if(!this.state.updated) {
-            console.log("TEster")
             //update user after forceUpdate() after login
             const user = localStorage.getItem(USER_COOKIE_INFO);
             if(user != null) {
@@ -155,8 +150,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                         })
                     }
                 }
-
-                console.log("SETTED", userDetails.data)
             }
         }
     }
@@ -192,8 +185,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
     buy = async (values, formikBag) => {
 
         if(values === "") {
-    
-            console.log("S", this.state);
 
             const response = await presentationsService.bookSeats(this.state.selectedSeats, this.props.location.state.presentationId, this.state.userId, this.state.paymentMethode);
         

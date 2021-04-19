@@ -186,8 +186,6 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
 
                 if(userInfoCookie != undefined) {
                     const response = await userService.getUserById(JSON.parse(userInfoCookie).id)
-
-                    console.log("R", response)
     
                     if (response) {
                         this.setState({

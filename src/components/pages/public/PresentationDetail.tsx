@@ -74,8 +74,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
 
     setCosts = (cost, costList) => {
 
-        console.log("setCosts");
-
         let costs = [];
 
         costList.forEach(pos => {
@@ -100,8 +98,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                 costList: costs
             })
         }
-
-        console.log(costs)
     }
 
     setButton = (showButton, selectedSeats) => {
@@ -130,7 +126,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                 presentationId: this.props.match.params.id
             };
             cartArr2.push(cartObj);
-            console.log("1", cartObj);
             localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr2));
         } else {
             const cartObj = {
