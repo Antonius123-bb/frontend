@@ -186,7 +186,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
 
         if(values === "") {
 
-            const response = await presentationsService.bookSeats(this.state.selectedSeats, this.props.location.state.presentationId, this.state.userId, this.state.paymentMethode);
+            const response = await presentationsService.bookSeats(this.state.selectedSeats, this.props.location.state.presentationId, this.state.userId, this.state.paymentMethode, this.state.selectedAdress);
         
             if(response.status === 200) {
                 this.props.history.push("/thankyou");
@@ -590,7 +590,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                 </Grid.Column>
                                 <Grid.Column width="3">
                                 {this.state.paymentMethode === 'Paypal' && this.state.adressen != undefined &&
-                                    <Paypal history={this.props.history} selectedAdress={this.state.selectedAdress} selectedSeats={this.state.selectedSeats} user={this.state.user} presId={this.props.location.state.presentationId} totalCost={this.state.cost} desc={this.state.movieName} />
+                                    <Paypal history={this.props.history} selectedAdress={this.state.selectedAdress} selectedSeats={this.state.selectedSeats} userId={this.state.userId} presId={this.props.location.state.presentationId} totalCost={this.state.cost} desc={this.state.movieName} />
                                 }
                                 {this.state.paymentMethode === 'Bar' &&
                                     <Button onClick={() => this.buy("", "")} disabled={this.state.adressen == undefined} floated="right">Kostenpflichtig kaufen</Button>
