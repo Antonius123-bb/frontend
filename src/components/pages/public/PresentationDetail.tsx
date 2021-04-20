@@ -227,7 +227,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                                     )
                                 })}
 
-                                <b><p style={{'fontSize': '20px'}}>Gesamtpreis: {this.state.cost}€ inkl. MwSt.</p></b>
+                                <b><p style={{'marginLeft': '200px', 'fontSize': '20px'}}>Gesamtpreis: {this.state.cost}€ inkl. MwSt.</p></b>
                                 
                                 <Button onClick={() => this.pushToCheckout()} disabled={!this.state.showButton} style={{'marginTop': '20px'}}>Tickets kaufen</Button>
                             </Grid.Column>
