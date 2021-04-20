@@ -60,8 +60,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
         if(user != null) {
             const userData = await userService.getUserById(JSON.parse(user).id);
 
-            console.log("U", userData)
-
             if(this.mounted) {
                 this.setState({
                     userId: userData.data.data.id,
@@ -69,8 +67,6 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                     adressen: userData.data.data.addresses
                 })
             }
-
-            console.log("T",userData.data.data.addresses)
         }
 
         //to avoid unautorized checkout calls
@@ -147,10 +143,10 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                     })
                 }
 
-                if(userDetails.data.adressen) {
+                if(userDetails.data.data.addresses) {
                     if(this.mounted) {
                         this.setState({
-                            adressen: userDetails.data.adressen,
+                            adressen: userDetails.data.data.addresses,
                         })
                     }
                 }
@@ -189,10 +185,8 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
     buy = async (values, formikBag) => {
 
         if(values === "") {
-    
-            console.log("S", this.state);
 
-            const response = await presentationsService.bookSeats(this.state.selectedSeats, this.props.location.state.presentationId, this.state.userId, this.state.paymentMethode);
+            const response = await presentationsService.bookSeats(this.state.selectedSeats, this.props.location.state.presentationId, this.state.userId, this.state.paymentMethode, this.state.selectedAdress);
         
             if(response.status === 200) {
                 this.props.history.push("/thankyou");
@@ -256,13 +250,13 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                         </Grid.Row>
                         <Grid.Row columns="2" centered>
                             <Grid.Column width="6">
-                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'textAlign': 'center', 'color': 'rgb(148, 97, 142)'}} onClick={() => this.setState({openModal: true})}>
+                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'textAlign': 'center', 'color': 'rgb(93,92,97)'}} onClick={() => this.setState({openModal: true})}>
                                     Login<br/>
                                     <Icon style={{'marginTop': '50px', 'marginLeft': '50px'}} name="user circle" size="huge"/>
                                 </Button>
                             </Grid.Column>
                             <Grid.Column width="6">
-                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'color': 'rgb(148, 97, 142)'}} onClick={() => this.setState({buyAsGuest: true})}>
+                                <Button style={{'width': '500px', 'height': '500px', 'fontSize': '30px', 'color': 'rgb(93,92,97)'}} onClick={() => this.setState({buyAsGuest: true})}>
                                     Als Gast kaufen<br/>
                                     <Icon style={{'marginTop': '50px', 'marginLeft': '40px'}} name="users" size="huge"/></Button>
                             </Grid.Column>
@@ -439,7 +433,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                         <Grid.Row columns="2">
                                             <Grid.Column width="6">
                                                 <div style={{'marginLeft': '20px'}}>
-                                                    <Header style={{'color': 'rgb(148, 97, 142)', 'fontSize': '26px'}} as="h3">
+                                                    <Header style={{'color': 'rgb(85, 122, 149)', 'fontSize': '26px'}} as="h3">
                                                         Ihre Bestellung:
                                                     </Header>
                                                 
@@ -456,7 +450,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                             </Grid.Column>
 
                                             <Grid.Column width="6">
-                                                <Header style={{'color': 'rgb(148, 97, 142)'}} as="h4">
+                                                <Header style={{'color': 'rgb(85, 122, 149)'}} as="h4">
                                                     Bezahlung wählen.
                                                 </Header>
                                                 <Accordion styled>
@@ -509,7 +503,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                             </Grid.Column>
 
                             <Grid.Column width="6">
-                                <Header style={{'color': 'rgb(148, 97, 142)'}} as="h4">
+                                <Header style={{'color': 'rgb(85, 122, 149)'}} as="h4">
                                     Adresse auswählen.
                                 </Header>
                                 <Accordion styled>
@@ -541,7 +535,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
 
                         <Grid.Row columns="2">
                             <Grid.Column width="6">
-                                <Header style={{'color': 'rgb(148, 97, 142)', 'fontSize': '26px'}} as="h3">
+                                <Header style={{'color': 'rgb(85, 122, 149)', 'fontSize': '26px'}} as="h3">
                                     Ihre Bestellung:
                                 </Header>
                                 <h3>{this.state.movieName}</h3>
@@ -556,7 +550,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                             </Grid.Column>
 
                             <Grid.Column width="6">
-                                <Header style={{'color': 'rgb(148, 97, 142)'}} as="h4">
+                                <Header style={{'color': 'rgb(85, 122, 149)'}} as="h4">
                                     Bezahlung wählen.
                                 </Header>
                                 <Accordion styled>
@@ -596,7 +590,7 @@ class Checkout extends React.Component<{location: any, history: any}, {error: st
                                 </Grid.Column>
                                 <Grid.Column width="3">
                                 {this.state.paymentMethode === 'Paypal' && this.state.adressen != undefined &&
-                                    <Paypal history={this.props.history} selectedAdress={this.state.selectedAdress} selectedSeats={this.state.selectedSeats} user={this.state.user} presId={this.props.location.state.presentationId} totalCost={this.state.cost} desc={this.state.movieName} />
+                                    <Paypal history={this.props.history} selectedAdress={this.state.selectedAdress} selectedSeats={this.state.selectedSeats} userId={this.state.userId} presId={this.props.location.state.presentationId} totalCost={this.state.cost} desc={this.state.movieName} />
                                 }
                                 {this.state.paymentMethode === 'Bar' &&
                                     <Button onClick={() => this.buy("", "")} disabled={this.state.adressen == undefined} floated="right">Kostenpflichtig kaufen</Button>

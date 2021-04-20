@@ -7,18 +7,25 @@ const Paypal = (props) => {
     const paypal = useRef()
 
     const buy = async (paypalTransactionId) => {
-        // const rechnung = {
-        //     titel: props.user.adressen[props.selectedAdress].anrede,
-        //     name: props.user.name,
-        //     strasse: props.user.adressen[props.selectedAdress].strasse,
-        //     plz: props.user.adressen[props.selectedAdress].plz,
-        //     stadt: props.user.adressen[props.selectedAdress].stadt
-        // };
 
-        // const response = presentationsService.placeOrderWithPaypal(parseInt(props.presId), props.user.email, props.selectedSeats, 1, rechnung, paypalTransactionId);
+        const response = await presentationsService.bookSeats(props.selectedSeats, props.presentationId, props.userId, "paypal", props.selectedAdress);
+        
+        if(response.status === 200) {
+            this.props.history.push("/thankyou");
+            localStorage.removeItem(CART_COOKIE);
 
-        // props.history.push('/thankyou');
-        // localStorage.removeItem(CART_COOKIE);
+            if(this.state.error != "" && this.mounted) {
+                this.setState({
+                    error: ""
+                })
+            }
+        } else {
+            if(this.mounted) {
+                this.setState({
+                    error: response.data
+                })
+            }
+        }
     }
 
     useEffect(() => {

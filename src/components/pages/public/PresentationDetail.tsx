@@ -74,8 +74,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
 
     setCosts = (cost, costList) => {
 
-        console.log("setCosts");
-
         let costs = [];
 
         costList.forEach(pos => {
@@ -100,8 +98,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                 costList: costs
             })
         }
-
-        console.log(costs)
     }
 
     setButton = (showButton, selectedSeats) => {
@@ -130,7 +126,6 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                 presentationId: this.props.match.params.id
             };
             cartArr2.push(cartObj);
-            console.log("1", cartObj);
             localStorage.setItem(CART_COOKIE, JSON.stringify(cartArr2));
         } else {
             const cartObj = {
@@ -177,7 +172,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
                                 {this.state.movie && this.state.presentation &&
                                 <React.Fragment>
                                     <p style={{'fontSize': '20px'}}>{m(this.state.presentation['presentationStart']).format("HH:mm")} Uhr am {m(this.state.presentation['presentationStart']).format("DD.MM.yyyy")}</p>
-                                    <Header as="h2">Tickets reservieren für: <span style={{'textDecoration': 'underline'}}>{this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"]}</span> {this.state.presentation['threeD'] ? "(3D)" : ""}</Header>
+                                    <Header as="h2" style={{'color': 'rgb(85, 122, 149)'}}>Tickets reservieren für: <span style={{'textDecoration': 'underline'}}>{this.state.movie["originalTitle"] === "" ? this.state.movie["title"] : this.state.movie["originalTitle"]}</span> {this.state.presentation['threeD'] ? "(3D)" : ""}</Header>
                                 </React.Fragment>
                                 }
                                 <p style={{'fontSize': '20px'}}>{this.mounted && (this.state.movie["storyline"]).split(" Written by")[0]}</p>
@@ -198,7 +193,7 @@ class PresentationDetail extends React.Component<{match: any, history: any}, Pre
 
                         <Grid.Row columns="2">
                             <Grid.Column width="10">
-                                <Header style={{'lineHeight': '3'}} as="h3">Bitte wählen Sie Ihre Plätze aus.</Header>
+                                <Header style={{'lineHeight': '3', 'color': 'rgb(85, 122, 149)'}} as="h3">Bitte wählen Sie Ihre Plätze aus.</Header>
                                 {this.state.presentation != null &&
                                     // 'width': this.state.presentation.width * 2
                                     <div style={{'borderRadius': '20px', 'marginLeft': '35px', 'background': 'grey', 'height': '60px', 'textAlign': 'center'}}>

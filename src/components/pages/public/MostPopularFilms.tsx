@@ -38,17 +38,19 @@ class MostPopularFilms extends React.Component<{history: any, movies: any}, Most
             SELECTED_MOST_POPULAR_MOVIES.map((item, index) => {
                 const obj = allMovies[SELECTED_MOST_POPULAR_MOVIES[index]];
 
-                let movieTitle = obj['originalTitle'];
-                if (obj['originalTitle'] === ''){
-                    movieTitle = obj['title']
-                }
-                arrayThree.push(
-                    {
-                        posterurl: obj['posterurl'],
-                        title: movieTitle,
-                        _id: obj['_id']
+                if(obj != undefined) {
+                    let movieTitle = obj['originalTitle'];
+                    if (obj['originalTitle'] === ''){
+                        movieTitle = obj['title']
                     }
-                )
+                    arrayThree.push(
+                        {
+                            posterurl: obj['posterurl'],
+                            title: movieTitle,
+                            _id: obj['_id']
+                        }
+                    )
+                }
             })
             if (this.mounted){
                 this.setState({

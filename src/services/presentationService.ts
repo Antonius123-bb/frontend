@@ -12,9 +12,9 @@ export default {
         return axios.get(API_URL + '/getPresentationById/' + id);
     },
 
-    bookSeats: (seats, presentationId, userId, payment) : Promise<any> => {
+    bookSeats: (seats, presentationId, userId, payment, selectedAdress) : Promise<any> => {
         return axios.post(API_URL + '/bookSeats', {
-            seats, presentationId, userId, payment
+            seats, presentationId, userId, payment, selectedAdress
         });
     },
 

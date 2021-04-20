@@ -182,11 +182,16 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
     getAdminInfo = async () => {
         try {
             if(this.mounted){
-                const response = await userService.getUserById(JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id)
-                if (response) {
-                    this.setState({
-                        userIsAdmin: response.data.data.admin
-                    })
+                const userInfoCookie = localStorage.getItem(USER_COOKIE_INFO);
+
+                if(userInfoCookie != undefined) {
+                    const response = await userService.getUserById(JSON.parse(userInfoCookie).id)
+    
+                    if (response) {
+                        this.setState({
+                            userIsAdmin: response.data.data.admin
+                        })
+                    }
                 }
             }
         } catch (e) {
