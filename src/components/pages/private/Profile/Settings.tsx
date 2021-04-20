@@ -32,7 +32,6 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
 
     async componentDidMount() {
         this.mounted = true;
-        //this.bookSeatsById('607c1eb3af940c37e07d03f3')
     }
 
     componentWillUnmount() {
@@ -46,20 +45,6 @@ class Settings extends React.Component<{userdata: {}, history: any}, settingsSta
                     userdata: this.props.userdata
                 })
             }
-        }
-    }
-    
-    //todo: to be cleared
-    bookSeatsById = async (id) => {
-        try {
-            await presentationService.bookSeats(
-            [1],
-            id,
-            JSON.parse(localStorage.getItem(USER_COOKIE_INFO)).id,
-            "bar"
-            )
-        } catch (e) {
-            console.log("Error ", e)
         }
     }
 
