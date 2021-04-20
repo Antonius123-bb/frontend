@@ -1,6 +1,6 @@
-# DHBW-Kino
+# Corona-Kino
 
-DHBW-Kino is a frontend used to order some movie tickets.
+Corona-Kino is a frontend used to order some movie tickets.
 
 ## Installation
 

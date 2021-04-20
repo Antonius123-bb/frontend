@@ -107,6 +107,10 @@ class TopMenu extends React.Component<{refreshCart: number, history: any}, topMe
                 if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
             } else if (url.includes('thankyou')){
                 if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
+            } else if (url.includes('privacy')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
+            } else if (url.includes('imprint')){
+                if(this.mounted) { this.setState({ activeTopMenuItem: null }) }
             }
         } catch (e) {
             console.log("Error ", e)
